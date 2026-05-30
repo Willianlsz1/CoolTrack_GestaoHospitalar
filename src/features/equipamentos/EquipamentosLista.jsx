@@ -133,7 +133,7 @@ export default function EquipamentosLista() {
                       disabled={excluir.isPending}
                       className="text-red-400 hover:text-red-300 disabled:opacity-50"
                     >
-                      {excluir.isPending && excluir.variables === eq.id
+                      {excluir.isPending && excluir.variables?.id === eq.id
                         ? 'Excluindo…'
                         : 'Confirmar'}
                     </button>

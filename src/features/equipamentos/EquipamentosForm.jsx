@@ -18,6 +18,9 @@ const inputCls =
   'w-full rounded border border-gray-700 bg-gray-800 px-3 py-2 text-gray-100'
 const labelCls = 'block text-sm text-gray-300 mb-1'
 
+// Limite de tamanho da foto (5 MB). O accept="image/*" já restringe o tipo.
+const MAX_FOTO_BYTES = 5 * 1024 * 1024
+
 // Form reaproveitado nos dois modos:
 // - sem `equipamento`  -> modo CRIAR
 // - com `equipamento`  -> modo EDITAR (pré-preenche e atualiza)
@@ -54,6 +57,10 @@ export default function EquipamentosForm({
     }
     if (tipo === '') {
       setErroValidacao('Selecione o tipo do equipamento.')
+      return
+    }
+    if (foto && foto.size > MAX_FOTO_BYTES) {
+      setErroValidacao('Foto muito grande (máx. 5 MB).')
       return
     }
     setErroValidacao('')

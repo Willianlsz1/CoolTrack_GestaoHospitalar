@@ -5,9 +5,19 @@ import { Link, useNavigate } from '@tanstack/react-router'
 // Id do <div> onde a biblioteca injeta o vídeo da câmera.
 const REGIAO_ID = 'leitor-qr'
 
+const RE_UUID =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 // O QR contém a URL da ficha; o id é o que vem depois de /equipamentos/.
+// Limpamos query/hash e barra final e validamos que é um UUID — assim um
+// QR estranho não navega para uma ficha quebrada. Retorna null se inválido.
 function idDaUrl(texto) {
-  return texto.split('/equipamentos/').pop()
+  const bruto = texto
+    .split('/equipamentos/')
+    .pop()
+    .split(/[?#]/)[0]
+    .replace(/\/$/, '')
+  return RE_UUID.test(bruto) ? bruto : null
 }
 
 export default function EquipamentoScanner() {
@@ -37,8 +47,13 @@ export default function EquipamentoScanner() {
         { fps: 10, qrbox: 250 },
         (texto) => {
           if (jaLeuRef.current) return
-          jaLeuRef.current = true
           const id = idDaUrl(texto)
+          if (!id) {
+            // QR que não é do sistema: avisa e segue escaneando.
+            setErro('QR inválido — não é um equipamento do sistema.')
+            return
+          }
+          jaLeuRef.current = true
           scanner.stop().finally(() => {
             navigate({ to: '/equipamentos/$id', params: { id } })
           })

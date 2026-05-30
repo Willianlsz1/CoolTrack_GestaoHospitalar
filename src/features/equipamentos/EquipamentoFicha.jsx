@@ -41,6 +41,10 @@ export default function EquipamentoFicha() {
         </p>
       )}
 
+      {!isPending && !isError && !eq && (
+        <p className="mt-4 text-gray-400">Equipamento não encontrado.</p>
+      )}
+
       {!isPending && !isError && eq && (
         <article className="mt-4">
           {eq.foto_url && (
