@@ -1,6 +1,7 @@
 import { Link, useParams } from '@tanstack/react-router'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEquipamento } from './useEquipamento'
+import ManutencoesHistorico from '../manutencoes/ManutencoesHistorico'
 
 // URL absoluta da ficha — é o que o QR Code codifica. Em produção,
 // VITE_APP_BASE_URL aponta pro domínio publicado (para o QR funcionar
@@ -98,6 +99,8 @@ export default function EquipamentoFicha() {
               {urlDaFicha(eq.id)}
             </p>
           </div>
+
+          <ManutencoesHistorico equipamentoId={eq.id} />
         </article>
       )}
     </div>
