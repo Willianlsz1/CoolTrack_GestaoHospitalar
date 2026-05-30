@@ -79,6 +79,34 @@ export default function ManutencoesHistorico({ equipamentoId }) {
                   Próxima: {m.proxima_manutencao}
                 </p>
               )}
+              {(m.foto_antes_url || m.foto_depois_url) && (
+                <div className="mt-3 flex gap-3">
+                  {m.foto_antes_url && (
+                    <figure>
+                      <img
+                        src={m.foto_antes_url}
+                        alt="Antes"
+                        className="h-24 w-24 rounded object-cover"
+                      />
+                      <figcaption className="mt-1 text-xs text-gray-500">
+                        Antes
+                      </figcaption>
+                    </figure>
+                  )}
+                  {m.foto_depois_url && (
+                    <figure>
+                      <img
+                        src={m.foto_depois_url}
+                        alt="Depois"
+                        className="h-24 w-24 rounded object-cover"
+                      />
+                      <figcaption className="mt-1 text-xs text-gray-500">
+                        Depois
+                      </figcaption>
+                    </figure>
+                  )}
+                </div>
+              )}
             </li>
           ))}
         </ul>

@@ -6,6 +6,11 @@ const TIPOS = ['preventiva', 'corretiva', 'preditiva']
 const inputCls =
   'w-full rounded border border-gray-700 bg-gray-800 px-3 py-2 text-gray-100'
 const labelCls = 'block text-sm text-gray-300 mb-1'
+const fileCls =
+  'w-full text-sm text-gray-400 file:mr-3 file:rounded file:border-0 file:bg-gray-700 file:px-3 file:py-1 file:text-gray-100'
+
+// Limite de tamanho de cada foto (5 MB).
+const MAX_FOTO_BYTES = 5 * 1024 * 1024
 
 // Data de hoje em YYYY-MM-DD para o valor inicial do input date.
 const hoje = () => new Date().toISOString().slice(0, 10)
@@ -21,6 +26,8 @@ export default function ManutencaoForm({
   const [descricao, setDescricao] = useState('')
   const [pecas, setPecas] = useState('')
   const [proxima, setProxima] = useState('')
+  const [fotoAntes, setFotoAntes] = useState(null)
+  const [fotoDepois, setFotoDepois] = useState(null)
   const [erroValidacao, setErroValidacao] = useState('')
 
   const criar = useCriarManutencao()
@@ -36,6 +43,13 @@ export default function ManutencaoForm({
       setErroValidacao('Informe a data.')
       return
     }
+    if (
+      (fotoAntes && fotoAntes.size > MAX_FOTO_BYTES) ||
+      (fotoDepois && fotoDepois.size > MAX_FOTO_BYTES)
+    ) {
+      setErroValidacao('Foto muito grande (máx. 5 MB).')
+      return
+    }
     setErroValidacao('')
 
     criar.mutate(
@@ -48,6 +62,9 @@ export default function ManutencaoForm({
         descricao: descricao.trim() || null,
         pecas: pecas.trim() || null,
         proxima_manutencao: proxima || null,
+        // File ou null; o hook sobe as fotos antes de inserir.
+        fotoAntes,
+        fotoDepois,
       },
       { onSuccess: onSucesso },
     )
@@ -134,6 +151,32 @@ export default function ManutencaoForm({
           className={inputCls}
           value={proxima}
           onChange={(e) => setProxima(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label className={labelCls} htmlFor="foto-antes">
+          Foto antes
+        </label>
+        <input
+          id="foto-antes"
+          type="file"
+          accept="image/*"
+          className={fileCls}
+          onChange={(e) => setFotoAntes(e.target.files[0] ?? null)}
+        />
+      </div>
+
+      <div>
+        <label className={labelCls} htmlFor="foto-depois">
+          Foto depois
+        </label>
+        <input
+          id="foto-depois"
+          type="file"
+          accept="image/*"
+          className={fileCls}
+          onChange={(e) => setFotoDepois(e.target.files[0] ?? null)}
         />
       </div>
 
