@@ -68,8 +68,15 @@ export default function EquipamentosForm({
 
     if (editando) {
       // foto nova = troca; senão removerFoto = limpa; senão mantém.
+      // fotoAntiga permite ao hook apagar o arquivo trocado/removido.
       atualizar.mutate(
-        { id: equipamento.id, foto, removerFoto, ...dados },
+        {
+          id: equipamento.id,
+          foto,
+          removerFoto,
+          fotoAntiga: equipamento.foto_url,
+          ...dados,
+        },
         { onSuccess: onSucesso },
       )
     } else {
