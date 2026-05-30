@@ -1,6 +1,7 @@
 import { Link, useParams } from '@tanstack/react-router'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEquipamento } from './useEquipamento'
+import SugestaoManutencao from '../ia/SugestaoManutencao'
 import ManutencoesHistorico from '../manutencoes/ManutencoesHistorico'
 
 // URL absoluta da ficha — é o que o QR Code codifica. Em produção,
@@ -100,6 +101,7 @@ export default function EquipamentoFicha() {
             </p>
           </div>
 
+          <SugestaoManutencao equipamentoId={eq.id} />
           <ManutencoesHistorico equipamentoId={eq.id} />
         </article>
       )}
