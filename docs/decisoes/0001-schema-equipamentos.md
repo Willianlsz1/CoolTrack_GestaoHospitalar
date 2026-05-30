@@ -20,7 +20,7 @@ Fundacional v1.0 define os campos nas seções 3.1 (MVP) e 5.3 (tabelas).
    - `tipo`: geladeira, freezer, camara_fria, ar_condicionado, climatizador, outro
    - `status`: ativo, manutencao, inativo
 
-3. **`setor`, `andar`, `sala` como texto livre** na Fase 1 — *não* tabela
+3. **`setor`, `andar`, `sala` como texto livre** na Fase 1 — _não_ tabela
    `setores` separada ainda. Mantém a Fase 1 focada só em equipamentos
    (princípio "uma coisa por vez"). A tabela `setores` (item 06 dos Próximos
    Passos) entra numa fase futura, quando houver necessidade de gerenciá-los.

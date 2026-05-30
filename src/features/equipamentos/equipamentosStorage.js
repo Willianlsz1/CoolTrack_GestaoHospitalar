@@ -16,3 +16,17 @@ export async function enviarFotoEquipamento(file) {
   const { data } = supabase.storage.from(BUCKET).getPublicUrl(caminho)
   return data.publicUrl
 }
+
+// Apaga do Storage o arquivo apontado por uma URL pública. Extrai o
+// caminho do que vem depois de "/<BUCKET>/". Best-effort: se algo der
+// errado, lança — quem chama decide engolir (limpeza não pode quebrar
+// a ação principal).
+export async function removerFotoPorUrl(fotoUrl) {
+  if (!fotoUrl) return
+
+  const caminho = fotoUrl.split(`/${BUCKET}/`).pop()
+  if (!caminho) return
+
+  const { error } = await supabase.storage.from(BUCKET).remove([caminho])
+  if (error) throw error
+}

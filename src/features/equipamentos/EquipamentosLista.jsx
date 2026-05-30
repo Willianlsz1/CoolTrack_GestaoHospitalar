@@ -107,9 +107,10 @@ export default function EquipamentosLista() {
                     <span className="text-gray-400">Excluir?</span>
                     <button
                       onClick={() =>
-                        excluir.mutate(eq.id, {
-                          onSuccess: () => setConfirmandoId(null),
-                        })
+                        excluir.mutate(
+                          { id: eq.id, foto_url: eq.foto_url },
+                          { onSuccess: () => setConfirmandoId(null) },
+                        )
                       }
                       disabled={excluir.isPending}
                       className="text-red-400 hover:text-red-300 disabled:opacity-50"
