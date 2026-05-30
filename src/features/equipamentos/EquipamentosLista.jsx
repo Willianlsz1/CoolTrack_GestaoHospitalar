@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import { useEquipamentos } from './useEquipamentos'
 import { useExcluirEquipamento } from './useExcluirEquipamento'
 import EquipamentosForm from './EquipamentosForm'
@@ -96,12 +97,21 @@ export default function EquipamentosLista() {
               )}
 
               <div className="mt-3 flex items-center justify-between border-t border-gray-800 pt-3">
-                <button
-                  onClick={() => abrirEditar(eq)}
-                  className="text-sm text-gray-500 hover:text-cyan-400"
-                >
-                  Editar
-                </button>
+                <div className="flex items-center gap-3">
+                  <Link
+                    to="/equipamentos/$id"
+                    params={{ id: eq.id }}
+                    className="text-sm text-gray-500 hover:text-cyan-400"
+                  >
+                    Ver ficha
+                  </Link>
+                  <button
+                    onClick={() => abrirEditar(eq)}
+                    className="text-sm text-gray-500 hover:text-cyan-400"
+                  >
+                    Editar
+                  </button>
+                </div>
                 {confirmandoId === eq.id ? (
                   <div className="flex items-center gap-3 text-sm">
                     <span className="text-gray-400">Excluir?</span>
