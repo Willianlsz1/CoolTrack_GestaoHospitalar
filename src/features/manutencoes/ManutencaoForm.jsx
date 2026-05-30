@@ -12,8 +12,9 @@ const fileCls =
 // Limite de tamanho de cada foto (5 MB).
 const MAX_FOTO_BYTES = 5 * 1024 * 1024
 
-// Data de hoje em YYYY-MM-DD para o valor inicial do input date.
-const hoje = () => new Date().toISOString().slice(0, 10)
+// Data de hoje em YYYY-MM-DD no fuso LOCAL (en-CA dá esse formato).
+// toISOString() seria UTC e adiantaria o dia à noite no Brasil (UTC-3).
+const hoje = () => new Date().toLocaleDateString('en-CA')
 
 export default function ManutencaoForm({
   equipamentoId,
