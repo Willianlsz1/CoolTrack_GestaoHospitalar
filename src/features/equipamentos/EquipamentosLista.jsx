@@ -22,8 +22,20 @@ export default function EquipamentosLista() {
   const { data: equipamentos, isPending, isError, error } = useEquipamentos()
   const excluir = useExcluirEquipamento()
   const [formAberto, setFormAberto] = useState(false)
+  // O equipamento em edição (ou null = modo criar). Define o modo do form.
+  const [equipamentoEditando, setEquipamentoEditando] = useState(null)
   // Guarda o id do card que está pedindo confirmação de exclusão.
   const [confirmandoId, setConfirmandoId] = useState(null)
+
+  function abrirCriar() {
+    setEquipamentoEditando(null)
+    setFormAberto(true)
+  }
+
+  function abrirEditar(eq) {
+    setEquipamentoEditando(eq)
+    setFormAberto(true)
+  }
 
   // O cabeçalho aparece sempre; só o conteúdo abaixo muda por estado.
   return (
@@ -36,7 +48,7 @@ export default function EquipamentosLista() {
           </p>
         </div>
         <button
-          onClick={() => setFormAberto(true)}
+          onClick={abrirCriar}
           className="shrink-0 rounded bg-cyan-500 px-4 py-2 text-sm font-medium text-gray-950 hover:bg-cyan-400"
         >
           + Novo equipamento
@@ -83,7 +95,13 @@ export default function EquipamentosLista() {
                 <p className="mt-2 text-sm text-gray-500">{eq.setor}</p>
               )}
 
-              <div className="mt-3 flex justify-end border-t border-gray-800 pt-3">
+              <div className="mt-3 flex items-center justify-between border-t border-gray-800 pt-3">
+                <button
+                  onClick={() => abrirEditar(eq)}
+                  className="text-sm text-gray-500 hover:text-cyan-400"
+                >
+                  Editar
+                </button>
                 {confirmandoId === eq.id ? (
                   <div className="flex items-center gap-3 text-sm">
                     <span className="text-gray-400">Excluir?</span>
@@ -132,9 +150,10 @@ export default function EquipamentosLista() {
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="mb-4 text-lg font-semibold text-gray-100">
-              Novo equipamento
+              {equipamentoEditando ? 'Editar equipamento' : 'Novo equipamento'}
             </h2>
             <EquipamentosForm
+              equipamento={equipamentoEditando}
               onSucesso={() => setFormAberto(false)}
               onCancelar={() => setFormAberto(false)}
             />

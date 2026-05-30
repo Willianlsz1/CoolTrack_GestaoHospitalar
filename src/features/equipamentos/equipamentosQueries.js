@@ -21,6 +21,18 @@ export async function criarEquipamento(equipamento) {
   return data
 }
 
+export async function atualizarEquipamento(id, dados) {
+  const { data, error } = await supabase
+    .from('equipamentos')
+    .update(dados)
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
 export async function excluirEquipamento(id) {
   const { error } = await supabase.from('equipamentos').delete().eq('id', id)
 
