@@ -1,0 +1,5 @@
+dist
+node_modules
+
+# Gerado pelo npm — deixar o Prettier de fora evita conflito a cada install
+package-lock.json
