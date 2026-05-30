@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useCriarManutencao } from './useCriarManutencao'
+import { hojeLocal } from '../../core/data'
 
 const TIPOS = ['preventiva', 'corretiva', 'preditiva']
 
@@ -12,17 +13,13 @@ const fileCls =
 // Limite de tamanho de cada foto (5 MB).
 const MAX_FOTO_BYTES = 5 * 1024 * 1024
 
-// Data de hoje em YYYY-MM-DD no fuso LOCAL (en-CA dá esse formato).
-// toISOString() seria UTC e adiantaria o dia à noite no Brasil (UTC-3).
-const hoje = () => new Date().toLocaleDateString('en-CA')
-
 export default function ManutencaoForm({
   equipamentoId,
   onSucesso,
   onCancelar,
 }) {
   const [tipo, setTipo] = useState('')
-  const [data, setData] = useState(hoje())
+  const [data, setData] = useState(hojeLocal())
   const [tecnico, setTecnico] = useState('')
   const [descricao, setDescricao] = useState('')
   const [pecas, setPecas] = useState('')

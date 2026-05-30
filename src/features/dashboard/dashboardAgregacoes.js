@@ -1,20 +1,9 @@
 // Funções puras de agregação do dashboard. Recebem os dados já buscados
 // (equipamentos e manutenções) e devolvem os números/listas dos widgets.
 // Datas são comparadas como texto 'YYYY-MM-DD' (ordenável sem fuso).
+import { hojeLocal, diasAtras } from '../../core/data'
 
 const DIAS_SEM_MANUTENCAO = 90
-
-// Hoje no fuso LOCAL, formato YYYY-MM-DD (en-CA dá esse formato).
-function hojeLocal() {
-  return new Date().toLocaleDateString('en-CA')
-}
-
-// Data de N dias atrás, YYYY-MM-DD local.
-function diasAtras(n) {
-  const d = new Date()
-  d.setDate(d.getDate() - n)
-  return d.toLocaleDateString('en-CA')
-}
 
 // Mapa equipamento_id -> manutenção mais recente. As manutenções já vêm
 // ordenadas por data desc, então a 1ª de cada id é a mais recente.

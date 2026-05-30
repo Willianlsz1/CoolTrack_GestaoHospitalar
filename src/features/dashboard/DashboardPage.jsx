@@ -63,7 +63,11 @@ export default function DashboardPage() {
   const erro = equipamentos.isError || manutencoes.isError
 
   if (carregando) {
-    return <Pagina>{<p className="text-gray-400">Carregando…</p>}</Pagina>
+    return (
+      <Pagina>
+        <p className="text-gray-400">Carregando…</p>
+      </Pagina>
+    )
   }
   if (erro) {
     return (
