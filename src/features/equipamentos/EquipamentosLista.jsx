@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useEquipamentos } from './useEquipamentos'
+import { useExcluirEquipamento } from './useExcluirEquipamento'
 import EquipamentosForm from './EquipamentosForm'
 
 // Classes Tailwind do badge conforme o status. Função pequena inline;
@@ -19,7 +20,10 @@ function corDoStatus(status) {
 
 export default function EquipamentosLista() {
   const { data: equipamentos, isPending, isError, error } = useEquipamentos()
+  const excluir = useExcluirEquipamento()
   const [formAberto, setFormAberto] = useState(false)
+  // Guarda o id do card que está pedindo confirmação de exclusão.
+  const [confirmandoId, setConfirmandoId] = useState(null)
 
   // O cabeçalho aparece sempre; só o conteúdo abaixo muda por estado.
   return (
@@ -78,6 +82,40 @@ export default function EquipamentosLista() {
               {eq.setor && (
                 <p className="mt-2 text-sm text-gray-500">{eq.setor}</p>
               )}
+
+              <div className="mt-3 flex justify-end border-t border-gray-800 pt-3">
+                {confirmandoId === eq.id ? (
+                  <div className="flex items-center gap-3 text-sm">
+                    <span className="text-gray-400">Excluir?</span>
+                    <button
+                      onClick={() =>
+                        excluir.mutate(eq.id, {
+                          onSuccess: () => setConfirmandoId(null),
+                        })
+                      }
+                      disabled={excluir.isPending}
+                      className="text-red-400 hover:text-red-300 disabled:opacity-50"
+                    >
+                      {excluir.isPending && excluir.variables === eq.id
+                        ? 'Excluindo…'
+                        : 'Confirmar'}
+                    </button>
+                    <button
+                      onClick={() => setConfirmandoId(null)}
+                      className="text-gray-400 hover:text-gray-300"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setConfirmandoId(eq.id)}
+                    className="text-sm text-gray-500 hover:text-red-400"
+                  >
+                    Excluir
+                  </button>
+                )}
+              </div>
             </article>
           ))}
         </div>

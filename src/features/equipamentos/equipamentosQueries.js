@@ -20,3 +20,9 @@ export async function criarEquipamento(equipamento) {
   if (error) throw error
   return data
 }
+
+export async function excluirEquipamento(id) {
+  const { error } = await supabase.from('equipamentos').delete().eq('id', id)
+
+  if (error) throw error
+}
