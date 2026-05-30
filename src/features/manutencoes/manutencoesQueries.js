@@ -37,14 +37,3 @@ export async function contarManutencoes(equipamentoId) {
   if (error) throw error
   return count ?? 0
 }
-
-// Apaga todas as manutenções de um equipamento (passo da cascata, antes
-// de excluir o próprio equipamento).
-export async function excluirManutencoesDoEquipamento(equipamentoId) {
-  const { error } = await supabase
-    .from('manutencoes')
-    .delete()
-    .eq('equipamento_id', equipamentoId)
-
-  if (error) throw error
-}

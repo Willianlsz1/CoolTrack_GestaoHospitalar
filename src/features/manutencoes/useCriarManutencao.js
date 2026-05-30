@@ -1,9 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { criarManutencao } from './manutencoesQueries'
-import {
-  enviarFotoManutencao,
-  removerFotoManutencaoPorUrl,
-} from './manutencoesStorage'
+import { enviarFoto, removerFotoPorUrl } from '../../core/storage'
 
 // Registra uma manutenção. Recebe { fotoAntes, fotoDepois, ...dados }:
 // sobe as fotos presentes antes do insert; se o banco falhar depois do
@@ -19,11 +16,11 @@ export function useCriarManutencao() {
       let foto_depois_url = null
 
       if (fotoAntes) {
-        foto_antes_url = await enviarFotoManutencao(fotoAntes)
+        foto_antes_url = await enviarFoto(fotoAntes)
         enviadas.push(foto_antes_url)
       }
       if (fotoDepois) {
-        foto_depois_url = await enviarFotoManutencao(fotoDepois)
+        foto_depois_url = await enviarFoto(fotoDepois)
         enviadas.push(foto_depois_url)
       }
 
@@ -35,7 +32,7 @@ export function useCriarManutencao() {
         })
       } catch (e) {
         for (const url of enviadas) {
-          await removerFotoManutencaoPorUrl(url).catch(() => {})
+          await removerFotoPorUrl(url).catch(() => {})
         }
         throw e
       }

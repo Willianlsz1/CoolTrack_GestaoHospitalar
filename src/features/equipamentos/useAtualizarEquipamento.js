@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { atualizarEquipamento } from './equipamentosQueries'
-import { enviarFotoEquipamento, removerFotoPorUrl } from './equipamentosStorage'
+import { enviarFoto, removerFotoPorUrl } from '../../core/storage'
 
 // Hook de mutation para EDITAR. Recebe { id, foto, removerFoto,
 // fotoAntiga, ...dados }:
@@ -17,7 +17,7 @@ export function useAtualizarEquipamento() {
       const patch = { ...dados }
       let novaFotoUrl = null
       if (foto) {
-        novaFotoUrl = await enviarFotoEquipamento(foto)
+        novaFotoUrl = await enviarFoto(foto)
         patch.foto_url = novaFotoUrl
       } else if (removerFoto) {
         patch.foto_url = null

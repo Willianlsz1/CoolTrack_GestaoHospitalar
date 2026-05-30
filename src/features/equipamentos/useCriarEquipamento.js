@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { criarEquipamento } from './equipamentosQueries'
-import { enviarFotoEquipamento, removerFotoPorUrl } from './equipamentosStorage'
+import { enviarFoto, removerFotoPorUrl } from '../../core/storage'
 
 // Hook de mutation: (1) se houver foto, sobe a foto e pega a URL;
 // (2) insere o equipamento com essa foto_url. As duas etapas ficam
@@ -14,7 +14,7 @@ export function useCriarEquipamento() {
     mutationFn: async ({ foto, ...dados }) => {
       let foto_url = null
       if (foto) {
-        foto_url = await enviarFotoEquipamento(foto)
+        foto_url = await enviarFoto(foto)
       }
       try {
         return await criarEquipamento({ ...dados, foto_url })

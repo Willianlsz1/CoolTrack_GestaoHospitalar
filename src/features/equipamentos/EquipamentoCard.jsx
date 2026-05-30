@@ -21,7 +21,8 @@ export default function EquipamentoCard({ eq, onEditar }) {
   const excluir = useExcluirEquipamento()
   // Fases do fluxo de exclusão: idle -> confirmando -> escalonado.
   const [fase, setFase] = useState('idle')
-  const [contagem, setContagem] = useState(0)
+  // null = contagem desconhecida (a query falhou); número = total real.
+  const [contagem, setContagem] = useState(null)
   const [erro, setErro] = useState('')
 
   function cancelar() {
@@ -38,7 +39,7 @@ export default function EquipamentoCard({ eq, onEditar }) {
       {
         onError: async (error) => {
           if (error?.code === '23503') {
-            const n = await contarManutencoes(eq.id).catch(() => 0)
+            const n = await contarManutencoes(eq.id).catch(() => null)
             setContagem(n)
             setFase('escalonado')
           } else {
@@ -116,7 +117,8 @@ export default function EquipamentoCard({ eq, onEditar }) {
             </button>
             <button
               onClick={cancelar}
-              className="text-gray-400 hover:text-gray-300"
+              disabled={excluir.isPending}
+              className="text-gray-400 hover:text-gray-300 disabled:opacity-50"
             >
               Cancelar
             </button>
@@ -127,14 +129,18 @@ export default function EquipamentoCard({ eq, onEditar }) {
       {fase === 'escalonado' && (
         <div className="mt-3 rounded border border-red-500/30 bg-red-500/5 p-3 text-sm">
           <p className="text-gray-300">
-            Este equipamento tem {contagem}{' '}
-            {contagem === 1 ? 'manutenção' : 'manutenções'}. Excluir o
-            equipamento e <strong>todo o histórico</strong>?
+            {contagem === null
+              ? 'Este equipamento tem manutenções registradas.'
+              : `Este equipamento tem ${contagem} ${
+                  contagem === 1 ? 'manutenção' : 'manutenções'
+                }.`}{' '}
+            Excluir o equipamento e <strong>todo o histórico</strong>?
           </p>
           <div className="mt-2 flex justify-end gap-3">
             <button
               onClick={cancelar}
-              className="text-gray-400 hover:text-gray-300"
+              disabled={excluir.isPending}
+              className="text-gray-400 hover:text-gray-300 disabled:opacity-50"
             >
               Cancelar
             </button>
