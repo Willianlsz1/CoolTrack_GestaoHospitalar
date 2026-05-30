@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useEquipamentos } from './useEquipamentos'
+import { useExcluirEquipamento } from './useExcluirEquipamento'
 import EquipamentosForm from './EquipamentosForm'
 
 // Classes Tailwind do badge conforme o status. Função pequena inline;
@@ -19,7 +20,22 @@ function corDoStatus(status) {
 
 export default function EquipamentosLista() {
   const { data: equipamentos, isPending, isError, error } = useEquipamentos()
+  const excluir = useExcluirEquipamento()
   const [formAberto, setFormAberto] = useState(false)
+  // O equipamento em edição (ou null = modo criar). Define o modo do form.
+  const [equipamentoEditando, setEquipamentoEditando] = useState(null)
+  // Guarda o id do card que está pedindo confirmação de exclusão.
+  const [confirmandoId, setConfirmandoId] = useState(null)
+
+  function abrirCriar() {
+    setEquipamentoEditando(null)
+    setFormAberto(true)
+  }
+
+  function abrirEditar(eq) {
+    setEquipamentoEditando(eq)
+    setFormAberto(true)
+  }
 
   // O cabeçalho aparece sempre; só o conteúdo abaixo muda por estado.
   return (
@@ -32,7 +48,7 @@ export default function EquipamentosLista() {
           </p>
         </div>
         <button
-          onClick={() => setFormAberto(true)}
+          onClick={abrirCriar}
           className="shrink-0 rounded bg-cyan-500 px-4 py-2 text-sm font-medium text-gray-950 hover:bg-cyan-400"
         >
           + Novo equipamento
@@ -59,6 +75,13 @@ export default function EquipamentosLista() {
               key={eq.id}
               className="rounded-lg border border-gray-800 bg-gray-900 p-4"
             >
+              {eq.foto_url && (
+                <img
+                  src={eq.foto_url}
+                  alt={eq.nome}
+                  className="mb-3 h-32 w-full rounded object-cover"
+                />
+              )}
               <div className="flex items-start justify-between gap-2">
                 <h2 className="font-semibold text-gray-100">{eq.nome}</h2>
                 <span
@@ -71,6 +94,46 @@ export default function EquipamentosLista() {
               {eq.setor && (
                 <p className="mt-2 text-sm text-gray-500">{eq.setor}</p>
               )}
+
+              <div className="mt-3 flex items-center justify-between border-t border-gray-800 pt-3">
+                <button
+                  onClick={() => abrirEditar(eq)}
+                  className="text-sm text-gray-500 hover:text-cyan-400"
+                >
+                  Editar
+                </button>
+                {confirmandoId === eq.id ? (
+                  <div className="flex items-center gap-3 text-sm">
+                    <span className="text-gray-400">Excluir?</span>
+                    <button
+                      onClick={() =>
+                        excluir.mutate(eq.id, {
+                          onSuccess: () => setConfirmandoId(null),
+                        })
+                      }
+                      disabled={excluir.isPending}
+                      className="text-red-400 hover:text-red-300 disabled:opacity-50"
+                    >
+                      {excluir.isPending && excluir.variables === eq.id
+                        ? 'Excluindo…'
+                        : 'Confirmar'}
+                    </button>
+                    <button
+                      onClick={() => setConfirmandoId(null)}
+                      className="text-gray-400 hover:text-gray-300"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setConfirmandoId(eq.id)}
+                    className="text-sm text-gray-500 hover:text-red-400"
+                  >
+                    Excluir
+                  </button>
+                )}
+              </div>
             </article>
           ))}
         </div>
@@ -87,9 +150,10 @@ export default function EquipamentosLista() {
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="mb-4 text-lg font-semibold text-gray-100">
-              Novo equipamento
+              {equipamentoEditando ? 'Editar equipamento' : 'Novo equipamento'}
             </h2>
             <EquipamentosForm
+              equipamento={equipamentoEditando}
               onSucesso={() => setFormAberto(false)}
               onCancelar={() => setFormAberto(false)}
             />

@@ -37,6 +37,16 @@ Fundacional v1.0 define os campos nas seções 3.1 (MVP) e 5.3 (tabelas).
    "Segurança não é fase separada". Será trocado por políticas baseadas em
    usuário autenticado quando entrar o Supabase Auth.
 
+## Addendum — divergência banco × migração (migração 0004)
+
+O banco vivo acabou criado com uma versão antiga do schema (antes do
+alinhamento ao Documento Fundacional): tinha `numero_serie` e
+`temperatura_alvo` e faltavam `serie`, `patrimonio`, `andar`, `sala`,
+`data_garantia`, `foto_url`, `qr_code`. A migração **0004** reconcilia o
+banco com este schema canônico via `alter table` (rename + drop + add
+column if not exists), sem recriar a tabela e preservando os dados.
+É idempotente: num banco novo criado pela 0001, a 0004 vira no-op.
+
 ## Descartado nesta fase
 
 - `temperatura_alvo`: não está no Documento Fundacional. Removido para não
