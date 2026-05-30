@@ -37,10 +37,10 @@ export function useCriarManutencao() {
         throw e
       }
     },
-    onSuccess: (nova) => {
-      queryClient.invalidateQueries({
-        queryKey: ['manutencoes', nova.equipamento_id],
-      })
+    onSuccess: () => {
+      // Invalida toda a família ['manutencoes', ...] — cobre o histórico
+      // do equipamento E o ['manutencoes', 'todas'] do dashboard.
+      queryClient.invalidateQueries({ queryKey: ['manutencoes'] })
     },
   })
 }
