@@ -43,7 +43,7 @@ export default function EquipamentoCard({ eq, onEditar }) {
             setContagem(n)
             setFase('escalonado')
           } else {
-            setErro('Erro ao excluir. Tente novamente.')
+            setErro(`Erro ao excluir: ${error.message}`)
           }
         },
       },
@@ -55,7 +55,7 @@ export default function EquipamentoCard({ eq, onEditar }) {
     setErro('')
     excluir.mutate(
       { id: eq.id, foto_url: eq.foto_url, comManutencoes: true },
-      { onError: () => setErro('Erro ao excluir. Tente novamente.') },
+      { onError: (error) => setErro(`Erro ao excluir: ${error.message}`) },
     )
   }
 

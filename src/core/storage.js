@@ -8,7 +8,9 @@ const BUCKET = 'equipamentos'
 // Sobe um arquivo e devolve a URL pública. Nome com crypto.randomUUID()
 // para nunca sobrescrever outra foto.
 export async function enviarFoto(file) {
-  const extensao = file.name.split('.').pop()
+  // Se o arquivo não tem extensão (ex.: blob de câmera "image"), cai em jpg.
+  const partes = file.name.split('.')
+  const extensao = partes.length > 1 ? partes.pop() : 'jpg'
   const caminho = `${crypto.randomUUID()}.${extensao}`
 
   const { error } = await supabase.storage.from(BUCKET).upload(caminho, file)
