@@ -21,9 +21,10 @@ export function useExcluirEquipamento() {
       }
       await removerFotoPorUrl(foto_url).catch(() => {})
     },
-    onSuccess: (_data, { id }) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['equipamentos'] })
-      queryClient.invalidateQueries({ queryKey: ['manutencoes', id] })
+      // Amplo: cobre o histórico do equipamento e o ['manutencoes', 'todas'].
+      queryClient.invalidateQueries({ queryKey: ['manutencoes'] })
     },
   })
 }
