@@ -51,3 +51,13 @@ export async function excluirEquipamento(id) {
 
   if (error) throw error
 }
+
+// Exclusão em cascata atômica (manutenções + equipamento numa única
+// transação), via a função do banco (migração 0011).
+export async function excluirEquipamentoEmCascata(id) {
+  const { error } = await supabase.rpc('excluir_equipamento_em_cascata', {
+    eq_id: id,
+  })
+
+  if (error) throw error
+}

@@ -1,12 +1,13 @@
-import { supabase } from '../../core/supabase'
+import { supabase } from './supabase'
 
+// Helper único de fotos. Equipamentos e manutenções usam o MESMO bucket
+// público (decisão: sem bucket novo), então a lógica de upload/remoção
+// fica num só lugar.
 const BUCKET = 'equipamentos'
 
-// Sobe um arquivo de foto para o Storage e devolve a URL pública.
-// O nome do arquivo usa crypto.randomUUID() para nunca sobrescrever
-// outra foto. Por ser bucket público, a URL é estável e vai direto
-// no <img src>.
-export async function enviarFotoEquipamento(file) {
+// Sobe um arquivo e devolve a URL pública. Nome com crypto.randomUUID()
+// para nunca sobrescrever outra foto.
+export async function enviarFoto(file) {
   const extensao = file.name.split('.').pop()
   const caminho = `${crypto.randomUUID()}.${extensao}`
 
@@ -17,10 +18,8 @@ export async function enviarFotoEquipamento(file) {
   return data.publicUrl
 }
 
-// Apaga do Storage o arquivo apontado por uma URL pública. Extrai o
-// caminho do que vem depois de "/<BUCKET>/". Best-effort: se algo der
-// errado, lança — quem chama decide engolir (limpeza não pode quebrar
-// a ação principal).
+// Apaga o arquivo apontado por uma URL pública. Quem chama decide engolir
+// o erro (limpeza de órfã é best-effort).
 export async function removerFotoPorUrl(fotoUrl) {
   if (!fotoUrl) return
 

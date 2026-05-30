@@ -1,25 +1,29 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { excluirEquipamento } from './equipamentosQueries'
-import { removerFotoPorUrl } from './equipamentosStorage'
-import { excluirManutencoesDoEquipamento } from '../manutencoes/manutencoesQueries'
+import {
+  excluirEquipamento,
+  excluirEquipamentoEmCascata,
+} from './equipamentosQueries'
+import { removerFotoPorUrl } from '../../core/storage'
 
 // Hook de mutation: recebe { id, foto_url, comManutencoes }. Se
-// comManutencoes, apaga primeiro as manutenções (cascata controlada),
-// depois o equipamento e, best-effort, a foto do Storage (erro de
-// limpeza é engolido). No sucesso, invalida o cache.
+// comManutencoes, usa a função atômica do banco (apaga manutenções +
+// equipamento numa transação); senão, exclui só o equipamento. Depois,
+// best-effort, apaga a foto. No sucesso, invalida a lista e o histórico.
 export function useExcluirEquipamento() {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async ({ id, foto_url, comManutencoes }) => {
       if (comManutencoes) {
-        await excluirManutencoesDoEquipamento(id)
+        await excluirEquipamentoEmCascata(id)
+      } else {
+        await excluirEquipamento(id)
       }
-      await excluirEquipamento(id)
       await removerFotoPorUrl(foto_url).catch(() => {})
     },
-    onSuccess: () => {
+    onSuccess: (_data, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['equipamentos'] })
+      queryClient.invalidateQueries({ queryKey: ['manutencoes', id] })
     },
   })
 }
