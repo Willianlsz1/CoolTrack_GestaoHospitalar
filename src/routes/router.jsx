@@ -2,23 +2,16 @@ import {
   createRootRoute,
   createRoute,
   createRouter,
-  Outlet,
 } from '@tanstack/react-router'
+import AppLayout from '../components/AppLayout.jsx'
 import EquipamentosLista from '../features/equipamentos/EquipamentosLista.jsx'
 import EquipamentoFicha from '../features/equipamentos/EquipamentoFicha.jsx'
 import EquipamentoScanner from '../features/equipamentos/EquipamentoScanner.jsx'
 
-// Rota raiz: o "tronco" da árvore. Seu componente é o layout que envolve
-// TODAS as telas — aqui, o fundo escuro e o container centralizado. O
-// <Outlet /> é o buraco onde a rota filha ativa é renderizada.
+// Rota raiz: o "tronco" da árvore. Seu componente é o AppLayout (casco:
+// cabeçalho + navegação), que envolve TODAS as telas via <Outlet/>.
 const rootRoute = createRootRoute({
-  component: () => (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
-      <div className="mx-auto max-w-5xl p-6">
-        <Outlet />
-      </div>
-    </div>
-  ),
+  component: AppLayout,
 })
 
 // Rota inicial ("/"): a tela de listagem de equipamentos.
