@@ -1,0 +1,14 @@
+import { supabase } from '../../core/supabase'
+
+// Todas as manutenções com o NOME do equipamento via relacionamento
+// (equipamentos(nome)), mais recentes primeiro. É a base das agregações
+// do dashboard (últimas manutenções, atrasadas, etc.).
+export async function buscarTodasManutencoes() {
+  const { data, error } = await supabase
+    .from('manutencoes')
+    .select('*, equipamentos(nome)')
+    .order('data', { ascending: false })
+
+  if (error) throw error
+  return data
+}
