@@ -54,6 +54,7 @@ export default function LoginPage() {
             <input
               id="email"
               type="email"
+              required
               className={inputCls}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -66,6 +67,7 @@ export default function LoginPage() {
             <input
               id="senha"
               type="password"
+              required
               className={inputCls}
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
