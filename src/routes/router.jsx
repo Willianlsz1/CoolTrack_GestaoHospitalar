@@ -5,6 +5,8 @@ import {
   Outlet,
 } from '@tanstack/react-router'
 import EquipamentosLista from '../features/equipamentos/EquipamentosLista.jsx'
+import EquipamentoFicha from '../features/equipamentos/EquipamentoFicha.jsx'
+import EquipamentoScanner from '../features/equipamentos/EquipamentoScanner.jsx'
 
 // Rota raiz: o "tronco" da árvore. Seu componente é o layout que envolve
 // TODAS as telas — aqui, o fundo escuro e o container centralizado. O
@@ -26,9 +28,24 @@ const indexRoute = createRoute({
   component: EquipamentosLista,
 })
 
+// Ficha de um equipamento. O $id é um parâmetro lido da URL
+// (ex.: /equipamentos/abc-123). É o destino que o QR Code vai apontar.
+const fichaRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/equipamentos/$id',
+  component: EquipamentoFicha,
+})
+
+// Leitor de QR pela câmera (entra na ficha lida).
+const escanearRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/escanear',
+  component: EquipamentoScanner,
+})
+
 // A árvore de rotas: a raiz com suas filhas. Cada nova tela vira
 // um createRoute() adicionado aqui.
-const routeTree = rootRoute.addChildren([indexRoute])
+const routeTree = rootRoute.addChildren([indexRoute, fichaRoute, escanearRoute])
 
 // O router em si: junta a árvore e é entregue ao RouterProvider.
 export const router = createRouter({ routeTree })

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import { useEquipamentos } from './useEquipamentos'
 import { useExcluirEquipamento } from './useExcluirEquipamento'
 import EquipamentosForm from './EquipamentosForm'
@@ -47,12 +48,20 @@ export default function EquipamentosLista() {
             Inventário de equipamentos de refrigeração
           </p>
         </div>
-        <button
-          onClick={abrirCriar}
-          className="shrink-0 rounded bg-cyan-500 px-4 py-2 text-sm font-medium text-gray-950 hover:bg-cyan-400"
-        >
-          + Novo equipamento
-        </button>
+        <div className="flex shrink-0 gap-2">
+          <Link
+            to="/escanear"
+            className="rounded border border-cyan-500 px-4 py-2 text-sm font-medium text-cyan-400 hover:bg-cyan-500/10"
+          >
+            Escanear
+          </Link>
+          <button
+            onClick={abrirCriar}
+            className="rounded bg-cyan-500 px-4 py-2 text-sm font-medium text-gray-950 hover:bg-cyan-400"
+          >
+            + Novo equipamento
+          </button>
+        </div>
       </header>
 
       {isPending && <p className="text-gray-400">Carregando equipamentos…</p>}
@@ -96,12 +105,21 @@ export default function EquipamentosLista() {
               )}
 
               <div className="mt-3 flex items-center justify-between border-t border-gray-800 pt-3">
-                <button
-                  onClick={() => abrirEditar(eq)}
-                  className="text-sm text-gray-500 hover:text-cyan-400"
-                >
-                  Editar
-                </button>
+                <div className="flex items-center gap-3">
+                  <Link
+                    to="/equipamentos/$id"
+                    params={{ id: eq.id }}
+                    className="text-sm text-gray-500 hover:text-cyan-400"
+                  >
+                    Ver ficha
+                  </Link>
+                  <button
+                    onClick={() => abrirEditar(eq)}
+                    className="text-sm text-gray-500 hover:text-cyan-400"
+                  >
+                    Editar
+                  </button>
+                </div>
                 {confirmandoId === eq.id ? (
                   <div className="flex items-center gap-3 text-sm">
                     <span className="text-gray-400">Excluir?</span>
