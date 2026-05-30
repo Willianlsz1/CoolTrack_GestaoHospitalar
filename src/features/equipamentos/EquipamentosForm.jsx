@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useCriarEquipamento } from './useCriarEquipamento'
 import { useAtualizarEquipamento } from './useAtualizarEquipamento'
+import { inputCls, labelCls, fileCls } from '../../components/ui'
 
 // Valores espelham os CHECK do banco — o <select> impede valor inválido
 // na origem; o CHECK é a segunda linha de defesa.
@@ -13,10 +14,6 @@ const TIPOS = [
   'outro',
 ]
 const STATUS = ['ativo', 'manutencao', 'inativo']
-
-const inputCls =
-  'w-full rounded border border-gray-700 bg-gray-800 px-3 py-2 text-gray-100'
-const labelCls = 'block text-sm text-gray-300 mb-1'
 
 // Limite de tamanho da foto (5 MB). O accept="image/*" já restringe o tipo.
 const MAX_FOTO_BYTES = 5 * 1024 * 1024
@@ -171,7 +168,7 @@ export default function EquipamentosForm({
           id="foto"
           type="file"
           accept="image/*"
-          className="w-full text-sm text-gray-400 file:mr-3 file:rounded file:border-0 file:bg-gray-700 file:px-3 file:py-1 file:text-gray-100"
+          className={fileCls}
           onChange={(e) => setFoto(e.target.files[0] ?? null)}
         />
         {editando && equipamento.foto_url && (

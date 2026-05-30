@@ -1,14 +1,9 @@
 import { useState } from 'react'
 import { useCriarManutencao } from './useCriarManutencao'
 import { hojeLocal } from '../../core/data'
+import { inputCls, labelCls, fileCls } from '../../components/ui'
 
 const TIPOS = ['preventiva', 'corretiva', 'preditiva']
-
-const inputCls =
-  'w-full rounded border border-gray-700 bg-gray-800 px-3 py-2 text-gray-100'
-const labelCls = 'block text-sm text-gray-300 mb-1'
-const fileCls =
-  'w-full text-sm text-gray-400 file:mr-3 file:rounded file:border-0 file:bg-gray-700 file:px-3 file:py-1 file:text-gray-100'
 
 // Limite de tamanho de cada foto (5 MB).
 const MAX_FOTO_BYTES = 5 * 1024 * 1024

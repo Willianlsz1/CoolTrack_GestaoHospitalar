@@ -4,6 +4,7 @@ import {
   excluirEquipamentoEmCascata,
 } from './equipamentosQueries'
 import { removerFotoPorUrl } from '../../core/storage'
+import { buscarUrlsFotosManutencoes } from '../manutencoes/manutencoesQueries'
 
 // Hook de mutation: recebe { id, foto_url, comManutencoes }. Se
 // comManutencoes, usa a função atômica do banco (apaga manutenções +
@@ -14,12 +15,22 @@ export function useExcluirEquipamento() {
 
   return useMutation({
     mutationFn: async ({ id, foto_url, comManutencoes }) => {
+      // Na cascata, guarda as URLs das fotos de manutenção ANTES de
+      // apagar as linhas — depois removemos os arquivos do Storage.
+      let fotosManutencoes = []
       if (comManutencoes) {
+        fotosManutencoes = await buscarUrlsFotosManutencoes(id)
         await excluirEquipamentoEmCascata(id)
       } else {
         await excluirEquipamento(id)
       }
+
+      // Limpeza best-effort dos arquivos (foto do equipamento + das
+      // manutenções). Erro de Storage não falha a exclusão.
       await removerFotoPorUrl(foto_url).catch(() => {})
+      for (const url of fotosManutencoes) {
+        await removerFotoPorUrl(url).catch(() => {})
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['equipamentos'] })

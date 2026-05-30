@@ -27,6 +27,20 @@ export async function criarManutencao(manutencao) {
   return data
 }
 
+// URLs de fotos (antes/depois) das manutenções de um equipamento —
+// usadas para apagar os arquivos do Storage na exclusão em cascata.
+export async function buscarUrlsFotosManutencoes(equipamentoId) {
+  const { data, error } = await supabase
+    .from('manutencoes')
+    .select('foto_antes_url, foto_depois_url')
+    .eq('equipamento_id', equipamentoId)
+
+  if (error) throw error
+  return data
+    .flatMap((m) => [m.foto_antes_url, m.foto_depois_url])
+    .filter(Boolean)
+}
+
 // Quantas manutenções um equipamento tem (head:true não traz as linhas,
 // só o total) — usado para o aviso de exclusão em cascata.
 export async function contarManutencoes(equipamentoId) {
