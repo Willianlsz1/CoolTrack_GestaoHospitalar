@@ -1,1 +1,24 @@
 @import 'tailwindcss';
+
+/* Impressão: mostra apenas a .etiqueta (QR + dados), escondendo o
+   resto da página. Truque de visibility para não tocar no layout. */
+@media print {
+  /* margin 0 remove os cabeçalhos/rodapés automáticos do navegador
+     (sem margem, ele não tem onde colocá-los). size força retrato. */
+  @page {
+    margin: 0;
+    size: portrait;
+  }
+  body * {
+    visibility: hidden;
+  }
+  .etiqueta,
+  .etiqueta * {
+    visibility: visible;
+  }
+  .etiqueta {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}

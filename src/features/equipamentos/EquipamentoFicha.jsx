@@ -67,13 +67,29 @@ export default function EquipamentoFicha() {
           </dl>
 
           <div className="mt-6 border-t border-gray-800 pt-6">
-            <h2 className="mb-3 text-sm uppercase tracking-wide text-gray-500">
-              QR Code
-            </h2>
-            {/* Fundo branco garante contraste para a leitura. */}
-            <div className="inline-block rounded bg-white p-3">
-              <QRCodeSVG value={urlDaFicha(eq.id)} size={160} level="M" />
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-sm uppercase tracking-wide text-gray-500">
+                QR Code
+              </h2>
+              <button
+                onClick={() => window.print()}
+                className="rounded bg-cyan-500 px-3 py-1 text-sm font-medium text-gray-950 hover:bg-cyan-400"
+              >
+                Imprimir etiqueta
+              </button>
             </div>
+
+            {/* .etiqueta: o que vai impresso. Fundo branco + texto escuro
+                servem na tela e no papel (e o QR precisa de contraste). */}
+            <div className="etiqueta inline-block rounded bg-white p-4 text-center text-gray-900">
+              <QRCodeSVG value={urlDaFicha(eq.id)} size={160} level="M" />
+              <p className="mt-2 font-semibold">{eq.nome}</p>
+              {eq.setor && <p className="text-sm">{eq.setor}</p>}
+              {eq.patrimonio && (
+                <p className="text-sm">Patrimônio: {eq.patrimonio}</p>
+              )}
+            </div>
+
             <p className="mt-2 break-all text-xs text-gray-500">
               {urlDaFicha(eq.id)}
             </p>
