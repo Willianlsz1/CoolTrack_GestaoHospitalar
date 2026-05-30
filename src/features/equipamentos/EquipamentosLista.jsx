@@ -1,32 +1,15 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useEquipamentos } from './useEquipamentos'
-import { useExcluirEquipamento } from './useExcluirEquipamento'
 import EquipamentosForm from './EquipamentosForm'
-
-// Classes Tailwind do badge conforme o status. Função pequena inline;
-// vira componente próprio só se for reusada em outra tela.
-function corDoStatus(status) {
-  switch (status) {
-    case 'ativo':
-      return 'bg-green-500/15 text-green-400'
-    case 'manutencao':
-      return 'bg-yellow-500/15 text-yellow-400'
-    case 'inativo':
-      return 'bg-gray-500/15 text-gray-400'
-    default:
-      return 'bg-gray-500/15 text-gray-400'
-  }
-}
+import EquipamentoCard from './EquipamentoCard'
+import Modal from '../../components/Modal'
 
 export default function EquipamentosLista() {
   const { data: equipamentos, isPending, isError, error } = useEquipamentos()
-  const excluir = useExcluirEquipamento()
   const [formAberto, setFormAberto] = useState(false)
   // O equipamento em edição (ou null = modo criar). Define o modo do form.
   const [equipamentoEditando, setEquipamentoEditando] = useState(null)
-  // Guarda o id do card que está pedindo confirmação de exclusão.
-  const [confirmandoId, setConfirmandoId] = useState(null)
 
   function abrirCriar() {
     setEquipamentoEditando(null)
@@ -38,7 +21,6 @@ export default function EquipamentosLista() {
     setFormAberto(true)
   }
 
-  // O cabeçalho aparece sempre; só o conteúdo abaixo muda por estado.
   return (
     <div>
       <header className="mb-6 flex items-start justify-between gap-4">
@@ -80,104 +62,24 @@ export default function EquipamentosLista() {
       {!isPending && !isError && equipamentos.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {equipamentos.map((eq) => (
-            <article
-              key={eq.id}
-              className="rounded-lg border border-gray-800 bg-gray-900 p-4"
-            >
-              {eq.foto_url && (
-                <img
-                  src={eq.foto_url}
-                  alt={eq.nome}
-                  className="mb-3 h-32 w-full rounded object-cover"
-                />
-              )}
-              <div className="flex items-start justify-between gap-2">
-                <h2 className="font-semibold text-gray-100">{eq.nome}</h2>
-                <span
-                  className={`shrink-0 rounded px-2 py-0.5 text-xs ${corDoStatus(eq.status)}`}
-                >
-                  {eq.status}
-                </span>
-              </div>
-              <p className="mt-1 text-sm text-gray-400">{eq.tipo}</p>
-              {eq.setor && (
-                <p className="mt-2 text-sm text-gray-500">{eq.setor}</p>
-              )}
-
-              <div className="mt-3 flex items-center justify-between border-t border-gray-800 pt-3">
-                <div className="flex items-center gap-3">
-                  <Link
-                    to="/equipamentos/$id"
-                    params={{ id: eq.id }}
-                    className="text-sm text-gray-500 hover:text-cyan-400"
-                  >
-                    Ver ficha
-                  </Link>
-                  <button
-                    onClick={() => abrirEditar(eq)}
-                    className="text-sm text-gray-500 hover:text-cyan-400"
-                  >
-                    Editar
-                  </button>
-                </div>
-                {confirmandoId === eq.id ? (
-                  <div className="flex items-center gap-3 text-sm">
-                    <span className="text-gray-400">Excluir?</span>
-                    <button
-                      onClick={() =>
-                        excluir.mutate(
-                          { id: eq.id, foto_url: eq.foto_url },
-                          { onSuccess: () => setConfirmandoId(null) },
-                        )
-                      }
-                      disabled={excluir.isPending}
-                      className="text-red-400 hover:text-red-300 disabled:opacity-50"
-                    >
-                      {excluir.isPending && excluir.variables?.id === eq.id
-                        ? 'Excluindo…'
-                        : 'Confirmar'}
-                    </button>
-                    <button
-                      onClick={() => setConfirmandoId(null)}
-                      className="text-gray-400 hover:text-gray-300"
-                    >
-                      Cancelar
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => setConfirmandoId(eq.id)}
-                    className="text-sm text-gray-500 hover:text-red-400"
-                  >
-                    Excluir
-                  </button>
-                )}
-              </div>
-            </article>
+            <EquipamentoCard key={eq.id} eq={eq} onEditar={abrirEditar} />
           ))}
         </div>
       )}
 
       {formAberto && (
-        <div
-          className="fixed inset-0 z-10 flex items-center justify-center bg-black/60 p-4"
-          onClick={() => setFormAberto(false)}
+        <Modal
+          titulo={
+            equipamentoEditando ? 'Editar equipamento' : 'Novo equipamento'
+          }
+          onClose={() => setFormAberto(false)}
         >
-          {/* stopPropagation: clicar DENTRO do cartão não fecha o modal */}
-          <div
-            className="w-full max-w-md rounded-lg border border-gray-800 bg-gray-900 p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="mb-4 text-lg font-semibold text-gray-100">
-              {equipamentoEditando ? 'Editar equipamento' : 'Novo equipamento'}
-            </h2>
-            <EquipamentosForm
-              equipamento={equipamentoEditando}
-              onSucesso={() => setFormAberto(false)}
-              onCancelar={() => setFormAberto(false)}
-            />
-          </div>
-        </div>
+          <EquipamentosForm
+            equipamento={equipamentoEditando}
+            onSucesso={() => setFormAberto(false)}
+            onCancelar={() => setFormAberto(false)}
+          />
+        </Modal>
       )}
     </div>
   )
