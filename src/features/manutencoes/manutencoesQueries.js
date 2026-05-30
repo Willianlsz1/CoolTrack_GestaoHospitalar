@@ -8,6 +8,7 @@ export async function buscarManutencoes(equipamentoId) {
     .select('*')
     .eq('equipamento_id', equipamentoId)
     .order('data', { ascending: false })
+    .order('created_at', { ascending: false }) // desempate determinístico
 
   if (error) throw error
   return data
