@@ -21,7 +21,11 @@ const labelCls = 'block text-sm text-gray-300 mb-1'
 // Form reaproveitado nos dois modos:
 // - sem `equipamento`  -> modo CRIAR
 // - com `equipamento`  -> modo EDITAR (pré-preenche e atualiza)
-export default function EquipamentosForm({ equipamento, onSucesso, onCancelar }) {
+export default function EquipamentosForm({
+  equipamento,
+  onSucesso,
+  onCancelar,
+}) {
   const editando = Boolean(equipamento)
 
   // Os estados iniciais vêm do equipamento quando editando. O form é
