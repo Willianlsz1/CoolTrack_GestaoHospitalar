@@ -10,10 +10,13 @@ export async function entrar(email, senha) {
   if (error) throw error
 }
 
-export async function criarConta(email, senha) {
+export async function criarConta(email, senha, nome) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password: senha,
+    // Vai para raw_user_meta_data; o trigger handle_new_user usa para
+    // preencher o nome do perfil.
+    options: { data: { nome } },
   })
   if (error) throw error
   return data

@@ -7,6 +7,7 @@ import { inputCls, labelCls } from '../../components/ui'
 // aparece sozinho — esta tela some.
 export default function LoginPage() {
   const [criando, setCriando] = useState(false)
+  const [nome, setNome] = useState('')
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [erro, setErro] = useState('')
@@ -20,7 +21,7 @@ export default function LoginPage() {
     setEnviando(true)
     try {
       if (criando) {
-        await criarConta(email, senha)
+        await criarConta(email, senha, nome)
         // Se a confirmação por e-mail estiver ligada, não há sessão ainda.
         setMensagem(
           'Conta criada. Se a confirmação por e-mail estiver ativa, confirme antes de entrar.',
@@ -47,6 +48,21 @@ export default function LoginPage() {
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {criando && (
+            <div>
+              <label className={labelCls} htmlFor="nome">
+                Nome
+              </label>
+              <input
+                id="nome"
+                type="text"
+                required
+                className={inputCls}
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+              />
+            </div>
+          )}
           <div>
             <label className={labelCls} htmlFor="email">
               E-mail

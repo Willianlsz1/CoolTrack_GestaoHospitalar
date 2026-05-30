@@ -1,13 +1,15 @@
+import { useState } from 'react'
 import { Link, Outlet } from '@tanstack/react-router'
 import { useSessao } from '../features/auth/useSessao'
 import { sair } from '../features/auth/authApi'
 import LoginPage from '../features/auth/LoginPage'
+import PerfilModal from '../features/perfil/PerfilModal'
 
 // Casco do app + PORTEIRO: enquanto busca a sessão, mostra "Carregando";
-// sem sessão, mostra a tela de login; logado, mostra o app com o botão
-// Sair. Assim o app inteiro fica protegido num lugar só (não rota a rota).
+// sem sessão, mostra a tela de login; logado, mostra o app com Perfil/Sair.
 export default function AppLayout() {
   const { sessao, carregando } = useSessao()
+  const [perfilAberto, setPerfilAberto] = useState(false)
 
   if (carregando) {
     return (
@@ -50,6 +52,12 @@ export default function AppLayout() {
               Dashboard
             </Link>
             <button
+              onClick={() => setPerfilAberto(true)}
+              className="text-gray-400 hover:text-gray-100"
+            >
+              Perfil
+            </button>
+            <button
               onClick={() => sair()}
               className="text-gray-400 hover:text-gray-100"
             >
@@ -62,6 +70,8 @@ export default function AppLayout() {
       <main className="mx-auto max-w-5xl p-6">
         <Outlet />
       </main>
+
+      {perfilAberto && <PerfilModal onClose={() => setPerfilAberto(false)} />}
     </div>
   )
 }
