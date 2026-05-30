@@ -1,5 +1,5 @@
 import { useManutencoes } from '../manutencoes/useManutencoes'
-import { intervaloMedioDias, proximaSugerida } from './previsao'
+import { preverManutencao } from './previsao'
 
 // Sugestão estatística na ficha. Reusa o cache do histórico (mesma
 // queryKey ['manutencoes', id]) — não faz busca extra. Fica discreta
@@ -13,8 +13,7 @@ export default function SugestaoManutencao({ equipamentoId }) {
 
   if (isPending || isError) return null
 
-  const intervalo = intervaloMedioDias(manutencoes)
-  const proxima = proximaSugerida(manutencoes)
+  const { intervalo, proxima } = preverManutencao(manutencoes)
 
   return (
     <section className="mt-6 border-t border-gray-800 pt-6">
