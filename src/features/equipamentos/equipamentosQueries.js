@@ -11,11 +11,13 @@ export async function buscarEquipamentos() {
 }
 
 export async function buscarEquipamentoPorId(id) {
+  // maybeSingle: retorna null (sem erro) quando não encontra, em vez de
+  // lançar como o single() faria. Assim "não existe" != "deu erro".
   const { data, error } = await supabase
     .from('equipamentos')
     .select('*')
     .eq('id', id)
-    .single()
+    .maybeSingle()
 
   if (error) throw error
   return data
