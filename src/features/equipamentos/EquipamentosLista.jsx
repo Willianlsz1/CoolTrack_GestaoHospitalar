@@ -48,12 +48,20 @@ export default function EquipamentosLista() {
             Inventário de equipamentos de refrigeração
           </p>
         </div>
-        <button
-          onClick={abrirCriar}
-          className="shrink-0 rounded bg-cyan-500 px-4 py-2 text-sm font-medium text-gray-950 hover:bg-cyan-400"
-        >
-          + Novo equipamento
-        </button>
+        <div className="flex shrink-0 gap-2">
+          <Link
+            to="/escanear"
+            className="rounded border border-cyan-500 px-4 py-2 text-sm font-medium text-cyan-400 hover:bg-cyan-500/10"
+          >
+            Escanear
+          </Link>
+          <button
+            onClick={abrirCriar}
+            className="rounded bg-cyan-500 px-4 py-2 text-sm font-medium text-gray-950 hover:bg-cyan-400"
+          >
+            + Novo equipamento
+          </button>
+        </div>
       </header>
 
       {isPending && <p className="text-gray-400">Carregando equipamentos…</p>}
