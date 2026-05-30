@@ -1,0 +1,4 @@
+# Normaliza fim de linha: o repositório guarda sempre LF, e o working
+# tree também usa LF (evita o aviso "LF will be replaced by CRLF" no
+# Windows). Padrão para projetos web/Node.
+* text=auto eol=lf
