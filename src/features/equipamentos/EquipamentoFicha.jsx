@@ -1,5 +1,14 @@
 import { Link, useParams } from '@tanstack/react-router'
+import { QRCodeSVG } from 'qrcode.react'
 import { useEquipamento } from './useEquipamento'
+
+// URL absoluta da ficha — é o que o QR Code codifica. Em produção,
+// VITE_APP_BASE_URL aponta pro domínio publicado (para o QR funcionar
+// no celular); sem ela, cai na origem atual.
+function urlDaFicha(id) {
+  const base = import.meta.env.VITE_APP_BASE_URL || window.location.origin
+  return `${base}/equipamentos/${id}`
+}
 
 // Um campo da ficha: rótulo + valor (ou "—" quando vazio).
 function Campo({ rotulo, valor }) {
@@ -56,6 +65,19 @@ export default function EquipamentoFicha() {
             <Campo rotulo="Instalação" valor={eq.data_instalacao} />
             <Campo rotulo="Garantia até" valor={eq.data_garantia} />
           </dl>
+
+          <div className="mt-6 border-t border-gray-800 pt-6">
+            <h2 className="mb-3 text-sm uppercase tracking-wide text-gray-500">
+              QR Code
+            </h2>
+            {/* Fundo branco garante contraste para a leitura. */}
+            <div className="inline-block rounded bg-white p-3">
+              <QRCodeSVG value={urlDaFicha(eq.id)} size={160} level="M" />
+            </div>
+            <p className="mt-2 break-all text-xs text-gray-500">
+              {urlDaFicha(eq.id)}
+            </p>
+          </div>
         </article>
       )}
     </div>
