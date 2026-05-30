@@ -25,6 +25,13 @@ export default function AppLayout() {
             >
               Equipamentos
             </Link>
+            <Link
+              to="/dashboard"
+              activeProps={{ className: 'text-cyan-400' }}
+              inactiveProps={{ className: 'text-gray-400 hover:text-gray-100' }}
+            >
+              Dashboard
+            </Link>
           </nav>
         </div>
       </header>
