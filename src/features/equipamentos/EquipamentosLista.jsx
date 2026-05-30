@@ -59,6 +59,13 @@ export default function EquipamentosLista() {
               key={eq.id}
               className="rounded-lg border border-gray-800 bg-gray-900 p-4"
             >
+              {eq.foto_url && (
+                <img
+                  src={eq.foto_url}
+                  alt={eq.nome}
+                  className="mb-3 h-32 w-full rounded object-cover"
+                />
+              )}
               <div className="flex items-start justify-between gap-2">
                 <h2 className="font-semibold text-gray-100">{eq.nome}</h2>
                 <span

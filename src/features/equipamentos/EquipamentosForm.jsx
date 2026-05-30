@@ -22,6 +22,7 @@ export default function EquipamentosForm({ onSucesso, onCancelar }) {
   const [tipo, setTipo] = useState('')
   const [status, setStatus] = useState('ativo')
   const [setor, setSetor] = useState('')
+  const [foto, setFoto] = useState(null)
   const [erroValidacao, setErroValidacao] = useState('')
 
   const criar = useCriarEquipamento()
@@ -47,6 +48,8 @@ export default function EquipamentosForm({ onSucesso, onCancelar }) {
         status,
         // Campo opcional: vazio vira null em vez de string vazia.
         setor: setor.trim() === '' ? null : setor.trim(),
+        // File ou null; o hook sobe a foto antes de inserir.
+        foto,
       },
       { onSuccess: onSucesso },
     )
@@ -112,6 +115,19 @@ export default function EquipamentosForm({ onSucesso, onCancelar }) {
           className={inputCls}
           value={setor}
           onChange={(e) => setSetor(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label className={labelCls} htmlFor="foto">
+          Foto
+        </label>
+        <input
+          id="foto"
+          type="file"
+          accept="image/*"
+          className="w-full text-sm text-gray-400 file:mr-3 file:rounded file:border-0 file:bg-gray-700 file:px-3 file:py-1 file:text-gray-100"
+          onChange={(e) => setFoto(e.target.files[0] ?? null)}
         />
       </div>
 
