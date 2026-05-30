@@ -15,18 +15,25 @@ export function useAtualizarEquipamento() {
   return useMutation({
     mutationFn: async ({ id, foto, removerFoto, fotoAntiga, ...dados }) => {
       const patch = { ...dados }
-      let fotoMudou = false
+      let novaFotoUrl = null
       if (foto) {
-        patch.foto_url = await enviarFotoEquipamento(foto)
-        fotoMudou = true
+        novaFotoUrl = await enviarFotoEquipamento(foto)
+        patch.foto_url = novaFotoUrl
       } else if (removerFoto) {
         patch.foto_url = null
-        fotoMudou = true
       }
 
-      const atualizado = await atualizarEquipamento(id, patch)
+      let atualizado
+      try {
+        atualizado = await atualizarEquipamento(id, patch)
+      } catch (e) {
+        // Update falhou: remove a foto nova recém-enviada (a antiga fica).
+        if (novaFotoUrl) await removerFotoPorUrl(novaFotoUrl).catch(() => {})
+        throw e
+      }
 
-      if (fotoMudou && fotoAntiga) {
+      // Sucesso: se a foto mudou (troca ou remoção), apaga a antiga.
+      if ((foto || removerFoto) && fotoAntiga) {
         await removerFotoPorUrl(fotoAntiga).catch(() => {})
       }
       return atualizado
