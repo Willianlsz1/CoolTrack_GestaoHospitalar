@@ -10,6 +10,17 @@ export async function buscarEquipamentos() {
   return data
 }
 
+export async function buscarEquipamentoPorId(id) {
+  const { data, error } = await supabase
+    .from('equipamentos')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (error) throw error
+  return data
+}
+
 export async function criarEquipamento(equipamento) {
   const { data, error } = await supabase
     .from('equipamentos')
