@@ -5,6 +5,7 @@ import ManutencaoForm from './ManutencaoForm'
 import Modal from '../../components/Modal'
 import { Button } from '../../components/Button'
 import { TipoManutencaoBadge } from '../../components/TipoManutencaoBadge'
+import { formatarData } from '../../core/data'
 
 export default function ManutencoesHistorico({ equipamentoId }) {
   const {
@@ -44,7 +45,9 @@ export default function ManutencoesHistorico({ equipamentoId }) {
           {manutencoes.map((m) => (
             <li key={m.id} className="ct-card">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-sm text-[var(--fg)]">{m.data}</span>
+                <span className="text-sm text-[var(--fg)]">
+                  {formatarData(m.data)}
+                </span>
                 <TipoManutencaoBadge tipo={m.tipo} />
               </div>
               {(m.perfis?.nome || m.tecnico) && (
@@ -58,7 +61,7 @@ export default function ManutencoesHistorico({ equipamentoId }) {
               {m.pecas && <p className="t-caption mt-2">Peças: {m.pecas}</p>}
               {m.proxima_manutencao && (
                 <p className="t-caption mt-2">
-                  Próxima: {m.proxima_manutencao}
+                  Próxima: {formatarData(m.proxima_manutencao)}
                 </p>
               )}
               {(m.foto_antes_url || m.foto_depois_url) && (

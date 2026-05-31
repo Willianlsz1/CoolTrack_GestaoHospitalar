@@ -1,5 +1,6 @@
 import { useManutencoes } from '../manutencoes/useManutencoes'
 import { preverManutencao } from './previsao'
+import { formatarData } from '../../core/data'
 
 // Sugestão estatística na ficha. Reusa o cache do histórico (mesma
 // queryKey ['manutencoes', id]) — não faz busca extra. Fica discreta
@@ -33,7 +34,7 @@ export default function SugestaoManutencao({ equipamentoId }) {
           </p>
           <p className="t-secondary mt-1">
             Próxima preventiva sugerida:{' '}
-            <span className="text-[var(--link)]">{proxima}</span>
+            <span className="text-[var(--link)]">{formatarData(proxima)}</span>
           </p>
         </div>
       )}

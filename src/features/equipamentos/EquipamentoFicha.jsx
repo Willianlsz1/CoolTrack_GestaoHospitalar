@@ -3,6 +3,7 @@ import { ArrowLeft, Printer } from 'lucide-react'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEquipamento } from './useEquipamento'
 import { TIPO_LABELS } from './rotulos'
+import { formatarData } from '../../core/data'
 import { IconeTipo } from './iconesTipo'
 import { StatusBadge } from '../../components/StatusBadge'
 import { Button } from '../../components/Button'
@@ -81,8 +82,14 @@ export default function EquipamentoFicha() {
             <Campo rotulo="Patrimônio" valor={eq.patrimonio} />
             <Campo rotulo="Andar" valor={eq.andar} />
             <Campo rotulo="Sala" valor={eq.sala} />
-            <Campo rotulo="Instalação" valor={eq.data_instalacao} />
-            <Campo rotulo="Garantia até" valor={eq.data_garantia} />
+            <Campo
+              rotulo="Instalação"
+              valor={formatarData(eq.data_instalacao)}
+            />
+            <Campo
+              rotulo="Garantia até"
+              valor={formatarData(eq.data_garantia)}
+            />
           </dl>
 
           <section className="mt-6 border-t border-[var(--border)] pt-6">

@@ -24,3 +24,11 @@ export function formatarDiaMes(dataStr) {
   if (!dataStr) return '—'
   return `${dataStr.slice(8, 10)}/${dataStr.slice(5, 7)}`
 }
+
+// 'YYYY-MM-DD' -> 'DD/MM/AAAA' (formato brasileiro, data cheia na UI).
+// O banco guarda em ISO (bom para ordenar/comparar); aqui só exibimos.
+export function formatarData(dataStr) {
+  if (!dataStr) return '—'
+  const [ano, mes, dia] = dataStr.slice(0, 10).split('-')
+  return `${dia}/${mes}/${ano}`
+}
