@@ -1,23 +1,7 @@
-import {
-  Refrigerator,
-  Snowflake,
-  Container,
-  AirVent,
-  Fan,
-  Box,
-} from 'lucide-react'
+import { IconeTipo } from './iconesTipo'
 
 // Miniatura 40x40 da linha: a foto do equipamento, ou — quando não há —
 // um ícone do tipo (altura de linha sempre igual).
-const TIPO_ICON = {
-  geladeira: Refrigerator,
-  freezer: Snowflake,
-  camara_fria: Container,
-  ar_condicionado: AirVent,
-  climatizador: Fan,
-  outro: Box,
-}
-
 const caixa = {
   width: 40,
   height: 40,
@@ -36,7 +20,6 @@ export function MiniaturaEquipamento({ eq }) {
     )
   }
 
-  const Icone = TIPO_ICON[eq.tipo] ?? Box
   return (
     <div
       style={{
@@ -48,7 +31,7 @@ export function MiniaturaEquipamento({ eq }) {
         color: 'var(--fg-3)',
       }}
     >
-      <Icone size={20} strokeWidth={1.5} />
+      <IconeTipo tipo={eq.tipo} size={20} strokeWidth={1.5} />
     </div>
   )
 }
