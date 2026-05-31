@@ -5,7 +5,7 @@ import { supabase } from '../../core/supabase'
 export async function buscarManutencoes(equipamentoId) {
   const { data, error } = await supabase
     .from('manutencoes')
-    .select('*')
+    .select('*, perfis(nome)')
     .eq('equipamento_id', equipamentoId)
     .order('data', { ascending: false })
     .order('created_at', { ascending: false }) // desempate determinístico

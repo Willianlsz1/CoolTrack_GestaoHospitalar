@@ -63,9 +63,9 @@ export default function ManutencoesHistorico({ equipamentoId }) {
                   {m.tipo}
                 </span>
               </div>
-              {m.tecnico && (
+              {(m.perfis?.nome || m.tecnico) && (
                 <p className="mt-1 text-sm text-gray-400">
-                  Técnico: {m.tecnico}
+                  Técnico: {m.perfis?.nome ?? m.tecnico}
                 </p>
               )}
               {m.descricao && (
