@@ -5,6 +5,7 @@ import ManutencaoForm from './ManutencaoForm'
 import Modal from '../../components/Modal'
 import { Button } from '../../components/Button'
 import { TipoManutencaoBadge } from '../../components/TipoManutencaoBadge'
+import { AprovacaoBadge } from '../../components/AprovacaoBadge'
 import { formatarData } from '../../core/data'
 
 export default function ManutencoesHistorico({ equipamentoId }) {
@@ -48,11 +49,28 @@ export default function ManutencoesHistorico({ equipamentoId }) {
                 <span className="text-sm text-[var(--fg)]">
                   {formatarData(m.data)}
                 </span>
-                <TipoManutencaoBadge tipo={m.tipo} />
+                <div className="flex items-center gap-1.5">
+                  <AprovacaoBadge status={m.aprovacao_status} />
+                  <TipoManutencaoBadge tipo={m.tipo} />
+                </div>
               </div>
               {(m.perfis?.nome || m.tecnico) && (
                 <p className="t-secondary mt-1">
                   Técnico: {m.perfis?.nome ?? m.tecnico}
+                </p>
+              )}
+              {m.aprovacao_status === 'aprovado' && (
+                <p className="t-caption mt-1" style={{ color: 'var(--ok)' }}>
+                  Aprovado por {m.aprovador?.nome ?? '—'}
+                  {m.aprovado_em && ` · ${formatarData(m.aprovado_em)}`}
+                </p>
+              )}
+              {m.aprovacao_status === 'reprovado' && m.aprovacao_motivo && (
+                <p
+                  className="mt-1 text-[14px]"
+                  style={{ color: 'var(--danger)' }}
+                >
+                  Reprovado: {m.aprovacao_motivo}
                 </p>
               )}
               {m.descricao && (

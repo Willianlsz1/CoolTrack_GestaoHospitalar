@@ -37,6 +37,37 @@ describe('ultimaPreventivaPorEquipamento', () => {
     ])
     expect(mapa.has('e1')).toBe(false)
   })
+  it('ignora preventiva REPROVADA, caindo na última válida', () => {
+    const mans = [
+      {
+        equipamento_id: 'e1',
+        tipo: 'preventiva',
+        data: '2026-05-10',
+        aprovacao_status: 'reprovado',
+      },
+      {
+        equipamento_id: 'e1',
+        tipo: 'preventiva',
+        data: '2026-04-10',
+        aprovacao_status: 'aprovado',
+      },
+    ]
+    const mapa = ultimaPreventivaPorEquipamento(mans)
+    expect(mapa.get('e1').data).toBe('2026-04-10')
+  })
+  it('pendente e aprovada contam (só reprovada não)', () => {
+    const mapa = ultimaPreventivaPorEquipamento([
+      { equipamento_id: 'e1', tipo: 'preventiva', data: '2026-05-10' }, // sem status
+      {
+        equipamento_id: 'e2',
+        tipo: 'preventiva',
+        data: '2026-05-01',
+        aprovacao_status: 'pendente',
+      },
+    ])
+    expect(mapa.get('e1').data).toBe('2026-05-10')
+    expect(mapa.get('e2').data).toBe('2026-05-01')
+  })
 })
 
 describe('classificarChecklistMensal', () => {

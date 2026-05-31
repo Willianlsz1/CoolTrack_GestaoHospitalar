@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { MapPin, Plus } from 'lucide-react'
-import { useEhAdmin } from '../perfil/useEhAdmin'
+import { SomenteAdmin } from '../../components/SomenteAdmin'
 import { useSetores, useExcluirSetor } from './useSetores'
 import { useEquipamentos } from '../equipamentos/useEquipamentos'
 import { useTodasManutencoes } from '../dashboard/useTodasManutencoes'
@@ -14,22 +14,11 @@ import SetorForm from './SetorForm'
 // Gestão de setores (só admin). A trava real é o RLS do banco (escrita
 // admin-only); a guarda aqui é UX/defesa.
 export default function SetoresPage() {
-  const { ehAdmin, carregando } = useEhAdmin()
-
-  if (carregando) return <p className="t-secondary">Carregando…</p>
-
-  if (!ehAdmin) {
-    return (
-      <div>
-        <h1>Setores</h1>
-        <p className="t-secondary mt-2">
-          Acesso restrito — apenas administradores podem gerenciar setores.
-        </p>
-      </div>
-    )
-  }
-
-  return <GestaoSetores />
+  return (
+    <SomenteAdmin titulo="Setores">
+      <GestaoSetores />
+    </SomenteAdmin>
+  )
 }
 
 function GestaoSetores() {

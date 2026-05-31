@@ -14,6 +14,7 @@ import RelatorioPmocPage from '../features/relatorio/RelatorioPmocPage.jsx'
 import ModelosChecklistPage from '../features/checklists/ModelosChecklistPage.jsx'
 import RondaPage from '../features/ronda/RondaPage.jsx'
 import ConfigPmocPage from '../features/config/ConfigPmocPage.jsx'
+import AprovacoesPage from '../features/aprovacoes/AprovacoesPage.jsx'
 
 // Rota raiz: o "tronco" da árvore. Seu componente é o AppLayout (casco:
 // cabeçalho + navegação), que envolve TODAS as telas via <Outlet/>.
@@ -101,6 +102,13 @@ const configPmocRoute = createRoute({
   component: ConfigPmocPage,
 })
 
+// Fila de aprovação de serviços (só admin — a página e o RLS checam).
+const aprovacoesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/aprovacoes',
+  component: AprovacoesPage,
+})
+
 // A árvore de rotas: a raiz com suas filhas. Cada nova tela vira
 // um createRoute() adicionado aqui.
 const routeTree = rootRoute.addChildren([
@@ -114,6 +122,7 @@ const routeTree = rootRoute.addChildren([
   checklistsRoute,
   rondaRoute,
   configPmocRoute,
+  aprovacoesRoute,
 ])
 
 // O router em si: junta a árvore e é entregue ao RouterProvider.

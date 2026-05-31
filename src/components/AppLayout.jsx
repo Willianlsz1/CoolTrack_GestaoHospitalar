@@ -7,6 +7,7 @@ import {
   Route,
   FileText,
   ListChecks,
+  ClipboardCheck,
   MapPin,
   UserPlus,
   User,
@@ -20,74 +21,44 @@ import { sair } from '../features/auth/authApi'
 import LoginPage from '../features/auth/LoginPage'
 import PerfilModal from '../features/perfil/PerfilModal'
 
+// Itens de navegação (ordem do menu). adminOnly esconde de quem não é admin;
+// exact marca o link da raiz (só ativo em "/"). A trava real é sempre o RLS.
+const ITENS_NAV = [
+  { to: '/', label: 'Equipamentos', icon: Boxes, exact: true },
+  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/ronda', label: 'Ronda', icon: Route },
+  { to: '/relatorio', label: 'Relatório', icon: FileText },
+  {
+    to: '/aprovacoes',
+    label: 'Aprovações',
+    icon: ClipboardCheck,
+    adminOnly: true,
+  },
+  { to: '/checklists', label: 'Checklists', icon: ListChecks, adminOnly: true },
+  { to: '/setores', label: 'Setores', icon: MapPin, adminOnly: true },
+  { to: '/usuarios', label: 'Usuários', icon: UserPlus, adminOnly: true },
+]
+
 // Itens da navegação, reusados no desktop e no menu mobile. aoNavegar
 // fecha o menu mobile ao clicar num item.
 function ItensNav({ aoAbrirPerfil, aoNavegar, ehAdmin }) {
   return (
     <>
-      <Link
-        to="/"
-        activeOptions={{ exact: true }}
-        className="ct-nav"
-        activeProps={{ className: 'is-active' }}
-        onClick={aoNavegar}
-      >
-        <Boxes size={16} /> Equipamentos
-      </Link>
-      <Link
-        to="/dashboard"
-        className="ct-nav"
-        activeProps={{ className: 'is-active' }}
-        onClick={aoNavegar}
-      >
-        <LayoutDashboard size={16} /> Dashboard
-      </Link>
-      <Link
-        to="/ronda"
-        className="ct-nav"
-        activeProps={{ className: 'is-active' }}
-        onClick={aoNavegar}
-      >
-        <Route size={16} /> Ronda
-      </Link>
-      <Link
-        to="/relatorio"
-        className="ct-nav"
-        activeProps={{ className: 'is-active' }}
-        onClick={aoNavegar}
-      >
-        <FileText size={16} /> Relatório
-      </Link>
-      {ehAdmin && (
-        <Link
-          to="/checklists"
-          className="ct-nav"
-          activeProps={{ className: 'is-active' }}
-          onClick={aoNavegar}
-        >
-          <ListChecks size={16} /> Checklists
-        </Link>
-      )}
-      {ehAdmin && (
-        <Link
-          to="/setores"
-          className="ct-nav"
-          activeProps={{ className: 'is-active' }}
-          onClick={aoNavegar}
-        >
-          <MapPin size={16} /> Setores
-        </Link>
-      )}
-      {ehAdmin && (
-        <Link
-          to="/usuarios"
-          className="ct-nav"
-          activeProps={{ className: 'is-active' }}
-          onClick={aoNavegar}
-        >
-          <UserPlus size={16} /> Usuários
-        </Link>
-      )}
+      {ITENS_NAV.filter((i) => !i.adminOnly || ehAdmin).map((item) => {
+        const Icone = item.icon
+        return (
+          <Link
+            key={item.to}
+            to={item.to}
+            activeOptions={item.exact ? { exact: true } : undefined}
+            className="ct-nav"
+            activeProps={{ className: 'is-active' }}
+            onClick={aoNavegar}
+          >
+            <Icone size={16} /> {item.label}
+          </Link>
+        )
+      })}
       <button
         type="button"
         onClick={() => {
