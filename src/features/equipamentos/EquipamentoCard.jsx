@@ -17,7 +17,7 @@ function corDoStatus(status) {
   }
 }
 
-export default function EquipamentoCard({ eq, onEditar }) {
+export default function EquipamentoCard({ eq, onEditar, podeExcluir }) {
   const excluir = useExcluirEquipamento()
   // Fases do fluxo de exclusão: idle -> confirmando -> escalonado.
   const [fase, setFase] = useState('idle')
@@ -96,7 +96,8 @@ export default function EquipamentoCard({ eq, onEditar }) {
           </button>
         </div>
 
-        {fase === 'idle' && (
+        {/* Excluir só aparece para admin (a RLS é a tranca de verdade). */}
+        {podeExcluir && fase === 'idle' && (
           <button
             onClick={() => setFase('confirmando')}
             className="text-sm text-gray-500 hover:text-red-400"
@@ -105,7 +106,7 @@ export default function EquipamentoCard({ eq, onEditar }) {
           </button>
         )}
 
-        {fase === 'confirmando' && (
+        {podeExcluir && fase === 'confirmando' && (
           <div className="flex items-center gap-3 text-sm">
             <span className="text-gray-400">Excluir?</span>
             <button
