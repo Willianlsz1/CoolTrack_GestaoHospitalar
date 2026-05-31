@@ -13,16 +13,51 @@
     margin: 0;
     size: portrait;
   }
-  body * {
+
+  /* Etiqueta (padrão): só quando NÃO está imprimindo o relatório. */
+  body:not(.imprimir-relatorio) * {
     visibility: hidden;
   }
-  .etiqueta,
-  .etiqueta * {
+  body:not(.imprimir-relatorio) .etiqueta,
+  body:not(.imprimir-relatorio) .etiqueta * {
     visibility: visible;
   }
-  .etiqueta {
+  body:not(.imprimir-relatorio) .etiqueta {
     position: absolute;
     left: 0;
     top: 0;
+  }
+
+  /* Relatório PMOC: tema claro, tabela com bordas (a tela é escura, mas o
+     papel precisa ser branco com texto preto). */
+  body.imprimir-relatorio {
+    background: #fff;
+  }
+  body.imprimir-relatorio * {
+    visibility: hidden;
+  }
+  body.imprimir-relatorio .relatorio-impressao,
+  body.imprimir-relatorio .relatorio-impressao * {
+    visibility: visible;
+    color: #000 !important;
+  }
+  body.imprimir-relatorio .relatorio-impressao {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 16px;
+    background: #fff;
+  }
+  body.imprimir-relatorio .relatorio-impressao table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  body.imprimir-relatorio .relatorio-impressao th,
+  body.imprimir-relatorio .relatorio-impressao td {
+    border: 1px solid #000;
+    padding: 4px 6px;
+    font-size: 10px;
+    text-align: left;
   }
 }
