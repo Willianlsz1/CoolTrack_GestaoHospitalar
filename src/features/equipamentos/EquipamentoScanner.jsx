@@ -87,14 +87,14 @@ export default function EquipamentoScanner() {
     <div>
       <Link
         to="/"
-        className="ct-link inline-flex items-center gap-1 text-[13px]"
+        className="ct-link inline-flex items-center gap-1 text-[14px]"
       >
         <ArrowLeft size={14} /> Voltar
       </Link>
       <h1 className="mt-2">Escanear QR</h1>
 
       {erro && (
-        <p className="mt-4 text-[13px]" style={{ color: 'var(--danger)' }}>
+        <p className="mt-4 text-[14px]" style={{ color: 'var(--danger)' }}>
           {erro}
         </p>
       )}

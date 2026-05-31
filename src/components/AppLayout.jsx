@@ -129,10 +129,10 @@ export default function AppLayout() {
   return (
     <div className="min-h-screen bg-[var(--bg)]">
       <header className="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--surface)]">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-3">
           <Link
             to="/"
-            className="flex items-center gap-2 text-[18px] font-medium text-[var(--fg)]"
+            className="flex items-center gap-2 text-[19px] font-medium text-[var(--fg)]"
           >
             <Snowflake size={20} style={{ color: 'var(--link)' }} />
             <span>CoolTrack</span>
@@ -170,7 +170,7 @@ export default function AppLayout() {
         )}
       </header>
 
-      <main className="mx-auto max-w-5xl p-6">
+      <main className="mx-auto max-w-[1440px] p-6">
         <Outlet />
       </main>
 

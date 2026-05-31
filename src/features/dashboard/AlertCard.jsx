@@ -30,7 +30,7 @@ export function AlertCard({
         <div className="flex items-center gap-[10px]">
           <Icone size={18} style={{ color: cor }} />
           <div>
-            <h2 className="text-[16px] font-medium">{titulo}</h2>
+            <h2 className="text-[17px] font-medium">{titulo}</h2>
             <div className="t-caption mt-0.5">{hint}</div>
           </div>
         </div>
@@ -61,11 +61,11 @@ export function AlertCard({
                   className="flex-none text-[var(--fg-3)]"
                 />
                 <div className="min-w-0">
-                  <div className="text-[14px] text-[var(--fg)]">{eq.nome}</div>
+                  <div className="text-[15px] text-[var(--fg)]">{eq.nome}</div>
                   <div className="t-caption">{localizacao(eq)}</div>
                 </div>
                 <span
-                  className="ml-auto whitespace-nowrap text-[13px]"
+                  className="ml-auto whitespace-nowrap text-[14px]"
                   style={{ color: cor }}
                 >
                   {dias} {dias === 1 ? 'dia' : 'dias'}
@@ -85,7 +85,7 @@ export function AlertCard({
           {/* TODO: levar a uma lista filtrada por este alerta. */}
           <Link
             to="/"
-            className="inline-flex items-center gap-[5px] text-[13px] text-[var(--link)]"
+            className="inline-flex items-center gap-[5px] text-[14px] text-[var(--link)]"
           >
             Ver todos os {total} equipamentos <ArrowRight size={14} />
           </Link>

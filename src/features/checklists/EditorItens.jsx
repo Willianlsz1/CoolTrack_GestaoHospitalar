@@ -39,7 +39,7 @@ export function EditorItens({ itens, onChange }) {
 
       {itens.map((it, i) => (
         <div key={it._id ?? i} className="flex items-start gap-2">
-          <span className="mt-2 w-5 flex-none text-right text-[13px] text-[var(--fg-3)]">
+          <span className="mt-2 w-5 flex-none text-right text-[14px] text-[var(--fg-3)]">
             {i + 1}.
           </span>
           <div className="flex-1">

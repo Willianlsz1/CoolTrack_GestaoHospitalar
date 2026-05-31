@@ -66,7 +66,7 @@ function ResumoExecucao({ manutencao }) {
           {excecoes.map((it, i) => (
             <li
               key={i}
-              className="text-[13px]"
+              className="text-[14px]"
               style={{ color: 'var(--warn)' }}
             >
               ⚠ {it.procedimento}
@@ -116,7 +116,7 @@ export default function ChecklistEquipamento({ equipamento }) {
         <div className="flex items-center gap-3">
           <ClipboardCheck size={20} style={{ color: status.cor }} />
           <div>
-            <div className="text-[14px] text-[var(--fg)]">{status.titulo}</div>
+            <div className="text-[15px] text-[var(--fg)]">{status.titulo}</div>
             <div className="t-caption">{status.detalhe}</div>
           </div>
         </div>

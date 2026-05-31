@@ -36,7 +36,7 @@ export default function RondaPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <label className="flex items-center gap-2 text-[13px] text-[var(--fg-2)]">
+          <label className="flex items-center gap-2 text-[14px] text-[var(--fg-2)]">
             <input
               type="checkbox"
               checked={soPendentes}
@@ -62,7 +62,7 @@ export default function RondaPage() {
       <div className="space-y-5">
         {setores.map(({ setor, itens }) => (
           <section key={setor}>
-            <h2 className="mb-2 text-[13px] text-[var(--fg-3)]">
+            <h2 className="mb-2 text-[14px] text-[var(--fg-3)]">
               {setor} · {itens.length}
             </h2>
             <ul className="overflow-hidden rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)]">
@@ -84,7 +84,7 @@ export default function RondaPage() {
                       className="flex-none text-[var(--fg-3)]"
                     />
                     <div className="min-w-0 flex-1">
-                      <div className="truncate text-[14px] text-[var(--fg)]">
+                      <div className="truncate text-[15px] text-[var(--fg)]">
                         {eq.nome}
                       </div>
                       <div className="t-caption">
@@ -92,7 +92,7 @@ export default function RondaPage() {
                       </div>
                     </div>
                     <span
-                      className="whitespace-nowrap text-[13px]"
+                      className="whitespace-nowrap text-[14px]"
                       style={{ color: status.cor }}
                     >
                       {status.label}

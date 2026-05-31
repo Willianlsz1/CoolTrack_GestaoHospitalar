@@ -18,7 +18,7 @@ export default function SugestaoManutencao({ equipamentoId }) {
 
   return (
     <section className="mt-1">
-      <h2 className="mb-3 text-[13px] text-[var(--fg-3)]">
+      <h2 className="mb-3 text-[14px] text-[var(--fg-3)]">
         Sugestão (estatística)
       </h2>
       {!intervalo ? (

@@ -82,7 +82,7 @@ export default function RelatorioPmocPage() {
       <div className="relatorio-impressao">
         {config?.hospital_nome && (
           <div className="mb-4 border-b border-[var(--border)] pb-3">
-            <div className="text-[16px] font-medium text-[var(--fg)]">
+            <div className="text-[17px] font-medium text-[var(--fg)]">
               {config.hospital_nome}
             </div>
             <div className="t-caption">
@@ -104,7 +104,7 @@ export default function RelatorioPmocPage() {
         </header>
 
         <div className="overflow-x-auto rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)]">
-          <table className="w-full text-[13px]">
+          <table className="w-full text-[14px]">
             <thead>
               <tr className="text-[var(--fg-3)]">
                 <th scope="col" className={th}>
@@ -169,7 +169,7 @@ export default function RelatorioPmocPage() {
         </div>
 
         {config?.rt_nome && (
-          <div className="mt-10 text-[13px]">
+          <div className="mt-10 text-[14px]">
             <div className="assinatura-linha mb-1 h-px w-64 bg-[var(--fg-3)]" />
             <div className="text-[var(--fg)]">{config.rt_nome}</div>
             <div className="t-caption">

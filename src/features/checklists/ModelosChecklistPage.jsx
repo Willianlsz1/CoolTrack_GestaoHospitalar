@@ -84,7 +84,7 @@ function GestaoModelos() {
         <div className="overflow-hidden rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)]">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[var(--border)] text-left text-[13px] text-[var(--fg-3)]">
+              <tr className="border-b border-[var(--border)] text-left text-[14px] text-[var(--fg-3)]">
                 <th scope="col" className="px-4 py-2.5 font-medium">
                   Tipo
                 </th>

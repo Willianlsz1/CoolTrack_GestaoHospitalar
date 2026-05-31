@@ -83,7 +83,7 @@ export default function DashboardPage() {
 // Casca: título + chips (total real; "atualizado" provisório).
 function Pagina({ total, children }) {
   const chip =
-    'inline-flex items-center gap-[7px] rounded-full border border-[var(--border)] bg-[var(--surface)] px-[14px] py-1.5 text-[13px] text-[var(--fg-2)]'
+    'inline-flex items-center gap-[7px] rounded-full border border-[var(--border)] bg-[var(--surface)] px-[14px] py-1.5 text-[14px] text-[var(--fg-2)]'
   return (
     <div>
       <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">

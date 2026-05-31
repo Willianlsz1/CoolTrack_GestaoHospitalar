@@ -74,7 +74,7 @@ export default function ExecutarChecklist({
           >
             <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
               <div className="min-w-0">
-                <div className="text-[14px] text-[var(--fg)]">
+                <div className="text-[15px] text-[var(--fg)]">
                   {it.procedimento}
                 </div>
                 {it.servico && <div className="t-caption">{it.servico}</div>}
@@ -82,7 +82,7 @@ export default function ExecutarChecklist({
               <div
                 role="group"
                 aria-label={`Status: ${it.procedimento}`}
-                className="inline-flex flex-none gap-0.5 rounded-[var(--r)] border border-[var(--border)] p-0.5 text-[13px]"
+                className="inline-flex flex-none gap-0.5 rounded-[var(--r)] border border-[var(--border)] p-0.5 text-[14px]"
               >
                 <button
                   type="button"
@@ -133,7 +133,7 @@ export default function ExecutarChecklist({
       </div>
 
       {criar.isError && (
-        <p className="text-[13px]" style={{ color: 'var(--danger)' }}>
+        <p className="text-[14px]" style={{ color: 'var(--danger)' }}>
           Erro ao salvar: {criar.error.message}
         </p>
       )}

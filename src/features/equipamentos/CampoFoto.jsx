@@ -27,11 +27,11 @@ export function CampoFoto({
         type="file"
         accept="image/*"
         onChange={(e) => setFoto(e.target.files[0] ?? null)}
-        className="block w-full text-[13px] text-[var(--fg-2)] file:mr-3 file:rounded-[var(--r)] file:border file:border-[var(--border)] file:bg-[var(--surface-2)] file:px-3 file:py-1.5 file:text-[13px] file:text-[var(--fg)] hover:file:bg-[var(--surface)]"
+        className="block w-full text-[14px] text-[var(--fg-2)] file:mr-3 file:rounded-[var(--r)] file:border file:border-[var(--border)] file:bg-[var(--surface-2)] file:px-3 file:py-1.5 file:text-[14px] file:text-[var(--fg)] hover:file:bg-[var(--surface)]"
       />
 
       {editando && fotoUrlAtual && (
-        <label className="mt-2 flex items-center gap-2 text-[13px] text-[var(--fg-2)]">
+        <label className="mt-2 flex items-center gap-2 text-[14px] text-[var(--fg-2)]">
           <input
             type="checkbox"
             checked={removerFoto}

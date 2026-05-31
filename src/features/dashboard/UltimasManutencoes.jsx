@@ -8,7 +8,7 @@ import { formatarDiaMes } from '../../core/data'
 export function UltimasManutencoes({ manutencoes }) {
   return (
     <article className="flex min-h-0 flex-col rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)] px-[22px] py-[18px]">
-      <p className="mb-[10px] flex items-center gap-2 text-[13px] text-[var(--fg-3)]">
+      <p className="mb-[10px] flex items-center gap-2 text-[14px] text-[var(--fg-3)]">
         <Wrench size={14} /> Últimas manutenções
       </p>
       {manutencoes.length === 0 ? (
@@ -28,7 +28,7 @@ export function UltimasManutencoes({ manutencoes }) {
                   <IconeTipo tipo={m.equipamentos?.tipo} size={17} />
                 </span>
                 <div className="min-w-0">
-                  <div className="truncate text-[14px] text-[var(--fg)]">
+                  <div className="truncate text-[15px] text-[var(--fg)]">
                     {m.equipamentos?.nome ?? '—'}
                   </div>
                   <div className="t-caption">{sub || '—'}</div>
@@ -36,7 +36,7 @@ export function UltimasManutencoes({ manutencoes }) {
                 <span className="ml-auto">
                   <TipoManutencaoBadge tipo={m.tipo} />
                 </span>
-                <span className="mono whitespace-nowrap text-[13px] text-[var(--fg-3)]">
+                <span className="mono whitespace-nowrap text-[14px] text-[var(--fg-3)]">
                   {formatarDiaMes(m.data)}
                 </span>
               </li>

@@ -12,7 +12,7 @@ const grid2 = 'grid grid-cols-1 gap-3 sm:grid-cols-2'
 function Secao({ icon: Icone, titulo, children }) {
   return (
     <section className="space-y-3">
-      <p className="flex items-center gap-2 text-[13px] text-[var(--fg-3)]">
+      <p className="flex items-center gap-2 text-[14px] text-[var(--fg-3)]">
         <Icone size={15} /> {titulo}
       </p>
       {children}
@@ -74,7 +74,7 @@ function FormularioConfig({ config }) {
     <div className="max-w-[640px]">
       <Link
         to="/relatorio"
-        className="ct-link inline-flex items-center gap-1 text-[13px]"
+        className="ct-link inline-flex items-center gap-1 text-[14px]"
       >
         <ArrowLeft size={14} /> Voltar ao relatório
       </Link>
@@ -117,12 +117,12 @@ function FormularioConfig({ config }) {
         </Secao>
 
         {salvar.isError && (
-          <p className="text-[13px]" style={{ color: 'var(--danger)' }}>
+          <p className="text-[14px]" style={{ color: 'var(--danger)' }}>
             Erro: {salvar.error.message}
           </p>
         )}
         {salvo && (
-          <p className="text-[13px]" style={{ color: 'var(--ok)' }}>
+          <p className="text-[14px]" style={{ color: 'var(--ok)' }}>
             Configuração salva.
           </p>
         )}
