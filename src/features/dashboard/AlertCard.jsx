@@ -8,9 +8,10 @@ import { IconeTipo } from '../equipamentos/iconesTipo'
 const COR = { danger: 'var(--danger)', warn: 'var(--warn)' }
 
 function localizacao(eq) {
+  const nomeSetor = eq.setores?.nome ?? eq.setor
   const detalhe = eq.sala || eq.andar
-  if (!eq.setor) return '—'
-  return detalhe ? `${eq.setor} · ${detalhe}` : eq.setor
+  if (!nomeSetor) return '—'
+  return detalhe ? `${nomeSetor} · ${detalhe}` : nomeSetor
 }
 
 export function AlertCard({

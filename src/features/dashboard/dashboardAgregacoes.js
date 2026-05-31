@@ -78,7 +78,7 @@ export function ultimasManutencoes(manutencoes, n = 5) {
 export function porSetorOrdenado(equipamentos, limite = 8) {
   const mapa = {}
   for (const eq of equipamentos) {
-    const setor = eq.setor || 'Sem setor'
+    const setor = eq.setores?.nome ?? eq.setor ?? 'Sem setor'
     mapa[setor] = (mapa[setor] || 0) + 1
   }
 

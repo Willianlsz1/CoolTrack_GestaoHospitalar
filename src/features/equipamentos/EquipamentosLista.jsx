@@ -14,7 +14,7 @@ function filtrar(equipamentos, { busca, setor, status }) {
   const b = busca.trim().toLowerCase()
   return equipamentos.filter((eq) => {
     if (status && eq.status !== status) return false
-    if (setor && eq.setor !== setor) return false
+    if (setor && (eq.setores?.nome ?? eq.setor) !== setor) return false
     if (b && !`${eq.nome} ${eq.serie ?? ''}`.toLowerCase().includes(b)) {
       return false
     }
@@ -43,7 +43,11 @@ export default function EquipamentosLista() {
   }
 
   const setores = equipamentos
-    ? [...new Set(equipamentos.map((e) => e.setor).filter(Boolean))].sort()
+    ? [
+        ...new Set(
+          equipamentos.map((e) => e.setores?.nome ?? e.setor).filter(Boolean),
+        ),
+      ].sort()
     : []
   const filtrados = equipamentos
     ? filtrar(equipamentos, {

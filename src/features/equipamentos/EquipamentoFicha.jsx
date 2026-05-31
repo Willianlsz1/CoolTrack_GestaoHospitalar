@@ -75,7 +75,7 @@ export default function EquipamentoFicha() {
 
           <dl className="mt-5 grid gap-4 sm:grid-cols-2">
             <Campo rotulo="Tipo" valor={TIPO_LABELS[eq.tipo] ?? eq.tipo} />
-            <Campo rotulo="Setor" valor={eq.setor} />
+            <Campo rotulo="Setor" valor={eq.setores?.nome ?? eq.setor} />
             <Campo rotulo="Marca" valor={eq.marca} />
             <Campo rotulo="Modelo" valor={eq.modelo} />
             <Campo rotulo="Nº de série" valor={eq.serie} />

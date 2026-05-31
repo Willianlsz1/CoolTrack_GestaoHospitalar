@@ -35,8 +35,11 @@ export function EquipamentoLinha({ eq, onEditar, podeExcluir }) {
     })
   }
 
-  const localizacao = eq.setor
-    ? `${eq.setor}${eq.andar ? ` · ${eq.andar}` : ''}`
+  // Prefere o nome do setor relacionado (setor_id); cai no texto antigo
+  // (eq.setor) para registros legados ainda não migrados.
+  const nomeSetor = eq.setores?.nome ?? eq.setor
+  const localizacao = nomeSetor
+    ? `${nomeSetor}${eq.andar ? ` · ${eq.andar}` : ''}`
     : '—'
 
   return (
