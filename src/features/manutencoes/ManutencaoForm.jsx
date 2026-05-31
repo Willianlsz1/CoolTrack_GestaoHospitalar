@@ -15,7 +15,6 @@ export default function ManutencaoForm({
 }) {
   const [tipo, setTipo] = useState('')
   const [data, setData] = useState(hojeLocal())
-  const [tecnico, setTecnico] = useState('')
   const [descricao, setDescricao] = useState('')
   const [pecas, setPecas] = useState('')
   const [proxima, setProxima] = useState('')
@@ -50,8 +49,8 @@ export default function ManutencaoForm({
         equipamento_id: equipamentoId,
         tipo,
         data,
-        // Opcionais: vazio vira null.
-        tecnico: tecnico.trim() || null,
+        // Opcionais: vazio vira null. (O técnico é gravado automaticamente
+        // pelo banco como o usuário logado — registrado_por.)
         descricao: descricao.trim() || null,
         pecas: pecas.trim() || null,
         proxima_manutencao: proxima || null,
@@ -94,18 +93,6 @@ export default function ManutencaoForm({
           className={inputCls}
           value={data}
           onChange={(e) => setData(e.target.value)}
-        />
-      </div>
-
-      <div>
-        <label className={labelCls} htmlFor="tecnico">
-          Técnico
-        </label>
-        <input
-          id="tecnico"
-          className={inputCls}
-          value={tecnico}
-          onChange={(e) => setTecnico(e.target.value)}
         />
       </div>
 
