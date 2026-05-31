@@ -1,12 +1,15 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useEquipamentos } from './useEquipamentos'
+import { useMeuPerfil } from '../perfil/useMeuPerfil'
 import EquipamentosForm from './EquipamentosForm'
 import EquipamentoCard from './EquipamentoCard'
 import Modal from '../../components/Modal'
 
 export default function EquipamentosLista() {
   const { data: equipamentos, isPending, isError, error } = useEquipamentos()
+  const { data: perfil } = useMeuPerfil()
+  const podeExcluir = perfil?.role === 'admin'
   const [formAberto, setFormAberto] = useState(false)
   // O equipamento em edição (ou null = modo criar). Define o modo do form.
   const [equipamentoEditando, setEquipamentoEditando] = useState(null)
@@ -62,7 +65,12 @@ export default function EquipamentosLista() {
       {!isPending && !isError && equipamentos.length > 0 && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {equipamentos.map((eq) => (
-            <EquipamentoCard key={eq.id} eq={eq} onEditar={abrirEditar} />
+            <EquipamentoCard
+              key={eq.id}
+              eq={eq}
+              onEditar={abrirEditar}
+              podeExcluir={podeExcluir}
+            />
           ))}
         </div>
       )}
