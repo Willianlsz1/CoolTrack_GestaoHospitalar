@@ -9,6 +9,7 @@ import EquipamentoFicha from '../features/equipamentos/EquipamentoFicha.jsx'
 import EquipamentoScanner from '../features/equipamentos/EquipamentoScanner.jsx'
 import DashboardPage from '../features/dashboard/DashboardPage.jsx'
 import UsuariosPage from '../features/usuarios/UsuariosPage.jsx'
+import SetoresPage from '../features/setores/SetoresPage.jsx'
 
 // Rota raiz: o "tronco" da árvore. Seu componente é o AppLayout (casco:
 // cabeçalho + navegação), que envolve TODAS as telas via <Outlet/>.
@@ -52,6 +53,13 @@ const usuariosRoute = createRoute({
   component: UsuariosPage,
 })
 
+// Gestão de setores (só admin — a página e o RLS do banco checam o papel).
+const setoresRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/setores',
+  component: SetoresPage,
+})
+
 // A árvore de rotas: a raiz com suas filhas. Cada nova tela vira
 // um createRoute() adicionado aqui.
 const routeTree = rootRoute.addChildren([
@@ -60,6 +68,7 @@ const routeTree = rootRoute.addChildren([
   escanearRoute,
   dashboardRoute,
   usuariosRoute,
+  setoresRoute,
 ])
 
 // O router em si: junta a árvore e é entregue ao RouterProvider.

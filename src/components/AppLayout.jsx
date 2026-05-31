@@ -4,6 +4,7 @@ import {
   Snowflake,
   Boxes,
   LayoutDashboard,
+  MapPin,
   UserPlus,
   User,
   LogOut,
@@ -38,6 +39,16 @@ function ItensNav({ aoAbrirPerfil, aoNavegar, ehAdmin }) {
       >
         <LayoutDashboard size={16} /> Dashboard
       </Link>
+      {ehAdmin && (
+        <Link
+          to="/setores"
+          className="ct-nav"
+          activeProps={{ className: 'is-active' }}
+          onClick={aoNavegar}
+        >
+          <MapPin size={16} /> Setores
+        </Link>
+      )}
       {ehAdmin && (
         <Link
           to="/usuarios"
