@@ -44,11 +44,39 @@ Equipamento que passou do seu intervalo de manutenção (do setor) desde a últi
 higienização. É a medida de não-conformidade exibida no Dashboard.
 _Evite_: "manutenção pendente" (ambíguo).
 
-**Relatório PMOC**:
-O entregável que o hospital precisa manter: inventário dos equipamentos por
-categoria, com periodicidade (30/365), última/próxima manutenção, localização,
-carga e área, mais totais. O CoolTrack gera uma versão dele ("PMOC report lite",
-sem os checklists de procedimentos, que entram numa evolução).
+**Relatório analítico (PMOC)**:
+O **inventário-mestre**: lista dos equipamentos por categoria, com periodicidade
+(30/365), última/próxima manutenção, localização, carga e área, mais totais.
+Atualizado quando entra/sai equipamento. É o que o CoolTrack já gera (exportável).
+Distinto do _Checklist de manutenção_.
+
+**Checklist de manutenção**:
+A lista de **procedimentos** que o técnico cumpre por equipamento a cada visita.
+O **modelo** é definido por **tipo de equipamento × frequência** (mensal/anual)
+e o tamanho varia por tipo (ex.: câmara frigorífica ~3 itens; ar central 9
+mensal / 28 anual). O admin/RT cadastra o modelo uma vez por tipo e todos os
+equipamentos daquele tipo herdam. No CoolTrack é **digital**: o técnico marca os
+itens e **assina no app** (substitui o papel — o diferencial, pois assinar
+centenas de folhas à mão é inviável). Gera a evidência de execução.
+
+**Assinatura eletrônica**:
+A "assinatura" do checklist NÃO é um rabisco desenhado: é a **atestação pela
+identidade autenticada** (quem está logado) + carimbo de tempo + registro dos
+itens cumpridos. Um toque de "confirmar" por equipamento. Vale para todos os
+checklists do técnico.
+
+**Responsável Técnico (RT)**:
+Profissional legalmente habilitado que assina e responde pelo PMOC — engenheiro
+(via CONFEA/CREA) ou técnico em refrigeração (via CFT/CRT, Resolução CFT
+068/2019, sem limite de BTU). No hospital atual é um **técnico externo
+contratado**. Seus dados (nome, conselho, registro, nº da ART/TRT) são
+configuráveis e entram no cabeçalho e na assinatura do documento.
+
+**ART / TRT**:
+O instrumento que vincula juridicamente o RT ao serviço: **ART** (Anotação de
+Responsabilidade Técnica) para a via CREA; **TRT** (Termo de Responsabilidade
+Técnica) para a via CFT. A fiscalização cruza a ART/TRT com quem assina os
+relatórios do PMOC.
 
 **Redundância**:
 Equipamentos robustos operam em par **ativo + backup**. Para o controle, **não
