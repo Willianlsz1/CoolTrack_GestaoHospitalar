@@ -1,5 +1,6 @@
+import { useState } from 'react'
 import { Link, useParams, useSearch, useNavigate } from '@tanstack/react-router'
-import { ArrowLeft, Printer } from 'lucide-react'
+import { ArrowLeft, Printer, QrCode } from 'lucide-react'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEquipamento } from './useEquipamento'
 import { TIPO_LABELS } from './rotulos'
@@ -8,6 +9,7 @@ import { nomeSetorDoEquipamento } from '../../core/dominio'
 import { IconeTipo } from './iconesTipo'
 import { StatusBadge } from '../../components/StatusBadge'
 import { Button } from '../../components/Button'
+import Modal from '../../components/Modal'
 import SugestaoManutencao from '../ia/SugestaoManutencao'
 import ManutencoesHistorico from '../manutencoes/ManutencoesHistorico'
 import ChecklistEquipamento from '../checklists/ChecklistEquipamento'
@@ -53,6 +55,7 @@ export default function EquipamentoFicha() {
   const { aba: abaUrl } = useSearch({ strict: false })
   const navigate = useNavigate()
   const { data: eq, isPending, isError, error } = useEquipamento(id)
+  const [qrAberto, setQrAberto] = useState(false)
 
   // A aba é DIRIGIDA pela URL (fonte única): trocar de aba atualiza ?aba, e
   // navegar entre equipamentos via deep-link já abre na aba certa.
@@ -88,71 +91,66 @@ export default function EquipamentoFicha() {
 
       {!isPending && !isError && eq && (
         <article className="mt-4">
-          {eq.foto_url ? (
-            <img
-              src={eq.foto_url}
-              alt={eq.nome}
-              className="mb-4 h-48 w-full max-w-[420px] rounded-[var(--r)] object-cover"
-            />
-          ) : (
-            <div className="mb-4 flex h-48 w-full max-w-[420px] items-center justify-center rounded-[var(--r)] bg-[var(--surface-2)] text-[var(--fg-3)]">
-              <IconeTipo tipo={eq.tipo} size={48} strokeWidth={1} />
-            </div>
-          )}
-
-          <div className="flex items-center gap-3">
-            <h1>{eq.nome}</h1>
-            <StatusBadge status={eq.status} />
-          </div>
-
-          <dl className="mt-5 grid gap-4 sm:grid-cols-2">
-            <Campo rotulo="Tipo" valor={TIPO_LABELS[eq.tipo] ?? eq.tipo} />
-            <Campo rotulo="Setor" valor={nomeSetorDoEquipamento(eq)} />
-            <Campo rotulo="Marca" valor={eq.marca} />
-            <Campo rotulo="Modelo" valor={eq.modelo} />
-            <Campo rotulo="Nº de série" valor={eq.serie} />
-            <Campo rotulo="Patrimônio" valor={eq.patrimonio} />
-            <Campo rotulo="Andar" valor={eq.andar} />
-            <Campo rotulo="Sala" valor={eq.sala} />
-            <Campo
-              rotulo="Instalação"
-              valor={formatarData(eq.data_instalacao)}
-            />
-            <Campo
-              rotulo="Garantia até"
-              valor={formatarData(eq.data_garantia)}
-            />
-          </dl>
-
-          <section className="mt-6 border-t border-[var(--border)] pt-6">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-[14px] text-[var(--fg-3)]">QR Code</h2>
+          {/* Cabeçalho compacto: identidade + specs */}
+          <div className="rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)] p-5">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+              {eq.foto_url ? (
+                <img
+                  src={eq.foto_url}
+                  alt={eq.nome}
+                  className="h-16 w-16 flex-none rounded-[var(--r)] object-cover"
+                />
+              ) : (
+                <div className="flex h-16 w-16 flex-none items-center justify-center rounded-[var(--r)] bg-[var(--surface-2)] text-[var(--fg-3)]">
+                  <IconeTipo tipo={eq.tipo} size={28} strokeWidth={1} />
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1>{eq.nome}</h1>
+                  <StatusBadge status={eq.status} />
+                </div>
+                <div className="t-caption mt-1">
+                  {[
+                    nomeSetorDoEquipamento(eq),
+                    eq.patrimonio && `Patrimônio ${eq.patrimonio}`,
+                    TIPO_LABELS[eq.tipo] ?? eq.tipo,
+                  ]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </div>
+              </div>
               <Button
-                size="sm"
                 variant="secondary"
-                icon={Printer}
-                onClick={() => window.print()}
+                size="sm"
+                icon={QrCode}
+                onClick={() => setQrAberto(true)}
               >
-                Imprimir etiqueta
+                QR / Etiqueta
               </Button>
             </div>
 
-            {/* .etiqueta: o que vai impresso. Fundo branco + texto escuro
-                servem na tela e no papel (e o QR precisa de contraste). */}
-            <div className="etiqueta inline-block rounded-[var(--r)] bg-white p-4 text-center text-gray-900">
-              <QRCodeSVG value={urlDaFicha(eq.id)} size={160} level="M" />
-              <p className="mt-2 font-medium">{eq.nome}</p>
-              {nomeSetorDoEquipamento(eq) && (
-                <p className="text-sm">{nomeSetorDoEquipamento(eq)}</p>
-              )}
-              {eq.patrimonio && (
-                <p className="text-sm">Patrimônio: {eq.patrimonio}</p>
-              )}
-            </div>
+            <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-3 border-t border-[var(--border)] pt-4 sm:grid-cols-3 lg:grid-cols-4">
+              <Campo rotulo="Tipo" valor={TIPO_LABELS[eq.tipo] ?? eq.tipo} />
+              <Campo rotulo="Setor" valor={nomeSetorDoEquipamento(eq)} />
+              <Campo rotulo="Marca" valor={eq.marca} />
+              <Campo rotulo="Modelo" valor={eq.modelo} />
+              <Campo rotulo="Nº de série" valor={eq.serie} />
+              <Campo rotulo="Patrimônio" valor={eq.patrimonio} />
+              <Campo rotulo="Andar" valor={eq.andar} />
+              <Campo rotulo="Sala" valor={eq.sala} />
+              <Campo
+                rotulo="Instalação"
+                valor={formatarData(eq.data_instalacao)}
+              />
+              <Campo
+                rotulo="Garantia até"
+                valor={formatarData(eq.data_garantia)}
+              />
+            </dl>
+          </div>
 
-            <p className="mono t-caption mt-2 break-all">{urlDaFicha(eq.id)}</p>
-          </section>
-
+          {/* Abas em toda a largura */}
           <div className="mt-6 flex gap-1 border-b border-[var(--border)]">
             <AbaBtn
               ativo={aba === 'registros'}
@@ -178,6 +176,34 @@ export default function EquipamentoFicha() {
               <ChecklistEquipamento equipamento={eq} />
             )}
           </div>
+
+          {qrAberto && (
+            <Modal titulo="QR Code" onClose={() => setQrAberto(false)}>
+              <div className="flex flex-col items-center gap-3">
+                {/* .etiqueta: o que vai impresso (fundo branco, texto escuro). */}
+                <div className="etiqueta inline-block rounded-[var(--r)] bg-white p-4 text-center text-gray-900">
+                  <QRCodeSVG value={urlDaFicha(eq.id)} size={160} level="M" />
+                  <p className="mt-2 font-medium">{eq.nome}</p>
+                  {nomeSetorDoEquipamento(eq) && (
+                    <p className="text-sm">{nomeSetorDoEquipamento(eq)}</p>
+                  )}
+                  {eq.patrimonio && (
+                    <p className="text-sm">Patrimônio: {eq.patrimonio}</p>
+                  )}
+                </div>
+                <p className="mono t-caption break-all text-center">
+                  {urlDaFicha(eq.id)}
+                </p>
+                <Button
+                  variant="secondary"
+                  icon={Printer}
+                  onClick={() => window.print()}
+                >
+                  Imprimir etiqueta
+                </Button>
+              </div>
+            </Modal>
+          )}
         </article>
       )}
     </div>
