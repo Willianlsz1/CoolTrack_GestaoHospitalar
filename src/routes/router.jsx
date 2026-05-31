@@ -22,9 +22,14 @@ const rootRoute = createRootRoute({
 })
 
 // Rota inicial ("/"): a tela de listagem de equipamentos.
+// ?setor=<nome> pré-filtra a lista por setor (deep-link vindo dos cards
+// de Setores). Filtro vazio/ausente vira undefined (sem filtro).
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
+  validateSearch: (search) => ({
+    setor: typeof search.setor === 'string' ? search.setor : undefined,
+  }),
   component: EquipamentosLista,
 })
 

@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useSearch, useNavigate } from '@tanstack/react-router'
 import { Plus, ScanLine } from 'lucide-react'
 import { useEquipamentos } from './useEquipamentos'
 import { useMeuPerfil } from '../perfil/useMeuPerfil'
@@ -28,10 +28,19 @@ export default function EquipamentosLista() {
   const { data: perfil } = useMeuPerfil()
   const podeExcluir = perfil?.role === 'admin'
 
+  // O filtro de SETOR é dirigido pela URL (?setor=<nome>): tanto o deep-link
+  // vindo dos cards de Setores quanto a troca no dropdown atualizam o mesmo
+  // lugar — fonte única, sem estado grudado e com link compartilhável.
+  // busca/status seguem como estado local (não precisam de URL).
+  const { setor: setorUrl } = useSearch({ strict: false })
+  const navigate = useNavigate()
+  const filtroSetor = setorUrl ?? ''
+  const setFiltroSetor = (novo) =>
+    navigate({ to: '/', search: novo ? { setor: novo } : {}, replace: true })
+
   const [formAberto, setFormAberto] = useState(false)
   const [equipamentoEditando, setEquipamentoEditando] = useState(null)
   const [busca, setBusca] = useState('')
-  const [filtroSetor, setFiltroSetor] = useState('')
   const [filtroStatus, setFiltroStatus] = useState('')
 
   function abrirCriar() {

@@ -1,8 +1,13 @@
 import { useState } from 'react'
-import { MapPin, Plus, Pencil, Trash2 } from 'lucide-react'
+import { MapPin, Plus } from 'lucide-react'
 import { useEhAdmin } from '../perfil/useEhAdmin'
 import { useSetores, useExcluirSetor } from './useSetores'
+import { useEquipamentos } from '../equipamentos/useEquipamentos'
+import { useTodasManutencoes } from '../dashboard/useTodasManutencoes'
+import { resumoPorSetor, resumoVazio } from './setoresAgregacoes'
+import { SetorCard } from './SetorCard'
 import { Button } from '../../components/Button'
+import { Input } from '../../components/Input'
 import Modal from '../../components/Modal'
 import SetorForm from './SetorForm'
 
@@ -28,10 +33,25 @@ export default function SetoresPage() {
 }
 
 function GestaoSetores() {
-  const { data: setores, isPending, isError, error } = useSetores()
+  const { data: setores, isPending: setoresPend, isError, error } = useSetores()
+  // Equipamentos e manutenções alimentam a contagem e o termômetro por setor.
+  const { data: equipamentos = [], isPending: eqPend } = useEquipamentos()
+  const { data: manutencoes = [], isPending: manPend } = useTodasManutencoes()
   const excluir = useExcluirSetor()
   const [modalAberto, setModalAberto] = useState(false)
   const [editando, setEditando] = useState(null)
+  const [busca, setBusca] = useState('')
+
+  const buscando = setoresPend || eqPend || manPend
+  const resumoMap = resumoPorSetor(equipamentos, manutencoes)
+
+  // Filtro client-side por nome do setor ou do responsável.
+  const termo = busca.trim().toLowerCase()
+  const setoresFiltrados = (setores ?? []).filter((s) => {
+    if (!termo) return true
+    const resp = s.responsavel?.nome ?? s.responsavel?.email ?? ''
+    return `${s.nome} ${resp}`.toLowerCase().includes(termo)
+  })
 
   function abrirNovo() {
     setEditando(null)
@@ -48,16 +68,13 @@ function GestaoSetores() {
     if (ok) excluir.mutate(s.id)
   }
 
-  const acaoCls =
-    'rounded-[var(--r)] p-1.5 text-[var(--fg-3)] hover:bg-[var(--surface-2)] hover:text-[var(--fg)]'
-
   return (
     <div>
       <div className="mb-4 flex items-end justify-between gap-3">
         <div>
           <h1>Setores</h1>
           <p className="t-secondary mt-1">
-            Cadência de manutenção por setor (PMOC).
+            Cadência de manutenção, responsável e situação por setor (PMOC).
           </p>
         </div>
         <Button variant="primary" icon={Plus} onClick={abrirNovo}>
@@ -65,12 +82,12 @@ function GestaoSetores() {
         </Button>
       </div>
 
-      {isPending && <p className="t-secondary">Carregando…</p>}
+      {buscando && <p className="t-secondary">Carregando…</p>}
       {isError && (
         <p style={{ color: 'var(--danger)' }}>Erro: {error.message}</p>
       )}
 
-      {!isPending && !isError && setores.length === 0 && (
+      {!buscando && !isError && setores.length === 0 && (
         <div className="rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)] p-6 text-center">
           <MapPin size={22} className="mx-auto mb-2 text-[var(--fg-3)]" />
           <p className="t-secondary">
@@ -79,57 +96,34 @@ function GestaoSetores() {
         </div>
       )}
 
-      {!isPending && !isError && setores.length > 0 && (
-        <div className="overflow-hidden rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)]">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[var(--border)] text-left text-[14px] text-[var(--fg-3)]">
-                <th scope="col" className="px-4 py-2.5 font-medium">
-                  Setor
-                </th>
-                <th scope="col" className="px-4 py-2.5 font-medium">
-                  Intervalo
-                </th>
-                <th scope="col" className="px-4 py-2.5 text-right font-medium">
-                  Ações
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {setores.map((s) => (
-                <tr
+      {!buscando && !isError && setores.length > 0 && (
+        <>
+          <div className="mb-4 sm:max-w-xs">
+            <Input
+              placeholder="Buscar setor ou responsável…"
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+            />
+          </div>
+
+          {setoresFiltrados.length === 0 ? (
+            <p className="t-secondary">
+              Nenhum setor encontrado com essa busca.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {setoresFiltrados.map((s) => (
+                <SetorCard
                   key={s.id}
-                  className="border-b border-[var(--border)] last:border-b-0"
-                >
-                  <td className="px-4 py-2.5 text-[var(--fg)]">{s.nome}</td>
-                  <td className="px-4 py-2.5 text-[var(--fg-2)]">
-                    {s.intervalo_dias} dias
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <div className="flex justify-end gap-1">
-                      <button
-                        type="button"
-                        onClick={() => abrirEdicao(s)}
-                        aria-label="Editar"
-                        className={acaoCls}
-                      >
-                        <Pencil size={16} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => confirmarExcluir(s)}
-                        aria-label="Excluir"
-                        className={acaoCls}
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                  setor={s}
+                  resumo={resumoMap.get(s.id) ?? resumoVazio()}
+                  onEditar={() => abrirEdicao(s)}
+                  onExcluir={() => confirmarExcluir(s)}
+                />
               ))}
-            </tbody>
-          </table>
-        </div>
+            </div>
+          )}
+        </>
       )}
 
       {modalAberto && (
