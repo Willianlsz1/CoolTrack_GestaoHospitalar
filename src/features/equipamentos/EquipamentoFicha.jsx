@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { Link, useParams, useSearch } from '@tanstack/react-router'
+import { Link, useParams, useSearch, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Printer } from 'lucide-react'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEquipamento } from './useEquipamento'
@@ -52,10 +51,19 @@ export default function EquipamentoFicha() {
   // strict:false lê os params sem precisar amarrar ao id exato da rota.
   const { id } = useParams({ strict: false })
   const { aba: abaUrl } = useSearch({ strict: false })
+  const navigate = useNavigate()
   const { data: eq, isPending, isError, error } = useEquipamento(id)
-  const [aba, setAba] = useState(
-    abaUrl === 'checklist' ? 'checklist' : 'registros',
-  )
+
+  // A aba é DIRIGIDA pela URL (fonte única): trocar de aba atualiza ?aba, e
+  // navegar entre equipamentos via deep-link já abre na aba certa.
+  const aba = abaUrl === 'checklist' ? 'checklist' : 'registros'
+  const irParaAba = (nova) =>
+    navigate({
+      to: '/equipamentos/$id',
+      params: { id },
+      search: nova === 'checklist' ? { aba: 'checklist' } : {},
+      replace: true,
+    })
 
   return (
     <div>
@@ -148,13 +156,13 @@ export default function EquipamentoFicha() {
           <div className="mt-6 flex gap-1 border-b border-[var(--border)]">
             <AbaBtn
               ativo={aba === 'registros'}
-              onClick={() => setAba('registros')}
+              onClick={() => irParaAba('registros')}
             >
               Registros
             </AbaBtn>
             <AbaBtn
               ativo={aba === 'checklist'}
-              onClick={() => setAba('checklist')}
+              onClick={() => irParaAba('checklist')}
             >
               Checklist
             </AbaBtn>

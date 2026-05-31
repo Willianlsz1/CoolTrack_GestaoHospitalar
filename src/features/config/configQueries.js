@@ -13,10 +13,10 @@ export async function buscarConfigPmoc() {
 }
 
 export async function salvarConfigPmoc(dados) {
+  // upsert na linha única (id=1): robusto mesmo se a linha não existir.
   const { data, error } = await supabase
     .from('config_pmoc')
-    .update(dados)
-    .eq('id', 1)
+    .upsert({ id: 1, ...dados }, { onConflict: 'id' })
     .select()
     .single()
   if (error) throw error

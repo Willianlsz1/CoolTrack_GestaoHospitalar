@@ -14,7 +14,10 @@ export function EditorItens({ itens, onChange }) {
     )
   }
   function adicionar() {
-    onChange([...itens, { procedimento: '', servico: '' }])
+    onChange([
+      ...itens,
+      { procedimento: '', servico: '', _id: crypto.randomUUID() },
+    ])
   }
   function remover(i) {
     onChange(itens.filter((_, idx) => idx !== i))
@@ -35,12 +38,13 @@ export function EditorItens({ itens, onChange }) {
       )}
 
       {itens.map((it, i) => (
-        <div key={i} className="flex items-start gap-2">
+        <div key={it._id ?? i} className="flex items-start gap-2">
           <span className="mt-2 w-5 flex-none text-right text-[13px] text-[var(--fg-3)]">
             {i + 1}.
           </span>
           <div className="flex-1">
             <Input
+              aria-label={`Procedimento do item ${i + 1}`}
               placeholder="Procedimento (ex.: Limpeza do evaporador com água)"
               value={it.procedimento}
               onChange={(e) => atualizar(i, 'procedimento', e.target.value)}
@@ -48,6 +52,7 @@ export function EditorItens({ itens, onChange }) {
           </div>
           <div className="w-36 flex-none">
             <Input
+              aria-label={`Serviço do item ${i + 1}`}
               placeholder="Serviço"
               value={it.servico}
               onChange={(e) => atualizar(i, 'servico', e.target.value)}
