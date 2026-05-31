@@ -1,6 +1,9 @@
 import { useState } from 'react'
+import { Snowflake } from 'lucide-react'
 import { entrar, criarConta } from './authApi'
-import { inputCls, labelCls } from '../../components/ui'
+import { Field } from '../../components/Field'
+import { Input } from '../../components/Input'
+import { Button } from '../../components/Button'
 
 // Tela de entrada. Alterna entre "Entrar" e "Criar conta". No sucesso do
 // login, o onAuthStateChange (AuthProvider) atualiza a sessão e o app
@@ -37,78 +40,67 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-950 p-4 text-gray-100">
-      <div className="w-full max-w-sm rounded-lg border border-gray-800 bg-gray-900 p-6">
-        <div className="mb-6 flex items-center gap-2 text-lg font-bold text-cyan-400">
-          <span aria-hidden="true">❄</span>
-          <span>CoolTrack</span>
+    <div className="flex min-h-screen items-center justify-center bg-[var(--bg)] p-4">
+      <div className="ct-card ct-card--pad24 w-full max-w-[360px]">
+        <div className="mb-6 flex items-center gap-2">
+          <Snowflake size={20} style={{ color: 'var(--link)' }} />
+          <span className="text-[18px] font-medium">CoolTrack</span>
         </div>
-        <h1 className="mb-4 text-xl font-semibold">
-          {criando ? 'Criar conta' : 'Entrar'}
-        </h1>
+        <h1 className="mb-5">{criando ? 'Criar conta' : 'Entrar'}</h1>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {criando && (
-            <div>
-              <label className={labelCls} htmlFor="nome">
-                Nome
-              </label>
-              <input
-                id="nome"
+            <Field label="Nome">
+              <Input
                 type="text"
                 required
-                className={inputCls}
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
               />
-            </div>
+            </Field>
           )}
-          <div>
-            <label className={labelCls} htmlFor="email">
-              E-mail
-            </label>
-            <input
-              id="email"
+          <Field label="E-mail">
+            <Input
               type="email"
               required
-              className={inputCls}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-          </div>
-          <div>
-            <label className={labelCls} htmlFor="senha">
-              Senha
-            </label>
-            <input
-              id="senha"
+          </Field>
+          <Field label="Senha">
+            <Input
               type="password"
               required
-              className={inputCls}
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
             />
-          </div>
+          </Field>
 
-          {erro && <p className="text-sm text-red-400">{erro}</p>}
-          {mensagem && <p className="text-sm text-green-400">{mensagem}</p>}
+          {erro && <p className="ct-error">{erro}</p>}
+          {mensagem && (
+            <p className="text-[13px]" style={{ color: 'var(--ok)' }}>
+              {mensagem}
+            </p>
+          )}
 
-          <button
+          <Button
             type="submit"
+            variant="primary"
             disabled={enviando}
-            className="w-full rounded bg-cyan-500 px-4 py-2 font-medium text-gray-950 hover:bg-cyan-400 disabled:opacity-50"
+            style={{ width: '100%', justifyContent: 'center' }}
           >
             {enviando ? '…' : criando ? 'Criar conta' : 'Entrar'}
-          </button>
+          </Button>
         </form>
 
         <button
+          type="button"
           onClick={() => {
             setCriando(!criando)
             setErro('')
             setMensagem('')
           }}
-          className="mt-4 text-sm text-cyan-400 hover:underline"
+          className="ct-link mt-4 border-none bg-transparent p-0 text-[13px]"
         >
           {criando ? 'Já tem conta? Entrar' : 'Não tem conta? Criar'}
         </button>
