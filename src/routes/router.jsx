@@ -8,6 +8,7 @@ import EquipamentosLista from '../features/equipamentos/EquipamentosLista.jsx'
 import EquipamentoFicha from '../features/equipamentos/EquipamentoFicha.jsx'
 import EquipamentoScanner from '../features/equipamentos/EquipamentoScanner.jsx'
 import DashboardPage from '../features/dashboard/DashboardPage.jsx'
+import UsuariosPage from '../features/usuarios/UsuariosPage.jsx'
 
 // Rota raiz: o "tronco" da árvore. Seu componente é o AppLayout (casco:
 // cabeçalho + navegação), que envolve TODAS as telas via <Outlet/>.
@@ -44,6 +45,13 @@ const dashboardRoute = createRoute({
   component: DashboardPage,
 })
 
+// Gestão de usuários (só admin — a página e a Edge Function checam o papel).
+const usuariosRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/usuarios',
+  component: UsuariosPage,
+})
+
 // A árvore de rotas: a raiz com suas filhas. Cada nova tela vira
 // um createRoute() adicionado aqui.
 const routeTree = rootRoute.addChildren([
@@ -51,6 +59,7 @@ const routeTree = rootRoute.addChildren([
   fichaRoute,
   escanearRoute,
   dashboardRoute,
+  usuariosRoute,
 ])
 
 // O router em si: junta a árvore e é entregue ao RouterProvider.

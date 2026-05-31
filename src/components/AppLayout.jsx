@@ -4,19 +4,21 @@ import {
   Snowflake,
   Boxes,
   LayoutDashboard,
+  UserPlus,
   User,
   LogOut,
   Menu,
   X,
 } from 'lucide-react'
 import { useSessao } from '../features/auth/useSessao'
+import { useEhAdmin } from '../features/perfil/useEhAdmin'
 import { sair } from '../features/auth/authApi'
 import LoginPage from '../features/auth/LoginPage'
 import PerfilModal from '../features/perfil/PerfilModal'
 
 // Itens da navegação, reusados no desktop e no menu mobile. aoNavegar
 // fecha o menu mobile ao clicar num item.
-function ItensNav({ aoAbrirPerfil, aoNavegar }) {
+function ItensNav({ aoAbrirPerfil, aoNavegar, ehAdmin }) {
   return (
     <>
       <Link
@@ -36,6 +38,16 @@ function ItensNav({ aoAbrirPerfil, aoNavegar }) {
       >
         <LayoutDashboard size={16} /> Dashboard
       </Link>
+      {ehAdmin && (
+        <Link
+          to="/usuarios"
+          className="ct-nav"
+          activeProps={{ className: 'is-active' }}
+          onClick={aoNavegar}
+        >
+          <UserPlus size={16} /> Usuários
+        </Link>
+      )}
       <button
         type="button"
         onClick={() => {
@@ -58,6 +70,7 @@ function ItensNav({ aoAbrirPerfil, aoNavegar }) {
 // menu hambúrguer no celular.
 export default function AppLayout() {
   const { sessao, carregando } = useSessao()
+  const { ehAdmin } = useEhAdmin()
   const [perfilAberto, setPerfilAberto] = useState(false)
   const [menuAberto, setMenuAberto] = useState(false)
 
@@ -87,7 +100,10 @@ export default function AppLayout() {
 
           {/* Desktop: navegação inline (>= sm) */}
           <nav className="hidden items-center gap-6 sm:flex">
-            <ItensNav aoAbrirPerfil={() => setPerfilAberto(true)} />
+            <ItensNav
+              aoAbrirPerfil={() => setPerfilAberto(true)}
+              ehAdmin={ehAdmin}
+            />
           </nav>
 
           {/* Mobile: botão hambúrguer (< sm) */}
@@ -108,6 +124,7 @@ export default function AppLayout() {
             <ItensNav
               aoAbrirPerfil={() => setPerfilAberto(true)}
               aoNavegar={() => setMenuAberto(false)}
+              ehAdmin={ehAdmin}
             />
           </nav>
         )}
