@@ -17,10 +17,10 @@ const fileInputCls =
 
 // Tipo como chips coloridos (substitui o <select>). Clicar seleciona;
 // o selecionado mostra ✓ e ganha a cor do tipo (via .ct-chip.is-sel).
-function ChipsTipo({ valor, aoSelecionar, erro }) {
+function ChipsTipo({ valor, aoSelecionar, erro, tipos = MANUTENCAO_TIPOS }) {
   return (
     <div className={`ct-chips${erro ? ' ct-chips--err' : ''}`}>
-      {MANUTENCAO_TIPOS.map((t) => {
+      {tipos.map((t) => {
         const sel = valor === t
         return (
           <button
@@ -64,6 +64,7 @@ function CelulaFoto({ id, rotulo, aoEscolher }) {
 
 export default function ManutencaoForm({
   equipamentoId,
+  tipos,
   onSucesso,
   onCancelar,
 }) {
@@ -123,6 +124,7 @@ export default function ManutencaoForm({
           valor={tipo}
           aoSelecionar={setTipo}
           erro={tipo === '' && Boolean(erroValidacao)}
+          tipos={tipos}
         />
       </Field>
 
