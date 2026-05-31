@@ -65,11 +65,11 @@
   --w-medium: 500; /* heaviest weight allowed — never 600/700 */
 
   /* Type scale (px). Sentence case ALWAYS, never CAPS. */
-  --t-title: 22px; /* page title (h1) */
-  --t-section: 18px; /* section heading (h2) */
-  --t-body: 14px; /* body, controls, default */
-  --t-secondary: 13px; /* secondary text, labels */
-  --t-caption: 12px; /* captions, meta, field hints */
+  --t-title: 24px; /* page title (h1) */
+  --t-section: 20px; /* section heading (h2) */
+  --t-body: 15px; /* body, controls, default */
+  --t-secondary: 14px; /* secondary text, labels */
+  --t-caption: 13px; /* captions, meta, field hints */
 
   --lh-tight: 1.25;
   --lh-normal: 1.5;

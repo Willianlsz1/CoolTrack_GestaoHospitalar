@@ -30,7 +30,7 @@ const ouNumero = (s) => {
 function Secao({ icon: Icone, titulo, children }) {
   return (
     <section className="space-y-3">
-      <p className="flex items-center gap-2 text-[13px] text-[var(--fg-3)]">
+      <p className="flex items-center gap-2 text-[14px] text-[var(--fg-3)]">
         <Icone size={15} /> {titulo}
       </p>
       {children}
@@ -273,14 +273,14 @@ export default function EquipamentosForm({
 
       {erroValidacao && (
         <p
-          className="flex items-center gap-1.5 text-[13px]"
+          className="flex items-center gap-1.5 text-[14px]"
           style={{ color: 'var(--warn)' }}
         >
           <CircleAlert size={14} /> {erroValidacao}
         </p>
       )}
       {mutation.isError && (
-        <p className="text-[13px]" style={{ color: 'var(--danger)' }}>
+        <p className="text-[14px]" style={{ color: 'var(--danger)' }}>
           Erro ao salvar: {mutation.error.message}
         </p>
       )}

@@ -98,12 +98,12 @@ function FormularioNovoUsuario() {
 
         {erroValidacao && <p className="ct-error">{erroValidacao}</p>}
         {criar.isError && (
-          <p className="text-[13px]" style={{ color: 'var(--danger)' }}>
+          <p className="text-[14px]" style={{ color: 'var(--danger)' }}>
             {criar.error.message}
           </p>
         )}
         {sucesso && (
-          <p className="text-[13px]" style={{ color: 'var(--ok)' }}>
+          <p className="text-[14px]" style={{ color: 'var(--ok)' }}>
             {sucesso}
           </p>
         )}

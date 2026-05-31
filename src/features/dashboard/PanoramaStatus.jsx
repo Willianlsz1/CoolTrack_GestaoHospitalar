@@ -7,7 +7,7 @@ import { percentual } from './dashboardAgregacoes'
 export function PanoramaStatus({ contagem, total }) {
   return (
     <section>
-      <p className="mb-[10px] flex items-center gap-2 text-[13px] text-[var(--fg-3)]">
+      <p className="mb-[10px] flex items-center gap-2 text-[14px] text-[var(--fg-3)]">
         <ChartPie size={14} /> Equipamentos por status
       </p>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">

@@ -11,7 +11,7 @@ export function PorSetor({ setores }) {
 
   return (
     <article className="flex min-h-0 flex-col rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)] px-[22px] py-[18px]">
-      <p className="mb-[10px] flex items-center gap-2 text-[13px] text-[var(--fg-3)]">
+      <p className="mb-[10px] flex items-center gap-2 text-[14px] text-[var(--fg-3)]">
         <Building2 size={14} /> Por setor
       </p>
       {setores.length === 0 ? (
@@ -24,7 +24,7 @@ export function PorSetor({ setores }) {
               className="grid grid-cols-[110px_1fr_44px] items-center gap-[14px] border-t border-[var(--border)] py-1.5 first:border-t-0"
             >
               <span
-                className={`truncate text-[14px] ${s.agrupado ? 'text-[var(--fg-3)]' : 'text-[var(--fg-2)]'}`}
+                className={`truncate text-[15px] ${s.agrupado ? 'text-[var(--fg-3)]' : 'text-[var(--fg-2)]'}`}
               >
                 {s.setor}
               </span>
@@ -40,7 +40,7 @@ export function PorSetor({ setores }) {
                 />
               </span>
               <span
-                className={`mono text-right text-[13px] ${s.agrupado ? 'text-[var(--fg-3)]' : 'text-[var(--fg)]'}`}
+                className={`mono text-right text-[14px] ${s.agrupado ? 'text-[var(--fg-3)]' : 'text-[var(--fg)]'}`}
               >
                 {s.count}
               </span>

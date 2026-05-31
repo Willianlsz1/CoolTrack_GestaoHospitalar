@@ -19,7 +19,7 @@ export default function ManutencoesHistorico({ equipamentoId }) {
   return (
     <section className="mt-6 border-t border-[var(--border)] pt-6">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-[13px] text-[var(--fg-3)]">Manutenções</h2>
+        <h2 className="text-[14px] text-[var(--fg-3)]">Manutenções</h2>
         <Button
           size="sm"
           variant="primary"

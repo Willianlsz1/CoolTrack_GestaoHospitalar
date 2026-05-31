@@ -13,7 +13,7 @@ const MAX_FOTO_BYTES = 5 * 1024 * 1024
 
 // Estilo do seletor de arquivo (mesmo do CampoFoto, mantém coesão).
 const fileInputCls =
-  'block w-full text-[13px] text-[var(--fg-2)] file:mr-3 file:rounded-[var(--r)] file:border file:border-[var(--border)] file:bg-[var(--surface-2)] file:px-3 file:py-1.5 file:text-[13px] file:text-[var(--fg)] hover:file:bg-[var(--surface)]'
+  'block w-full text-[14px] text-[var(--fg-2)] file:mr-3 file:rounded-[var(--r)] file:border file:border-[var(--border)] file:bg-[var(--surface-2)] file:px-3 file:py-1.5 file:text-[14px] file:text-[var(--fg)] hover:file:bg-[var(--surface)]'
 
 // Tipo como chips coloridos (substitui o <select>). Clicar seleciona;
 // o selecionado mostra ✓ e ganha a cor do tipo (via .ct-chip.is-sel).
@@ -172,7 +172,7 @@ export default function ManutencaoForm({
 
       {erroValidacao && (
         <p
-          className="flex items-center gap-1.5 text-[13px]"
+          className="flex items-center gap-1.5 text-[14px]"
           style={{ color: 'var(--warn)' }}
         >
           <CircleAlert size={14} /> {erroValidacao}
@@ -180,7 +180,7 @@ export default function ManutencaoForm({
       )}
       {criar.isError && (
         <p
-          className="flex items-center gap-1.5 text-[13px]"
+          className="flex items-center gap-1.5 text-[14px]"
           style={{ color: 'var(--danger)' }}
         >
           <CircleAlert size={14} /> Erro ao salvar: {criar.error.message}

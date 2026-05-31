@@ -40,7 +40,7 @@ function FormularioPerfil({ perfil, onClose }) {
       </Field>
 
       {atualizar.isError && (
-        <p className="text-[13px]" style={{ color: 'var(--danger)' }}>
+        <p className="text-[14px]" style={{ color: 'var(--danger)' }}>
           Erro: {atualizar.error.message}
         </p>
       )}

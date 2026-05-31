@@ -17,7 +17,7 @@ export function CamposEspecificacoes({
 }) {
   return (
     <section className="space-y-3">
-      <p className="flex items-center gap-2 text-[13px] text-[var(--fg-3)]">
+      <p className="flex items-center gap-2 text-[14px] text-[var(--fg-3)]">
         <Gauge size={15} /> Cadência e especificações{' '}
         <span className="t-caption">(admin)</span>
       </p>

@@ -18,7 +18,7 @@ function AbaBtn({ ativo, onClick, children }) {
     <button
       type="button"
       onClick={onClick}
-      className={`-mb-px border-b-2 px-3 py-2 text-[14px] ${
+      className={`-mb-px border-b-2 px-3 py-2 text-[15px] ${
         ativo
           ? 'border-[var(--link)] text-[var(--fg)]'
           : 'border-transparent text-[var(--fg-3)] hover:text-[var(--fg)]'
@@ -42,7 +42,7 @@ function Campo({ rotulo, valor }) {
   return (
     <div>
       <dt className="t-caption mb-0.5">{rotulo}</dt>
-      <dd className="m-0 text-[14px] text-[var(--fg)]">{valor || '—'}</dd>
+      <dd className="m-0 text-[15px] text-[var(--fg)]">{valor || '—'}</dd>
     </div>
   )
 }
@@ -69,7 +69,7 @@ export default function EquipamentoFicha() {
     <div>
       <Link
         to="/"
-        className="ct-link inline-flex items-center gap-1 text-[13px]"
+        className="ct-link inline-flex items-center gap-1 text-[14px]"
       >
         <ArrowLeft size={14} /> Voltar
       </Link>
@@ -126,7 +126,7 @@ export default function EquipamentoFicha() {
 
           <section className="mt-6 border-t border-[var(--border)] pt-6">
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-[13px] text-[var(--fg-3)]">QR Code</h2>
+              <h2 className="text-[14px] text-[var(--fg-3)]">QR Code</h2>
               <Button
                 size="sm"
                 variant="secondary"

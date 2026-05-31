@@ -32,7 +32,7 @@ export function ProporcaoBar({ contagem, total }) {
           }}
         />
       </div>
-      <div className="mt-[10px] flex flex-wrap gap-x-6 gap-y-1 text-[12px] text-[var(--fg-3)]">
+      <div className="mt-[10px] flex flex-wrap gap-x-6 gap-y-1 text-[13px] text-[var(--fg-3)]">
         <Legenda cor="var(--ok)" texto={`Ativos ${contagem.ativo}`} />
         <Legenda
           cor="var(--warn)"

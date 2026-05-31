@@ -33,7 +33,7 @@ export default function LoginPage() {
       <div className="ct-card ct-card--pad24 w-full max-w-[360px]">
         <div className="mb-6 flex items-center gap-2">
           <Snowflake size={20} style={{ color: 'var(--link)' }} />
-          <span className="text-[18px] font-medium">CoolTrack</span>
+          <span className="text-[19px] font-medium">CoolTrack</span>
         </div>
         <h1 className="mb-5">Entrar</h1>
 

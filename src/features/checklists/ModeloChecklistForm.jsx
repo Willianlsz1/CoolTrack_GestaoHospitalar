@@ -98,7 +98,7 @@ export default function ModeloChecklistForm({ modelo, onSucesso, onCancelar }) {
 
       {erro && <p className="ct-error">{erro}</p>}
       {mutation.isError && (
-        <p className="text-[13px]" style={{ color: 'var(--danger)' }}>
+        <p className="text-[14px]" style={{ color: 'var(--danger)' }}>
           {mensagemErro(mutation.error)}
         </p>
       )}
