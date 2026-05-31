@@ -4,7 +4,7 @@ import { useTodasManutencoes } from './useTodasManutencoes'
 import {
   contarPorStatus,
   atrasadosComDias,
-  semManutencaoComDias,
+  venceEmBreve,
   ultimasManutencoes,
   porSetorOrdenado,
 } from './dashboardAgregacoes'
@@ -39,7 +39,7 @@ export default function DashboardPage() {
   const mans = manQuery.data
   const contagem = contarPorStatus(eqs)
   const atrasados = atrasadosComDias(eqs, mans)
-  const semManut = semManutencaoComDias(eqs, mans)
+  const aVencer = venceEmBreve(eqs, mans)
 
   return (
     <Pagina total={eqs.length}>
@@ -50,17 +50,17 @@ export default function DashboardPage() {
             variant="danger"
             icon={AlertTriangle}
             titulo="Manutenção atrasada"
-            hint="Próxima preventiva venceu — exige ação imediata"
+            hint="Passou do intervalo desde a última preventiva — ação imediata"
             total={atrasados.length}
             itens={atrasados.slice(0, 5)}
           />
           <AlertCard
             variant="warn"
             icon={Clock}
-            titulo="Sem manutenção há +90 dias"
-            hint="Fora do intervalo recomendado — agendar revisão"
-            total={semManut.length}
-            itens={semManut.slice(0, 5)}
+            titulo="Vence em breve"
+            hint="Higienização a vencer nos próximos 7 dias — agendar"
+            total={aVencer.length}
+            itens={aVencer.slice(0, 5)}
           />
         </section>
 
