@@ -6,7 +6,7 @@ import { supabase } from '../../core/supabase'
 export async function buscarTodasManutencoes() {
   const { data, error } = await supabase
     .from('manutencoes')
-    .select('*, equipamentos(nome, tipo, setor), perfis(nome)')
+    .select('*, equipamentos(nome, tipo, setores(nome)), perfis(nome)')
     .order('data', { ascending: false })
     .order('created_at', { ascending: false }) // desempate determinístico
 

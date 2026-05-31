@@ -4,6 +4,7 @@ import { Pencil } from 'lucide-react'
 import { useExcluirEquipamento } from './useExcluirEquipamento'
 import { contarManutencoes } from '../manutencoes/manutencoesQueries'
 import { TIPO_LABELS } from './rotulos'
+import { nomeSetorDoEquipamento } from '../../core/dominio'
 import { StatusBadge } from '../../components/StatusBadge'
 import { MiniaturaEquipamento } from './MiniaturaEquipamento'
 
@@ -35,8 +36,9 @@ export function EquipamentoLinha({ eq, onEditar, podeExcluir }) {
     })
   }
 
-  const localizacao = eq.setor
-    ? `${eq.setor}${eq.andar ? ` · ${eq.andar}` : ''}`
+  const nomeSetor = nomeSetorDoEquipamento(eq)
+  const localizacao = nomeSetor
+    ? `${nomeSetor}${eq.andar ? ` · ${eq.andar}` : ''}`
     : '—'
 
   return (

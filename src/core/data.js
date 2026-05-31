@@ -32,3 +32,12 @@ export function formatarData(dataStr) {
   const [ano, mes, dia] = dataStr.slice(0, 10).split('-')
   return `${dia}/${mes}/${ano}`
 }
+
+// 'YYYY-MM-DD' + n dias -> 'YYYY-MM-DD' (fuso local). Usado para calcular
+// a "próxima manutenção" = última + intervalo.
+export function somarDias(dataStr, n) {
+  if (!dataStr) return null
+  const d = new Date(`${dataStr.slice(0, 10)}T00:00:00`)
+  d.setDate(d.getDate() + n)
+  return d.toLocaleDateString('en-CA')
+}

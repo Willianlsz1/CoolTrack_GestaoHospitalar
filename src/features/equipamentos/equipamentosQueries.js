@@ -3,7 +3,7 @@ import { supabase } from '../../core/supabase'
 export async function buscarEquipamentos() {
   const { data, error } = await supabase
     .from('equipamentos')
-    .select('*')
+    .select('*, setores(nome, intervalo_dias)')
     .order('created_at', { ascending: false })
 
   if (error) throw error
@@ -15,7 +15,7 @@ export async function buscarEquipamentoPorId(id) {
   // lançar como o single() faria. Assim "não existe" != "deu erro".
   const { data, error } = await supabase
     .from('equipamentos')
-    .select('*')
+    .select('*, setores(nome, intervalo_dias)')
     .eq('id', id)
     .maybeSingle()
 

@@ -39,9 +39,23 @@ setor numa coluna à parte (localização). Reconciliação adotada:
 - A tabela `setores` continua valendo — como fonte do default e unidade de
   gestão/relatório —, mas **não é a dona exclusiva** do intervalo.
 
-## Pendente de definição
+## Implementado (Fase 1)
 
-- **Checklist de procedimentos** por tipo de manutenção (o PMOC traz listas
-  fixas para mensal e anual) — feature a escopar.
-- Atributos de HVAC vistos no PMOC (carga em BTU, área em m², ativo S/N).
-- Qual tipo de manutenção **reinicia o relógio** (decidido: só preventiva).
+- Tabela `setores` + tela de gestão admin-only; equipamento referencia setor.
+- Cadência **no equipamento** (mensal + anual), default do setor.
+- Atributos de HVAC (carga em BTU, área em m²) — admin-only na UI.
+- "Atrasada" = dias desde a última **preventiva** > intervalo; + "vence em breve".
+- **Relatório PMOC lite** (exportável) + seed de demonstração.
+
+## Pendente — "PMOC documento completo" (próxima fase)
+
+Para o relatório valer como documento oficial, faltam:
+
+- **Cabeçalho institucional**: hospital, empresa responsável, responsável
+  técnico + ART/CREA, vigência.
+- **Checklists de procedimentos** (mensal 9 itens, anual 28 itens) por
+  categoria — a prova do que foi executado.
+- **Agrupamento por categoria** de equipamento (como o PMOC oficial).
+- Campo de **assinatura**.
+- **Trava de coluna no banco** para os campos admin-only (intervalo, carga,
+  área) — hoje só UI; vira grant por coluna na Fase 3 (hardening).

@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Plus, ScanLine } from 'lucide-react'
 import { useEquipamentos } from './useEquipamentos'
 import { useMeuPerfil } from '../perfil/useMeuPerfil'
+import { nomeSetorDoEquipamento } from '../../core/dominio'
 import { Button } from '../../components/Button'
 import Modal from '../../components/Modal'
 import EquipamentosForm from './EquipamentosForm'
@@ -14,7 +15,7 @@ function filtrar(equipamentos, { busca, setor, status }) {
   const b = busca.trim().toLowerCase()
   return equipamentos.filter((eq) => {
     if (status && eq.status !== status) return false
-    if (setor && eq.setor !== setor) return false
+    if (setor && nomeSetorDoEquipamento(eq) !== setor) return false
     if (b && !`${eq.nome} ${eq.serie ?? ''}`.toLowerCase().includes(b)) {
       return false
     }
@@ -42,16 +43,28 @@ export default function EquipamentosLista() {
     setFormAberto(true)
   }
 
-  const setores = equipamentos
-    ? [...new Set(equipamentos.map((e) => e.setor).filter(Boolean))].sort()
-    : []
-  const filtrados = equipamentos
-    ? filtrar(equipamentos, {
-        busca,
-        setor: filtroSetor,
-        status: filtroStatus,
-      })
-    : []
+  const setores = useMemo(
+    () =>
+      equipamentos
+        ? [
+            ...new Set(
+              equipamentos.map(nomeSetorDoEquipamento).filter(Boolean),
+            ),
+          ].sort()
+        : [],
+    [equipamentos],
+  )
+  const filtrados = useMemo(
+    () =>
+      equipamentos
+        ? filtrar(equipamentos, {
+            busca,
+            setor: filtroSetor,
+            status: filtroStatus,
+          })
+        : [],
+    [equipamentos, busca, filtroSetor, filtroStatus],
+  )
 
   const semCadastro = !isPending && !isError && equipamentos.length === 0
   const semResultado =
