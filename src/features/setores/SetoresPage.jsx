@@ -84,9 +84,15 @@ function GestaoSetores() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--border)] text-left text-[13px] text-[var(--fg-3)]">
-                <th className="px-4 py-2.5 font-medium">Setor</th>
-                <th className="px-4 py-2.5 font-medium">Intervalo</th>
-                <th className="px-4 py-2.5 text-right font-medium">Ações</th>
+                <th scope="col" className="px-4 py-2.5 font-medium">
+                  Setor
+                </th>
+                <th scope="col" className="px-4 py-2.5 font-medium">
+                  Intervalo
+                </th>
+                <th scope="col" className="px-4 py-2.5 text-right font-medium">
+                  Ações
+                </th>
               </tr>
             </thead>
             <tbody>

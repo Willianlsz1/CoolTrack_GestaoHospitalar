@@ -1,23 +1,17 @@
 import { somarDias, formatarData } from '../../core/data'
+import {
+  nomeSetorDoEquipamento,
+  ultimaPreventivaPorEquipamento,
+} from '../../core/dominio'
 
 // 1 TR (tonelada de refrigeração) = 12.000 BTU/h.
 const BTU_POR_TR = 12000
-
-// Última preventiva por equipamento (manutenções vêm ordenadas desc).
-function ultimaPreventiva(manutencoes) {
-  const mapa = new Map()
-  for (const m of manutencoes) {
-    if (m.tipo !== 'preventiva') continue
-    if (!mapa.has(m.equipamento_id)) mapa.set(m.equipamento_id, m)
-  }
-  return mapa
-}
 
 // Monta as linhas + totais do relatório PMOC a partir dos dados já buscados.
 // Espelha as colunas do documento oficial (periodicidade, última/próxima,
 // localização, carga, área, ativo) e os totais (qtd, BTU, m², TR).
 export function montarRelatorioPmoc(equipamentos, manutencoes) {
-  const ultimaPrev = ultimaPreventiva(manutencoes)
+  const ultimaPrev = ultimaPreventivaPorEquipamento(manutencoes)
 
   const linhas = equipamentos.map((eq) => {
     const m = ultimaPrev.get(eq.id)
@@ -37,7 +31,7 @@ export function montarRelatorioPmoc(equipamentos, manutencoes) {
       periodicidade,
       ultima: formatarData(ultima),
       proxima: formatarData(proxima),
-      setor: eq.setores?.nome ?? eq.setor ?? '—',
+      setor: nomeSetorDoEquipamento(eq) ?? '—',
       cargaBtu: eq.carga_btu ?? null,
       areaM2: eq.area_m2 ?? null,
       ativo: eq.status === 'ativo' ? 'S' : 'N',

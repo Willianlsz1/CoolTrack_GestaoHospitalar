@@ -8,6 +8,7 @@ import {
   ultimasManutencoes,
   porSetorOrdenado,
 } from './dashboardAgregacoes'
+import { ultimaPreventivaPorEquipamento } from '../../core/dominio'
 import { AlertCard } from './AlertCard'
 import { PanoramaStatus } from './PanoramaStatus'
 import { UltimasManutencoes } from './UltimasManutencoes'
@@ -38,8 +39,10 @@ export default function DashboardPage() {
   const eqs = eqQuery.data
   const mans = manQuery.data
   const contagem = contarPorStatus(eqs)
-  const atrasados = atrasadosComDias(eqs, mans)
-  const aVencer = venceEmBreve(eqs, mans)
+  // Calcula a última preventiva uma vez e reusa nos dois alertas.
+  const ultimaPrev = ultimaPreventivaPorEquipamento(mans)
+  const atrasados = atrasadosComDias(eqs, ultimaPrev)
+  const aVencer = venceEmBreve(eqs, ultimaPrev)
 
   return (
     <Pagina total={eqs.length}>

@@ -2,20 +2,9 @@
 // (equipamentos e manutenções) e devolvem os números/listas dos widgets.
 // Datas são comparadas como texto 'YYYY-MM-DD' (ordenável sem fuso).
 import { hojeLocal, diasEntre } from '../../core/data'
+import { nomeSetorDoEquipamento } from '../../core/dominio'
 
 const JANELA_VENCE_EM_BREVE = 7
-
-// Última manutenção PREVENTIVA por equipamento — é o que zera o relógio do
-// PMOC (corretiva/preditiva não contam). As manutenções já vêm ordenadas
-// por data desc, então a 1ª preventiva de cada id é a mais recente.
-function ultimaPreventivaPorEquipamento(manutencoes) {
-  const mapa = new Map()
-  for (const m of manutencoes) {
-    if (m.tipo !== 'preventiva') continue
-    if (!mapa.has(m.equipamento_id)) mapa.set(m.equipamento_id, m)
-  }
-  return mapa
-}
 
 // Data-base da cadência: última preventiva ou, na falta, a instalação
 // (ou o cadastro). Retorna 'YYYY-MM-DD' ou null.
@@ -45,9 +34,8 @@ export function percentual(parte, total) {
 // Atrasados: passou do `intervalo_mensal` desde a última preventiva (ou,
 // se nunca houve, desde a instalação). Mostra os DIAS DE ATRASO. Equipamento
 // sem intervalo (sem setor/cadência) fica fora. Mais atrasado primeiro.
-export function atrasadosComDias(equipamentos, manutencoes) {
+export function atrasadosComDias(equipamentos, ultimaPrev) {
   const hoje = hojeLocal()
-  const ultimaPrev = ultimaPreventivaPorEquipamento(manutencoes)
   return equipamentos
     .map((eq) => {
       const intervalo = eq.intervalo_mensal
@@ -68,11 +56,10 @@ export function atrasadosComDias(equipamentos, manutencoes) {
 // atrasados). Mais perto de vencer primeiro.
 export function venceEmBreve(
   equipamentos,
-  manutencoes,
+  ultimaPrev,
   janela = JANELA_VENCE_EM_BREVE,
 ) {
   const hoje = hojeLocal()
-  const ultimaPrev = ultimaPreventivaPorEquipamento(manutencoes)
   return equipamentos
     .map((eq) => {
       const intervalo = eq.intervalo_mensal
@@ -96,7 +83,7 @@ export function ultimasManutencoes(manutencoes, n = 5) {
 export function porSetorOrdenado(equipamentos, limite = 8) {
   const mapa = {}
   for (const eq of equipamentos) {
-    const setor = eq.setores?.nome ?? eq.setor ?? 'Sem setor'
+    const setor = nomeSetorDoEquipamento(eq) ?? 'Sem setor'
     mapa[setor] = (mapa[setor] || 0) + 1
   }
 

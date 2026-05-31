@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { ChevronRight, ArrowRight } from 'lucide-react'
 import { IconeTipo } from '../equipamentos/iconesTipo'
+import { nomeSetorDoEquipamento } from '../../core/dominio'
 
 // Card de alerta reutilizável (danger/warn): título + número grande +
 // lista de equipamentos (ícone do tipo, nome, setor·sala, "X dias",
@@ -8,7 +9,7 @@ import { IconeTipo } from '../equipamentos/iconesTipo'
 const COR = { danger: 'var(--danger)', warn: 'var(--warn)' }
 
 function localizacao(eq) {
-  const nomeSetor = eq.setores?.nome ?? eq.setor
+  const nomeSetor = nomeSetorDoEquipamento(eq)
   const detalhe = eq.sala || eq.andar
   if (!nomeSetor) return '—'
   return detalhe ? `${nomeSetor} · ${detalhe}` : nomeSetor

@@ -4,6 +4,7 @@ import { Pencil } from 'lucide-react'
 import { useExcluirEquipamento } from './useExcluirEquipamento'
 import { contarManutencoes } from '../manutencoes/manutencoesQueries'
 import { TIPO_LABELS } from './rotulos'
+import { nomeSetorDoEquipamento } from '../../core/dominio'
 import { StatusBadge } from '../../components/StatusBadge'
 import { MiniaturaEquipamento } from './MiniaturaEquipamento'
 
@@ -35,9 +36,7 @@ export function EquipamentoLinha({ eq, onEditar, podeExcluir }) {
     })
   }
 
-  // Prefere o nome do setor relacionado (setor_id); cai no texto antigo
-  // (eq.setor) para registros legados ainda não migrados.
-  const nomeSetor = eq.setores?.nome ?? eq.setor
+  const nomeSetor = nomeSetorDoEquipamento(eq)
   const localizacao = nomeSetor
     ? `${nomeSetor}${eq.andar ? ` · ${eq.andar}` : ''}`
     : '—'

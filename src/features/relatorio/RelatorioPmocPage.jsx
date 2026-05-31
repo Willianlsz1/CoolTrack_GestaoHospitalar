@@ -3,6 +3,7 @@ import { Printer } from 'lucide-react'
 import { useEquipamentos } from '../equipamentos/useEquipamentos'
 import { useTodasManutencoes } from '../dashboard/useTodasManutencoes'
 import { montarRelatorioPmoc } from './relatorioPmoc'
+import { nomeSetorDoEquipamento } from '../../core/dominio'
 import { Select } from '../../components/Select'
 import { Button } from '../../components/Button'
 
@@ -38,10 +39,10 @@ export default function RelatorioPmocPage() {
   const eqs = eqQuery.data
   const mans = manQuery.data
   const setores = [
-    ...new Set(eqs.map((e) => e.setores?.nome ?? e.setor).filter(Boolean)),
+    ...new Set(eqs.map(nomeSetorDoEquipamento).filter(Boolean)),
   ].sort()
   const filtrados = filtroSetor
-    ? eqs.filter((e) => (e.setores?.nome ?? e.setor) === filtroSetor)
+    ? eqs.filter((e) => nomeSetorDoEquipamento(e) === filtroSetor)
     : eqs
   const { linhas, totais } = montarRelatorioPmoc(filtrados, mans)
 
@@ -81,14 +82,30 @@ export default function RelatorioPmocPage() {
           <table className="w-full text-[13px]">
             <thead>
               <tr className="text-[var(--fg-3)]">
-                <th className={th}>Equipamento</th>
-                <th className={th}>Periodicidade</th>
-                <th className={th}>Última</th>
-                <th className={th}>Próxima</th>
-                <th className={th}>Localização</th>
-                <th className={th}>Carga (BTU)</th>
-                <th className={th}>Área (m²)</th>
-                <th className={th}>Ativo</th>
+                <th scope="col" className={th}>
+                  Equipamento
+                </th>
+                <th scope="col" className={th}>
+                  Periodicidade
+                </th>
+                <th scope="col" className={th}>
+                  Última
+                </th>
+                <th scope="col" className={th}>
+                  Próxima
+                </th>
+                <th scope="col" className={th}>
+                  Localização
+                </th>
+                <th scope="col" className={th}>
+                  Carga (BTU)
+                </th>
+                <th scope="col" className={th}>
+                  Área (m²)
+                </th>
+                <th scope="col" className={th}>
+                  Ativo
+                </th>
               </tr>
             </thead>
             <tbody>

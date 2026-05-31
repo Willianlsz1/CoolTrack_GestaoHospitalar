@@ -16,7 +16,7 @@ export function UltimasManutencoes({ manutencoes }) {
       ) : (
         <ul className="m-0 flex list-none flex-col p-0">
           {manutencoes.map((m) => {
-            const sub = [m.equipamentos?.setor, m.perfis?.nome]
+            const sub = [m.equipamentos?.setores?.nome, m.perfis?.nome]
               .filter(Boolean)
               .join(' · ')
             return (

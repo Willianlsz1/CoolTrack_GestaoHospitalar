@@ -4,6 +4,7 @@ import { QRCodeSVG } from 'qrcode.react'
 import { useEquipamento } from './useEquipamento'
 import { TIPO_LABELS } from './rotulos'
 import { formatarData } from '../../core/data'
+import { nomeSetorDoEquipamento } from '../../core/dominio'
 import { IconeTipo } from './iconesTipo'
 import { StatusBadge } from '../../components/StatusBadge'
 import { Button } from '../../components/Button'
@@ -75,7 +76,7 @@ export default function EquipamentoFicha() {
 
           <dl className="mt-5 grid gap-4 sm:grid-cols-2">
             <Campo rotulo="Tipo" valor={TIPO_LABELS[eq.tipo] ?? eq.tipo} />
-            <Campo rotulo="Setor" valor={eq.setores?.nome ?? eq.setor} />
+            <Campo rotulo="Setor" valor={nomeSetorDoEquipamento(eq)} />
             <Campo rotulo="Marca" valor={eq.marca} />
             <Campo rotulo="Modelo" valor={eq.modelo} />
             <Campo rotulo="Nº de série" valor={eq.serie} />
@@ -110,7 +111,9 @@ export default function EquipamentoFicha() {
             <div className="etiqueta inline-block rounded-[var(--r)] bg-white p-4 text-center text-gray-900">
               <QRCodeSVG value={urlDaFicha(eq.id)} size={160} level="M" />
               <p className="mt-2 font-medium">{eq.nome}</p>
-              {eq.setor && <p className="text-sm">{eq.setor}</p>}
+              {nomeSetorDoEquipamento(eq) && (
+                <p className="text-sm">{nomeSetorDoEquipamento(eq)}</p>
+              )}
               {eq.patrimonio && (
                 <p className="text-sm">Patrimônio: {eq.patrimonio}</p>
               )}
