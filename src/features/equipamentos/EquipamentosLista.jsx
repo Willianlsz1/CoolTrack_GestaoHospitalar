@@ -26,7 +26,7 @@ export default function EquipamentosLista() {
 
   return (
     <div>
-      <header className="mb-6 flex items-start justify-between gap-4">
+      <header className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-cyan-400">Equipamentos</h1>
           <p className="text-sm text-gray-500">
