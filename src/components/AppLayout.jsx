@@ -5,6 +5,7 @@ import {
   Boxes,
   LayoutDashboard,
   FileText,
+  ListChecks,
   MapPin,
   UserPlus,
   User,
@@ -48,6 +49,16 @@ function ItensNav({ aoAbrirPerfil, aoNavegar, ehAdmin }) {
       >
         <FileText size={16} /> Relatório
       </Link>
+      {ehAdmin && (
+        <Link
+          to="/checklists"
+          className="ct-nav"
+          activeProps={{ className: 'is-active' }}
+          onClick={aoNavegar}
+        >
+          <ListChecks size={16} /> Checklists
+        </Link>
+      )}
       {ehAdmin && (
         <Link
           to="/setores"

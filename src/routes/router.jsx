@@ -11,6 +11,7 @@ import DashboardPage from '../features/dashboard/DashboardPage.jsx'
 import UsuariosPage from '../features/usuarios/UsuariosPage.jsx'
 import SetoresPage from '../features/setores/SetoresPage.jsx'
 import RelatorioPmocPage from '../features/relatorio/RelatorioPmocPage.jsx'
+import ModelosChecklistPage from '../features/checklists/ModelosChecklistPage.jsx'
 
 // Rota raiz: o "tronco" da árvore. Seu componente é o AppLayout (casco:
 // cabeçalho + navegação), que envolve TODAS as telas via <Outlet/>.
@@ -68,6 +69,13 @@ const relatorioRoute = createRoute({
   component: RelatorioPmocPage,
 })
 
+// Modelos de checklist (só admin — a página e o RLS checam o papel).
+const checklistsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/checklists',
+  component: ModelosChecklistPage,
+})
+
 // A árvore de rotas: a raiz com suas filhas. Cada nova tela vira
 // um createRoute() adicionado aqui.
 const routeTree = rootRoute.addChildren([
@@ -78,6 +86,7 @@ const routeTree = rootRoute.addChildren([
   usuariosRoute,
   setoresRoute,
   relatorioRoute,
+  checklistsRoute,
 ])
 
 // O router em si: junta a árvore e é entregue ao RouterProvider.
