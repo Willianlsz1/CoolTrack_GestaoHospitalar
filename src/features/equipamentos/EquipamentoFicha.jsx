@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useParams } from '@tanstack/react-router'
+import { Link, useParams, useSearch } from '@tanstack/react-router'
 import { ArrowLeft, Printer } from 'lucide-react'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEquipamento } from './useEquipamento'
@@ -51,8 +51,11 @@ function Campo({ rotulo, valor }) {
 export default function EquipamentoFicha() {
   // strict:false lê os params sem precisar amarrar ao id exato da rota.
   const { id } = useParams({ strict: false })
+  const { aba: abaUrl } = useSearch({ strict: false })
   const { data: eq, isPending, isError, error } = useEquipamento(id)
-  const [aba, setAba] = useState('registros')
+  const [aba, setAba] = useState(
+    abaUrl === 'checklist' ? 'checklist' : 'registros',
+  )
 
   return (
     <div>

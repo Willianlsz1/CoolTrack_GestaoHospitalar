@@ -4,6 +4,7 @@ import {
   Snowflake,
   Boxes,
   LayoutDashboard,
+  Route,
   FileText,
   ListChecks,
   MapPin,
@@ -40,6 +41,14 @@ function ItensNav({ aoAbrirPerfil, aoNavegar, ehAdmin }) {
         onClick={aoNavegar}
       >
         <LayoutDashboard size={16} /> Dashboard
+      </Link>
+      <Link
+        to="/ronda"
+        className="ct-nav"
+        activeProps={{ className: 'is-active' }}
+        onClick={aoNavegar}
+      >
+        <Route size={16} /> Ronda
       </Link>
       <Link
         to="/relatorio"

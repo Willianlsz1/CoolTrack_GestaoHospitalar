@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Html5Qrcode } from 'html5-qrcode'
 import { Link, useNavigate } from '@tanstack/react-router'
+import { ArrowLeft } from 'lucide-react'
 
 // Id do <div> onde a biblioteca injeta o vídeo da câmera.
 const REGIAO_ID = 'leitor-qr'
@@ -55,7 +56,12 @@ export default function EquipamentoScanner() {
           }
           jaLeuRef.current = true
           scanner.stop().finally(() => {
-            navigate({ to: '/equipamentos/$id', params: { id } })
+            // Abre direto na aba Checklist (fluxo de ronda em campo).
+            navigate({
+              to: '/equipamentos/$id',
+              params: { id },
+              search: { aba: 'checklist' },
+            })
           })
         },
         () => {}, // erro por frame (QR não encontrado) — ignorar
@@ -79,16 +85,23 @@ export default function EquipamentoScanner() {
 
   return (
     <div>
-      <Link to="/" className="text-sm text-cyan-400 hover:underline">
-        ← Voltar
+      <Link
+        to="/"
+        className="ct-link inline-flex items-center gap-1 text-[13px]"
+      >
+        <ArrowLeft size={14} /> Voltar
       </Link>
-      <h1 className="mt-2 text-2xl font-bold text-cyan-400">Escanear QR</h1>
+      <h1 className="mt-2">Escanear QR</h1>
 
-      {erro && <p className="mt-4 text-red-400">{erro}</p>}
+      {erro && (
+        <p className="mt-4 text-[13px]" style={{ color: 'var(--danger)' }}>
+          {erro}
+        </p>
+      )}
 
       <div id={REGIAO_ID} className="mx-auto mt-4 w-full max-w-sm" />
 
-      <p className="mt-4 text-sm text-gray-500">
+      <p className="t-secondary mt-4">
         Aponte a câmera para o QR Code colado no equipamento.
       </p>
     </div>
