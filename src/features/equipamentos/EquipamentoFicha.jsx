@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useParams } from '@tanstack/react-router'
 import { ArrowLeft, Printer } from 'lucide-react'
 import { QRCodeSVG } from 'qrcode.react'
@@ -10,6 +11,24 @@ import { StatusBadge } from '../../components/StatusBadge'
 import { Button } from '../../components/Button'
 import SugestaoManutencao from '../ia/SugestaoManutencao'
 import ManutencoesHistorico from '../manutencoes/ManutencoesHistorico'
+import ChecklistEquipamento from '../checklists/ChecklistEquipamento'
+
+// Botão de aba (Registros / Checklist).
+function AbaBtn({ ativo, onClick, children }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`-mb-px border-b-2 px-3 py-2 text-[14px] ${
+        ativo
+          ? 'border-[var(--link)] text-[var(--fg)]'
+          : 'border-transparent text-[var(--fg-3)] hover:text-[var(--fg)]'
+      }`}
+    >
+      {children}
+    </button>
+  )
+}
 
 // URL absoluta da ficha — é o que o QR Code codifica. Em produção,
 // VITE_APP_BASE_URL aponta pro domínio publicado (para o QR funcionar
@@ -33,6 +52,7 @@ export default function EquipamentoFicha() {
   // strict:false lê os params sem precisar amarrar ao id exato da rota.
   const { id } = useParams({ strict: false })
   const { data: eq, isPending, isError, error } = useEquipamento(id)
+  const [aba, setAba] = useState('registros')
 
   return (
     <div>
@@ -122,8 +142,31 @@ export default function EquipamentoFicha() {
             <p className="mono t-caption mt-2 break-all">{urlDaFicha(eq.id)}</p>
           </section>
 
-          <SugestaoManutencao equipamentoId={eq.id} />
-          <ManutencoesHistorico equipamentoId={eq.id} />
+          <div className="mt-6 flex gap-1 border-b border-[var(--border)]">
+            <AbaBtn
+              ativo={aba === 'registros'}
+              onClick={() => setAba('registros')}
+            >
+              Registros
+            </AbaBtn>
+            <AbaBtn
+              ativo={aba === 'checklist'}
+              onClick={() => setAba('checklist')}
+            >
+              Checklist
+            </AbaBtn>
+          </div>
+
+          <div className="pt-4">
+            {aba === 'registros' ? (
+              <>
+                <SugestaoManutencao equipamentoId={eq.id} />
+                <ManutencoesHistorico equipamentoId={eq.id} />
+              </>
+            ) : (
+              <ChecklistEquipamento equipamento={eq} />
+            )}
+          </div>
         </article>
       )}
     </div>
