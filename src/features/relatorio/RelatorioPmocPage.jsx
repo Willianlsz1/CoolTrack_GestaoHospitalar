@@ -170,7 +170,7 @@ export default function RelatorioPmocPage() {
 
         {config?.rt_nome && (
           <div className="mt-10 text-[13px]">
-            <div className="mb-1 h-px w-64 bg-[var(--fg-3)]" />
+            <div className="assinatura-linha mb-1 h-px w-64 bg-[var(--fg-3)]" />
             <div className="text-[var(--fg)]">{config.rt_nome}</div>
             <div className="t-caption">
               Responsável Técnico

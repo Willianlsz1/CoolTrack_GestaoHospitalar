@@ -2,41 +2,50 @@ import { useState } from 'react'
 import { ClipboardCheck, ClipboardX, Plus } from 'lucide-react'
 import { useModelosChecklist } from './useModelosChecklist'
 import { useManutencoes } from '../manutencoes/useManutencoes'
-import { hojeLocal, diasEntre, formatarData } from '../../core/data'
+import { hojeLocal, formatarData } from '../../core/data'
+import { classificarChecklistMensal } from '../../core/dominio'
 import { TIPO_LABELS } from '../equipamentos/rotulos'
 import { Button } from '../../components/Button'
 import Modal from '../../components/Modal'
 import ExecutarChecklist from './ExecutarChecklist'
 
-// Status do checklist mensal vs a cadência do equipamento.
-function calcularStatus(ultima, intervalo) {
-  if (!ultima) {
+// Status do checklist mensal (usa o helper de domínio; aqui só formata texto).
+function calcularStatus(eq, ultima) {
+  const c = classificarChecklistMensal(eq, ultima?.data ?? null, hojeLocal())
+  if (c.chave === 'nunca') {
     return {
-      cor: 'var(--warn)',
+      cor: c.cor,
       titulo: 'Nunca executado',
       detalhe: 'Sem preventiva registrada.',
     }
   }
   const dataFmt = formatarData(ultima.data)
-  if (!intervalo) {
-    return {
-      cor: 'var(--ok)',
-      titulo: `Última: ${dataFmt}`,
-      detalhe: 'Sem cadência (equipamento sem setor).',
-    }
-  }
-  const restam = intervalo - diasEntre(ultima.data, hojeLocal())
-  if (restam < 0) {
-    return {
-      cor: 'var(--danger)',
-      titulo: `Atrasado há ${-restam} ${-restam === 1 ? 'dia' : 'dias'}`,
-      detalhe: `Última: ${dataFmt}`,
-    }
-  }
-  return {
-    cor: 'var(--ok)',
-    titulo: 'Em dia',
-    detalhe: `Última: ${dataFmt} · vence em ${restam} ${restam === 1 ? 'dia' : 'dias'}`,
+  const plural = (n) => `${n} ${n === 1 ? 'dia' : 'dias'}`
+  switch (c.chave) {
+    case 'sem_cadencia':
+      return {
+        cor: c.cor,
+        titulo: `Última: ${dataFmt}`,
+        detalhe: 'Sem cadência (equipamento sem setor).',
+      }
+    case 'atrasado':
+      return {
+        cor: c.cor,
+        titulo: `Atrasado há ${plural(c.dias)}`,
+        detalhe: `Última: ${dataFmt}`,
+      }
+    case 'vence':
+      return {
+        cor: c.cor,
+        titulo: 'Vence em breve',
+        detalhe: `Última: ${dataFmt} · vence em ${plural(c.dias)}`,
+      }
+    default:
+      return {
+        cor: c.cor,
+        titulo: 'Em dia',
+        detalhe: `Última: ${dataFmt} · vence em ${plural(c.dias)}`,
+      }
   }
 }
 
@@ -72,11 +81,14 @@ function ResumoExecucao({ manutencao }) {
 
 // Aba "Checklist" da ficha: status mensal + execução. Decisão 0006.
 export default function ChecklistEquipamento({ equipamento }) {
-  const { data: modelos, isPending: mp } = useModelosChecklist()
-  const { data: manutencoes, isPending: hp } = useManutencoes(equipamento.id)
+  const { data: modelos, isPending: modelosCarregando } = useModelosChecklist()
+  const { data: manutencoes, isPending: manutencoesCarregando } =
+    useManutencoes(equipamento.id)
   const [aberto, setAberto] = useState(false)
 
-  if (mp || hp) return <p className="t-secondary">Carregando…</p>
+  if (modelosCarregando || manutencoesCarregando) {
+    return <p className="t-secondary">Carregando…</p>
+  }
 
   const modelo = (modelos ?? []).find(
     (m) => m.tipo === equipamento.tipo && m.frequencia === 'mensal',
@@ -96,7 +108,7 @@ export default function ChecklistEquipamento({ equipamento }) {
   }
 
   const ultima = (manutencoes ?? []).find((m) => m.tipo === 'preventiva')
-  const status = calcularStatus(ultima, equipamento.intervalo_mensal)
+  const status = calcularStatus(equipamento, ultima)
 
   return (
     <div className="space-y-4">

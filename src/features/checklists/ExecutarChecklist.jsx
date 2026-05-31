@@ -79,7 +79,11 @@ export default function ExecutarChecklist({
                 </div>
                 {it.servico && <div className="t-caption">{it.servico}</div>}
               </div>
-              <div className="inline-flex flex-none gap-0.5 rounded-[var(--r)] border border-[var(--border)] p-0.5 text-[13px]">
+              <div
+                role="group"
+                aria-label={`Status: ${it.procedimento}`}
+                className="inline-flex flex-none gap-0.5 rounded-[var(--r)] border border-[var(--border)] p-0.5 text-[13px]"
+              >
                 <button
                   type="button"
                   onClick={() => setOkItem(i, true)}

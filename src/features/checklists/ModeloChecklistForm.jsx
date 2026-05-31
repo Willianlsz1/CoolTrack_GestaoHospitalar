@@ -19,7 +19,10 @@ export default function ModeloChecklistForm({ modelo, onSucesso, onCancelar }) {
   const editando = Boolean(modelo)
   const [tipo, setTipo] = useState(modelo?.tipo ?? '')
   const [frequencia, setFrequencia] = useState(modelo?.frequencia ?? 'mensal')
-  const [itens, setItens] = useState(modelo?.itens ?? [])
+  // _id estável só para a key do React (reordenação); removido ao salvar.
+  const [itens, setItens] = useState(() =>
+    (modelo?.itens ?? []).map((it) => ({ ...it, _id: crypto.randomUUID() })),
+  )
   const [erro, setErro] = useState('')
 
   const criar = useCriarModelo()
