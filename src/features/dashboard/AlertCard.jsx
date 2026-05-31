@@ -42,47 +42,54 @@ export function AlertCard({
         </div>
       </div>
 
-      <ul className="m-0 mt-2 list-none p-0">
-        {itens.map(({ eq, dias }) => {
-          return (
-            <li
-              key={eq.id}
-              className="border-t border-[var(--border)] first:border-t-0"
-            >
-              <Link
-                to="/equipamentos/$id"
-                params={{ id: eq.id }}
-                className="-mx-[10px] flex items-center gap-3 rounded-[var(--r)] px-[10px] py-1 hover:bg-[var(--surface-2)]"
-                style={{ color: 'inherit', textDecoration: 'none' }}
+      {itens.length === 0 ? (
+        <p className="t-caption mt-2">Nenhum equipamento — tudo em dia.</p>
+      ) : (
+        <ul className="m-0 mt-2 list-none p-0">
+          {itens.map(({ eq, dias }) => {
+            return (
+              <li
+                key={eq.id}
+                className="border-t border-[var(--border)] first:border-t-0"
               >
-                <IconeTipo
-                  tipo={eq.tipo}
-                  size={17}
-                  className="flex-none text-[var(--fg-3)]"
-                />
-                <div className="min-w-0">
-                  <div className="text-[15px] text-[var(--fg)]">{eq.nome}</div>
-                  <div className="t-caption">{localizacao(eq)}</div>
-                </div>
-                <span
-                  className="ml-auto whitespace-nowrap text-[14px]"
-                  style={{ color: cor }}
+                <Link
+                  to="/equipamentos/$id"
+                  params={{ id: eq.id }}
+                  className="-mx-[10px] flex items-center gap-3 rounded-[var(--r)] px-[10px] py-1 hover:bg-[var(--surface-2)]"
+                  style={{ color: 'inherit', textDecoration: 'none' }}
                 >
-                  {dias} {dias === 1 ? 'dia' : 'dias'}
-                </span>
-                <ChevronRight
-                  size={16}
-                  className="flex-none text-[var(--fg-3)]"
-                />
-              </Link>
-            </li>
-          )
-        })}
-      </ul>
+                  <IconeTipo
+                    tipo={eq.tipo}
+                    size={17}
+                    className="flex-none text-[var(--fg-3)]"
+                  />
+                  <div className="min-w-0">
+                    <div className="text-[15px] text-[var(--fg)]">
+                      {eq.nome}
+                    </div>
+                    <div className="t-caption">{localizacao(eq)}</div>
+                  </div>
+                  <span
+                    className="ml-auto whitespace-nowrap text-[14px]"
+                    style={{ color: cor }}
+                  >
+                    {dias} {dias === 1 ? 'dia' : 'dias'}
+                  </span>
+                  <ChevronRight
+                    size={16}
+                    className="flex-none text-[var(--fg-3)]"
+                  />
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
+      )}
 
-      {total > itens.length && (
+      {/* Rodapé sempre presente quando há itens — simétrico entre os dois
+          cards. Leva ao inventário (TODO: filtrar por este alerta). */}
+      {total > 0 && (
         <div className="mt-auto pt-[10px]">
-          {/* TODO: levar a uma lista filtrada por este alerta. */}
           <Link
             to="/"
             className="inline-flex items-center gap-[5px] text-[14px] text-[var(--link)]"

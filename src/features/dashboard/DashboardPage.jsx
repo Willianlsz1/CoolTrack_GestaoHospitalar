@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { Boxes, RefreshCw, AlertTriangle, Clock } from 'lucide-react'
 import { useEquipamentos } from '../equipamentos/useEquipamentos'
 import { useTodasManutencoes } from './useTodasManutencoes'
@@ -43,12 +44,22 @@ export default function DashboardPage() {
   const ultimaPrev = ultimaPreventivaPorEquipamento(mans)
   const atrasados = atrasadosComDias(eqs, ultimaPrev)
   const aVencer = venceEmBreve(eqs, ultimaPrev)
+  // Quando os dados foram buscados (o mais recente das duas queries).
+  const atualizadoEm = Math.max(eqQuery.dataUpdatedAt, manQuery.dataUpdatedAt)
+  const atualizar = () => {
+    eqQuery.refetch()
+    manQuery.refetch()
+  }
 
   return (
-    <Pagina total={eqs.length}>
+    <Pagina
+      total={eqs.length}
+      atualizadoEm={atualizadoEm}
+      onAtualizar={atualizar}
+    >
       <div className="flex flex-col gap-3">
         {/* Nível 1 — alertas de ação */}
-        <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <section className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
           <AlertCard
             variant="danger"
             icon={AlertTriangle}
@@ -80,10 +91,36 @@ export default function DashboardPage() {
   )
 }
 
-// Casca: título + chips (total real; "atualizado" provisório).
-function Pagina({ total, children }) {
-  const chip =
-    'inline-flex items-center gap-[7px] rounded-full border border-[var(--border)] bg-[var(--surface)] px-[14px] py-1.5 text-[14px] text-[var(--fg-2)]'
+const chip =
+  'inline-flex items-center gap-[7px] rounded-full border border-[var(--border)] bg-[var(--surface)] px-[14px] py-1.5 text-[14px] text-[var(--fg-2)]'
+
+// Chip "Atualizado há X min" (de dataUpdatedAt); clicar re-busca os dados.
+// O tempo é calculado no efeito/intervalo (não no render — Date.now é impuro)
+// e guardado em estado; recalcula a cada 60s e quando os dados mudam.
+function ChipAtualizado({ atualizadoEm, onAtualizar }) {
+  const [min, setMin] = useState(0)
+  useEffect(() => {
+    const calcular = () =>
+      setMin(Math.floor((Date.now() - atualizadoEm) / 60000))
+    calcular()
+    const id = setInterval(calcular, 60000)
+    return () => clearInterval(id)
+  }, [atualizadoEm])
+  const quando = min < 1 ? 'agora' : `há ${min} min`
+  return (
+    <button
+      type="button"
+      onClick={onAtualizar}
+      title="Clique para atualizar"
+      className={`${chip} hover:text-[var(--fg)]`}
+    >
+      <RefreshCw size={14} className="text-[var(--fg-3)]" /> Atualizado {quando}
+    </button>
+  )
+}
+
+// Casca: título + chips (total real + "atualizado há X min").
+function Pagina({ total, atualizadoEm, onAtualizar, children }) {
   return (
     <div>
       <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -98,11 +135,10 @@ function Pagina({ total, children }) {
               <b className="font-medium text-[var(--fg)]">{total}</b>{' '}
               equipamentos
             </span>
-            {/* TODO: calcular "Atualizado há X min" de verdade (dataUpdatedAt). */}
-            <span className={chip}>
-              <RefreshCw size={14} className="text-[var(--fg-3)]" /> Atualizado
-              agora
-            </span>
+            <ChipAtualizado
+              atualizadoEm={atualizadoEm}
+              onAtualizar={onAtualizar}
+            />
           </div>
         )}
       </div>
