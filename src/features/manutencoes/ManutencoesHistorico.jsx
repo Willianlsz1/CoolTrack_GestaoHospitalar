@@ -8,7 +8,17 @@ import { TipoManutencaoBadge } from '../../components/TipoManutencaoBadge'
 import { AprovacaoBadge } from '../../components/AprovacaoBadge'
 import { formatarData } from '../../core/data'
 
-export default function ManutencoesHistorico({ equipamentoId }) {
+// Lista parametrizável de manutenções de um equipamento. Reusada nas duas
+// abas da ficha:
+//  - Serviços:  tipos=['corretiva','preditiva'], com botão Registrar.
+//  - Checklist: tipos=['preventiva'], sem registro (preventiva só via checklist).
+export default function ManutencoesHistorico({
+  equipamentoId,
+  titulo = 'Manutenções',
+  tipos,
+  comRegistro = true,
+  vazio = 'Nenhum registro ainda.',
+}) {
   const {
     data: manutencoes,
     isPending,
@@ -17,33 +27,38 @@ export default function ManutencoesHistorico({ equipamentoId }) {
   } = useManutencoes(equipamentoId)
   const [formAberto, setFormAberto] = useState(false)
 
+  // Filtra pelos tipos pedidos (sem `tipos` = todos).
+  const lista = (manutencoes ?? []).filter(
+    (m) => !tipos || tipos.includes(m.tipo),
+  )
+
   return (
     <section className="mt-6 border-t border-[var(--border)] pt-6">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-[14px] text-[var(--fg-3)]">Manutenções</h2>
-        <Button
-          size="sm"
-          variant="primary"
-          icon={Plus}
-          onClick={() => setFormAberto(true)}
-        >
-          Registrar
-        </Button>
+        <h2 className="text-[14px] text-[var(--fg-3)]">{titulo}</h2>
+        {comRegistro && (
+          <Button
+            size="sm"
+            variant="primary"
+            icon={Plus}
+            onClick={() => setFormAberto(true)}
+          >
+            Registrar
+          </Button>
+        )}
       </div>
 
       {isPending && <p className="t-secondary">Carregando…</p>}
-
       {isError && (
         <p style={{ color: 'var(--danger)' }}>Erro: {error.message}</p>
       )}
-
-      {!isPending && !isError && manutencoes.length === 0 && (
-        <p className="t-secondary">Nenhuma manutenção registrada ainda.</p>
+      {!isPending && !isError && lista.length === 0 && (
+        <p className="t-secondary">{vazio}</p>
       )}
 
-      {!isPending && !isError && manutencoes.length > 0 && (
+      {!isPending && !isError && lista.length > 0 && (
         <ul className="space-y-3">
-          {manutencoes.map((m) => (
+          {lista.map((m) => (
             <li key={m.id} className="ct-card">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-sm text-[var(--fg)]">
@@ -112,12 +127,10 @@ export default function ManutencoesHistorico({ equipamentoId }) {
       )}
 
       {formAberto && (
-        <Modal
-          titulo="Registrar manutenção"
-          onClose={() => setFormAberto(false)}
-        >
+        <Modal titulo="Registrar serviço" onClose={() => setFormAberto(false)}>
           <ManutencaoForm
             equipamentoId={equipamentoId}
+            tipos={tipos}
             onSucesso={() => setFormAberto(false)}
             onCancelar={() => setFormAberto(false)}
           />

@@ -10,11 +10,10 @@ import { IconeTipo } from './iconesTipo'
 import { StatusBadge } from '../../components/StatusBadge'
 import { Button } from '../../components/Button'
 import Modal from '../../components/Modal'
-import SugestaoManutencao from '../ia/SugestaoManutencao'
 import ManutencoesHistorico from '../manutencoes/ManutencoesHistorico'
 import ChecklistEquipamento from '../checklists/ChecklistEquipamento'
 
-// Botão de aba (Registros / Checklist).
+// Botão de aba (Serviços / Checklist).
 function AbaBtn({ ativo, onClick, children }) {
   return (
     <button
@@ -59,7 +58,7 @@ export default function EquipamentoFicha() {
 
   // A aba é DIRIGIDA pela URL (fonte única): trocar de aba atualiza ?aba, e
   // navegar entre equipamentos via deep-link já abre na aba certa.
-  const aba = abaUrl === 'checklist' ? 'checklist' : 'registros'
+  const aba = abaUrl === 'checklist' ? 'checklist' : 'servicos'
   const irParaAba = (nova) =>
     navigate({
       to: '/equipamentos/$id',
@@ -153,10 +152,10 @@ export default function EquipamentoFicha() {
           {/* Abas em toda a largura */}
           <div className="mt-6 flex gap-1 border-b border-[var(--border)]">
             <AbaBtn
-              ativo={aba === 'registros'}
-              onClick={() => irParaAba('registros')}
+              ativo={aba === 'servicos'}
+              onClick={() => irParaAba('servicos')}
             >
-              Registros
+              Serviços
             </AbaBtn>
             <AbaBtn
               ativo={aba === 'checklist'}
@@ -167,11 +166,13 @@ export default function EquipamentoFicha() {
           </div>
 
           <div className="pt-4">
-            {aba === 'registros' ? (
-              <>
-                <SugestaoManutencao equipamentoId={eq.id} />
-                <ManutencoesHistorico equipamentoId={eq.id} />
-              </>
+            {aba === 'servicos' ? (
+              <ManutencoesHistorico
+                equipamentoId={eq.id}
+                titulo="Serviços"
+                tipos={['corretiva', 'preditiva']}
+                vazio="Nenhum serviço de intervenção registrado."
+              />
             ) : (
               <ChecklistEquipamento equipamento={eq} />
             )}

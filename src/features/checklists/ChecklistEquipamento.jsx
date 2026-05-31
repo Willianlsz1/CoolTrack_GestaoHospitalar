@@ -8,6 +8,8 @@ import { TIPO_LABELS } from '../equipamentos/rotulos'
 import { Button } from '../../components/Button'
 import Modal from '../../components/Modal'
 import ExecutarChecklist from './ExecutarChecklist'
+import SugestaoManutencao from '../ia/SugestaoManutencao'
+import ManutencoesHistorico from '../manutencoes/ManutencoesHistorico'
 
 // Status do checklist mensal (usa o helper de domínio; aqui só formata texto).
 function calcularStatus(eq, ultima) {
@@ -129,6 +131,18 @@ export default function ChecklistEquipamento({ equipamento }) {
       </div>
 
       {ultima?.checklist && <ResumoExecucao manutencao={ultima} />}
+
+      <SugestaoManutencao equipamentoId={equipamento.id} />
+
+      {/* Histórico de todas as execuções preventivas (read-only — preventiva
+          só nasce do "Executar checklist mensal"). */}
+      <ManutencoesHistorico
+        equipamentoId={equipamento.id}
+        titulo="Execuções preventivas"
+        tipos={['preventiva']}
+        comRegistro={false}
+        vazio="Nenhuma execução preventiva registrada."
+      />
 
       {aberto && (
         <Modal titulo="Checklist mensal" onClose={() => setAberto(false)}>
