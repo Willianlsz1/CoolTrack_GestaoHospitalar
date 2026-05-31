@@ -1,19 +1,26 @@
 import { useState } from 'react'
 import { useCriarSetor, useAtualizarSetor } from './useSetores'
+import { usePerfis } from '../perfil/usePerfis'
 import { Field } from '../../components/Field'
 import { Input } from '../../components/Input'
+import { Select } from '../../components/Select'
 import { Button } from '../../components/Button'
 
 // Form de setor (criar/editar). intervalo_dias é a cadência mensal padrão
-// que os equipamentos do setor herdam.
+// que os equipamentos do setor herdam. responsavel_id liga o setor a um
+// usuário (opcional).
 export default function SetorForm({ setor, onSucesso, onCancelar }) {
   const editando = Boolean(setor)
   const [nome, setNome] = useState(setor?.nome ?? '')
   const [intervalo, setIntervalo] = useState(
     String(setor?.intervalo_dias ?? 30),
   )
+  const [responsavelId, setResponsavelId] = useState(
+    setor?.responsavel_id ?? '',
+  )
   const [erro, setErro] = useState('')
 
+  const { data: perfis } = usePerfis()
   const criar = useCriarSetor()
   const atualizar = useAtualizarSetor()
   const mutation = editando ? atualizar : criar
@@ -32,7 +39,12 @@ export default function SetorForm({ setor, onSucesso, onCancelar }) {
     }
     setErro('')
 
-    const dados = { nome: nome.trim(), intervalo_dias: dias }
+    const dados = {
+      nome: nome.trim(),
+      intervalo_dias: dias,
+      // '' (nenhum) vira null para a coluna aceitar "sem responsável".
+      responsavel_id: responsavelId || null,
+    }
     if (editando) {
       atualizar.mutate({ id: setor.id, ...dados }, { onSuccess: onSucesso })
     } else {
@@ -60,6 +72,22 @@ export default function SetorForm({ setor, onSucesso, onCancelar }) {
           value={intervalo}
           onChange={(e) => setIntervalo(e.target.value)}
         />
+      </Field>
+      <Field
+        label="Responsável"
+        hint="Técnico que responde por este setor. Opcional."
+      >
+        <Select
+          value={responsavelId}
+          onChange={(e) => setResponsavelId(e.target.value)}
+        >
+          <option value="">— Sem responsável —</option>
+          {perfis?.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.nome || p.email || 'Sem nome'}
+            </option>
+          ))}
+        </Select>
       </Field>
 
       {erro && <p className="ct-error">{erro}</p>}

@@ -1,5 +1,16 @@
 import { supabase } from '../../core/supabase'
 
+// Lista todos os usuários (perfis) — usado para escolher o responsável de
+// um setor. Todo autenticado pode ler perfis (RLS da 0014).
+export async function buscarPerfis() {
+  const { data, error } = await supabase
+    .from('perfis')
+    .select('id, nome, email')
+    .order('nome')
+  if (error) throw error
+  return data
+}
+
 // Perfil do usuário logado (lê pelo id do usuário atual).
 export async function buscarMeuPerfil() {
   const {
