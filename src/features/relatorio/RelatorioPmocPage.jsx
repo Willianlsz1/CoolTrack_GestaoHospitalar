@@ -1,7 +1,10 @@
 import { useState } from 'react'
-import { Printer } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { Printer, Settings } from 'lucide-react'
 import { useEquipamentos } from '../equipamentos/useEquipamentos'
 import { useTodasManutencoes } from '../dashboard/useTodasManutencoes'
+import { useConfigPmoc } from '../config/useConfigPmoc'
+import { useEhAdmin } from '../perfil/useEhAdmin'
 import { montarRelatorioPmoc } from './relatorioPmoc'
 import { nomeSetorDoEquipamento } from '../../core/dominio'
 import { Select } from '../../components/Select'
@@ -27,6 +30,8 @@ const td = 'border-b border-[var(--border)] px-3 py-2'
 export default function RelatorioPmocPage() {
   const eqQuery = useEquipamentos()
   const manQuery = useTodasManutencoes()
+  const { data: config } = useConfigPmoc()
+  const { ehAdmin } = useEhAdmin()
   const [filtroSetor, setFiltroSetor] = useState('')
 
   if (eqQuery.isPending || manQuery.isPending) {
@@ -63,6 +68,11 @@ export default function RelatorioPmocPage() {
             ))}
           </Select>
         </div>
+        {ehAdmin && (
+          <Link to="/config-pmoc" className="ct-btn ct-btn--ghost">
+            <Settings size={16} /> Configurar
+          </Link>
+        )}
         <Button variant="secondary" icon={Printer} onClick={imprimir}>
           Imprimir / PDF
         </Button>
@@ -70,6 +80,21 @@ export default function RelatorioPmocPage() {
 
       {/* Área impressa. */}
       <div className="relatorio-impressao">
+        {config?.hospital_nome && (
+          <div className="mb-4 border-b border-[var(--border)] pb-3">
+            <div className="text-[16px] font-medium text-[var(--fg)]">
+              {config.hospital_nome}
+            </div>
+            <div className="t-caption">
+              {[
+                config.hospital_cnpj && `CNPJ ${config.hospital_cnpj}`,
+                config.hospital_endereco,
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+            </div>
+          </div>
+        )}
         <header className="mb-4">
           <h1>Relatório PMOC</h1>
           <p className="t-secondary mt-1">
@@ -142,6 +167,20 @@ export default function RelatorioPmocPage() {
             </tfoot>
           </table>
         </div>
+
+        {config?.rt_nome && (
+          <div className="mt-10 text-[13px]">
+            <div className="mb-1 h-px w-64 bg-[var(--fg-3)]" />
+            <div className="text-[var(--fg)]">{config.rt_nome}</div>
+            <div className="t-caption">
+              Responsável Técnico
+              {config.rt_conselho || config.rt_registro
+                ? ` · ${[config.rt_conselho, config.rt_registro].filter(Boolean).join(' ')}`
+                : ''}
+              {config.rt_documento ? ` · ART/TRT ${config.rt_documento}` : ''}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

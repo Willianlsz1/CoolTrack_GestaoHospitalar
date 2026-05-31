@@ -13,6 +13,7 @@ import SetoresPage from '../features/setores/SetoresPage.jsx'
 import RelatorioPmocPage from '../features/relatorio/RelatorioPmocPage.jsx'
 import ModelosChecklistPage from '../features/checklists/ModelosChecklistPage.jsx'
 import RondaPage from '../features/ronda/RondaPage.jsx'
+import ConfigPmocPage from '../features/config/ConfigPmocPage.jsx'
 
 // Rota raiz: o "tronco" da árvore. Seu componente é o AppLayout (casco:
 // cabeçalho + navegação), que envolve TODAS as telas via <Outlet/>.
@@ -88,6 +89,13 @@ const rondaRoute = createRoute({
   component: RondaPage,
 })
 
+// Configuração do PMOC (só admin) — estabelecimento + responsável técnico.
+const configPmocRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/config-pmoc',
+  component: ConfigPmocPage,
+})
+
 // A árvore de rotas: a raiz com suas filhas. Cada nova tela vira
 // um createRoute() adicionado aqui.
 const routeTree = rootRoute.addChildren([
@@ -100,6 +108,7 @@ const routeTree = rootRoute.addChildren([
   relatorioRoute,
   checklistsRoute,
   rondaRoute,
+  configPmocRoute,
 ])
 
 // O router em si: junta a árvore e é entregue ao RouterProvider.
