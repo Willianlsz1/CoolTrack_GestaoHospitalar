@@ -8,7 +8,11 @@ Para o _que é_ o projeto (propósito, roadmap, schema), veja os links no fim.
 - `npm run dev` — sobe o servidor de desenvolvimento (Vite)
 - `npm run build` — gera o build de produção
 - `npm run lint` — roda o ESLint
-- (Prettier e testes ainda não configurados — serão adicionados em fases futuras)
+- `npm run test` — testes (Vitest, watch); `npm run test:run` roda uma vez
+- `npm run format` — Prettier (formatação)
+
+Os testes são **unit das funções puras** (regra de negócio: cadência PMOC,
+datas, relatório, ronda). Componentes/e2e ficam para fases futuras, se preciso.
 
 ## Como o Willian trabalha
 
