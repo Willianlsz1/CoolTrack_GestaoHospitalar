@@ -1,12 +1,18 @@
 import { useState } from 'react'
 import { Link, Outlet } from '@tanstack/react-router'
+import {
+  Snowflake,
+  Boxes,
+  LayoutDashboard,
+  User,
+  LogOut,
+  Menu,
+  X,
+} from 'lucide-react'
 import { useSessao } from '../features/auth/useSessao'
 import { sair } from '../features/auth/authApi'
 import LoginPage from '../features/auth/LoginPage'
 import PerfilModal from '../features/perfil/PerfilModal'
-
-const linkAtivo = { className: 'text-cyan-400' }
-const linkInativo = { className: 'text-gray-400 hover:text-gray-100' }
 
 // Itens da navegação, reusados no desktop e no menu mobile. aoNavegar
 // fecha o menu mobile ao clicar num item.
@@ -16,34 +22,32 @@ function ItensNav({ aoAbrirPerfil, aoNavegar }) {
       <Link
         to="/"
         activeOptions={{ exact: true }}
-        activeProps={linkAtivo}
-        inactiveProps={linkInativo}
+        className="ct-nav"
+        activeProps={{ className: 'is-active' }}
         onClick={aoNavegar}
       >
-        Equipamentos
+        <Boxes size={16} /> Equipamentos
       </Link>
       <Link
         to="/dashboard"
-        activeProps={linkAtivo}
-        inactiveProps={linkInativo}
+        className="ct-nav"
+        activeProps={{ className: 'is-active' }}
         onClick={aoNavegar}
       >
-        Dashboard
+        <LayoutDashboard size={16} /> Dashboard
       </Link>
       <button
+        type="button"
         onClick={() => {
           aoAbrirPerfil()
           aoNavegar?.()
         }}
-        className="text-left text-gray-400 hover:text-gray-100"
+        className="ct-nav"
       >
-        Perfil
+        <User size={16} /> Perfil
       </button>
-      <button
-        onClick={() => sair()}
-        className="text-left text-gray-400 hover:text-gray-100"
-      >
-        Sair
+      <button type="button" onClick={() => sair()} className="ct-nav">
+        <LogOut size={16} /> Sair
       </button>
     </>
   )
@@ -59,7 +63,7 @@ export default function AppLayout() {
 
   if (carregando) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-950 text-gray-400">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--bg)] text-[var(--fg-2)]">
         Carregando…
       </div>
     )
@@ -70,36 +74,37 @@ export default function AppLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
-      <header className="border-b border-gray-800 bg-gray-900">
+    <div className="min-h-screen bg-[var(--bg)]">
+      <header className="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--surface)]">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
           <Link
             to="/"
-            className="flex items-center gap-2 text-lg font-bold text-cyan-400"
+            className="flex items-center gap-2 text-[18px] font-medium text-[var(--fg)]"
           >
-            <span aria-hidden="true">❄</span>
+            <Snowflake size={20} style={{ color: 'var(--link)' }} />
             <span>CoolTrack</span>
           </Link>
 
           {/* Desktop: navegação inline (>= sm) */}
-          <nav className="hidden items-center gap-4 text-sm sm:flex">
+          <nav className="hidden items-center gap-6 sm:flex">
             <ItensNav aoAbrirPerfil={() => setPerfilAberto(true)} />
           </nav>
 
           {/* Mobile: botão hambúrguer (< sm) */}
           <button
+            type="button"
             onClick={() => setMenuAberto((v) => !v)}
-            className="text-2xl leading-none text-gray-300 sm:hidden"
+            className="text-[var(--fg-2)] hover:text-[var(--fg)] sm:hidden"
             aria-label="Abrir menu"
             aria-expanded={menuAberto}
           >
-            ☰
+            {menuAberto ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
 
         {/* Mobile: menu aberto */}
         {menuAberto && (
-          <nav className="flex flex-col gap-3 border-t border-gray-800 px-6 py-3 text-sm sm:hidden">
+          <nav className="flex flex-col items-start gap-3 border-t border-[var(--border)] px-6 py-3 sm:hidden">
             <ItensNav
               aoAbrirPerfil={() => setPerfilAberto(true)}
               aoNavegar={() => setMenuAberto(false)}
