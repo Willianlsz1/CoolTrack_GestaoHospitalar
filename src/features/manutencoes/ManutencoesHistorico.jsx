@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useManutencoes } from './useManutencoes'
 import ManutencaoForm from './ManutencaoForm'
 import Modal from '../../components/Modal'
+import { MANUTENCAO_TIPO_LABELS } from './rotulos'
 
 // Cor do badge por tipo de manutenção.
 function corDoTipo(tipo) {
@@ -60,7 +61,7 @@ export default function ManutencoesHistorico({ equipamentoId }) {
                 <span
                   className={`rounded px-2 py-0.5 text-xs ${corDoTipo(m.tipo)}`}
                 >
-                  {m.tipo}
+                  {MANUTENCAO_TIPO_LABELS[m.tipo] ?? m.tipo}
                 </span>
               </div>
               {(m.perfis?.nome || m.tecnico) && (

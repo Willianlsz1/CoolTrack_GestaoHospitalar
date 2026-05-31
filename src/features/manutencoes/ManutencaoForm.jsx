@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { useCriarManutencao } from './useCriarManutencao'
 import { hojeLocal } from '../../core/data'
 import { inputCls, labelCls, fileCls } from '../../components/ui'
-
-const TIPOS = ['preventiva', 'corretiva', 'preditiva']
+import { MANUTENCAO_TIPOS, MANUTENCAO_TIPO_LABELS } from './rotulos'
 
 // Limite de tamanho de cada foto (5 MB).
 const MAX_FOTO_BYTES = 5 * 1024 * 1024
@@ -75,9 +74,9 @@ export default function ManutencaoForm({
           onChange={(e) => setTipo(e.target.value)}
         >
           <option value="">Selecione…</option>
-          {TIPOS.map((t) => (
+          {MANUTENCAO_TIPOS.map((t) => (
             <option key={t} value={t}>
-              {t}
+              {MANUTENCAO_TIPO_LABELS[t]}
             </option>
           ))}
         </select>

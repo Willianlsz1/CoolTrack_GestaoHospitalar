@@ -1,6 +1,7 @@
 import { Link, useParams } from '@tanstack/react-router'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEquipamento } from './useEquipamento'
+import { TIPO_LABELS, STATUS_LABELS } from './rotulos'
 import SugestaoManutencao from '../ia/SugestaoManutencao'
 import ManutencoesHistorico from '../manutencoes/ManutencoesHistorico'
 
@@ -59,8 +60,11 @@ export default function EquipamentoFicha() {
           <h1 className="text-2xl font-bold text-cyan-400">{eq.nome}</h1>
 
           <dl className="mt-4 grid gap-4 sm:grid-cols-2">
-            <Campo rotulo="Tipo" valor={eq.tipo} />
-            <Campo rotulo="Status" valor={eq.status} />
+            <Campo rotulo="Tipo" valor={TIPO_LABELS[eq.tipo] ?? eq.tipo} />
+            <Campo
+              rotulo="Status"
+              valor={STATUS_LABELS[eq.status] ?? eq.status}
+            />
             <Campo rotulo="Marca" valor={eq.marca} />
             <Campo rotulo="Modelo" valor={eq.modelo} />
             <Campo rotulo="Nº de série" valor={eq.serie} />

@@ -8,6 +8,7 @@ import {
   ultimasManutencoes,
   distribuicaoPorSetor,
 } from './dashboardAgregacoes'
+import { MANUTENCAO_TIPO_LABELS } from '../manutencoes/rotulos'
 
 const STATUS_LABELS = {
   ativo: 'Ativos',
@@ -123,7 +124,9 @@ export default function DashboardPage() {
                       </span>
                       <span className="text-gray-500">{m.data}</span>
                     </div>
-                    <span className="text-gray-400">{m.tipo}</span>
+                    <span className="text-gray-400">
+                      {MANUTENCAO_TIPO_LABELS[m.tipo] ?? m.tipo}
+                    </span>
                   </li>
                 ))}
               </ul>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useExcluirEquipamento } from './useExcluirEquipamento'
 import { contarManutencoes } from '../manutencoes/manutencoesQueries'
+import { TIPO_LABELS, STATUS_LABELS } from './rotulos'
 
 // Classes Tailwind do badge conforme o status.
 function corDoStatus(status) {
@@ -73,10 +74,12 @@ export default function EquipamentoCard({ eq, onEditar, podeExcluir }) {
         <span
           className={`shrink-0 rounded px-2 py-0.5 text-xs ${corDoStatus(eq.status)}`}
         >
-          {eq.status}
+          {STATUS_LABELS[eq.status] ?? eq.status}
         </span>
       </div>
-      <p className="mt-1 text-sm text-gray-400">{eq.tipo}</p>
+      <p className="mt-1 text-sm text-gray-400">
+        {TIPO_LABELS[eq.tipo] ?? eq.tipo}
+      </p>
       {eq.setor && <p className="mt-2 text-sm text-gray-500">{eq.setor}</p>}
 
       <div className="mt-3 flex items-center justify-between border-t border-gray-800 pt-3">

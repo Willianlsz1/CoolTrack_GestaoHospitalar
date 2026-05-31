@@ -2,18 +2,7 @@ import { useState } from 'react'
 import { useCriarEquipamento } from './useCriarEquipamento'
 import { useAtualizarEquipamento } from './useAtualizarEquipamento'
 import { inputCls, labelCls, fileCls } from '../../components/ui'
-
-// Valores espelham os CHECK do banco — o <select> impede valor inválido
-// na origem; o CHECK é a segunda linha de defesa.
-const TIPOS = [
-  'geladeira',
-  'freezer',
-  'camara_fria',
-  'ar_condicionado',
-  'climatizador',
-  'outro',
-]
-const STATUS = ['ativo', 'manutencao', 'inativo']
+import { TIPOS, STATUS, TIPO_LABELS, STATUS_LABELS } from './rotulos'
 
 // Limite de tamanho da foto (5 MB). O accept="image/*" já restringe o tipo.
 const MAX_FOTO_BYTES = 5 * 1024 * 1024
@@ -115,7 +104,7 @@ export default function EquipamentosForm({
           <option value="">Selecione…</option>
           {TIPOS.map((t) => (
             <option key={t} value={t}>
-              {t}
+              {TIPO_LABELS[t]}
             </option>
           ))}
         </select>
@@ -133,7 +122,7 @@ export default function EquipamentosForm({
         >
           {STATUS.map((s) => (
             <option key={s} value={s}>
-              {s}
+              {STATUS_LABELS[s]}
             </option>
           ))}
         </select>
