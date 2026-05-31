@@ -1,14 +1,18 @@
 import { useState } from 'react'
 import { UserPlus } from 'lucide-react'
 import { useEhAdmin } from '../perfil/useEhAdmin'
-import { useCriarUsuario } from './useCriarUsuario'
-import { Field } from '../../components/Field'
-import { Input } from '../../components/Input'
+import { usePerfis } from '../perfil/usePerfis'
+import { useSetores } from '../setores/useSetores'
+import { useTodasManutencoes } from '../dashboard/useTodasManutencoes'
+import { resumoUsuarios, servicosDoUsuario } from './usuariosAgregacoes'
+import { formatarData } from '../../core/data'
 import { Button } from '../../components/Button'
+import Modal from '../../components/Modal'
+import UsuarioForm from './UsuarioForm'
+import ServicosUsuarioModal from './ServicosUsuarioModal'
 
 // Página de gestão de usuários (só admin). A trava REAL é na Edge Function
-// (server-side); aqui o bloqueio é UX/defesa — esconde o formulário de quem
-// não é admin.
+// e no RLS; a guarda aqui é UX/defesa.
 export default function UsuariosPage() {
   const { ehAdmin, carregando } = useEhAdmin()
 
@@ -25,98 +29,139 @@ export default function UsuariosPage() {
     )
   }
 
-  return <FormularioNovoUsuario />
+  return <GestaoUsuarios />
 }
 
-function FormularioNovoUsuario() {
-  const [nome, setNome] = useState('')
-  const [email, setEmail] = useState('')
-  const [senha, setSenha] = useState('')
-  const [erroValidacao, setErroValidacao] = useState('')
-  const [sucesso, setSucesso] = useState('')
-  const criar = useCriarUsuario()
+// Badge do papel. Trocar o papel é SQL-only de propósito (migração 0017),
+// então aqui é só leitura.
+function PapelBadge({ role }) {
+  const admin = role === 'admin'
+  return (
+    <span
+      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[13px] ${
+        admin
+          ? 'border-[var(--link)] text-[var(--link)]'
+          : 'border-[var(--border)] text-[var(--fg-2)]'
+      }`}
+    >
+      {admin ? 'Admin' : 'Técnico'}
+    </span>
+  )
+}
 
-  function handleSubmit(e) {
-    e.preventDefault()
-    setSucesso('')
+function GestaoUsuarios() {
+  const {
+    data: perfis = [],
+    isPending: perfisPend,
+    isError,
+    error,
+  } = usePerfis()
+  const { data: setores = [], isPending: setoresPend } = useSetores()
+  const { data: manutencoes = [], isPending: manPend } = useTodasManutencoes()
 
-    if (nome.trim() === '') {
-      setErroValidacao('Informe o nome.')
-      return
-    }
-    if (email.trim() === '') {
-      setErroValidacao('Informe o e-mail.')
-      return
-    }
-    if (senha.length < 6) {
-      setErroValidacao('A senha deve ter ao menos 6 caracteres.')
-      return
-    }
-    setErroValidacao('')
+  const [formAberto, setFormAberto] = useState(false)
+  // Usuário cujo modal de serviços está aberto (ou null).
+  const [servicosDe, setServicosDe] = useState(null)
 
-    const emailLimpo = email.trim()
-    criar.mutate(
-      { nome: nome.trim(), email: emailLimpo, senha },
-      {
-        onSuccess: () => {
-          setSucesso(`Usuário ${emailLimpo} criado como técnico.`)
-          setNome('')
-          setEmail('')
-          setSenha('')
-        },
-      },
-    )
-  }
+  const buscando = perfisPend || setoresPend || manPend
+  const resumoMap = resumoUsuarios(perfis, setores, manutencoes)
 
   return (
-    <div className="max-w-[440px]">
-      <h1>Usuários</h1>
-      <p className="t-secondary mt-1">Criar acesso para um novo técnico.</p>
-
-      <form onSubmit={handleSubmit} className="mt-5 space-y-4">
-        <Field label="Nome" required>
-          <Input value={nome} onChange={(e) => setNome(e.target.value)} />
-        </Field>
-        <Field label="E-mail" required>
-          <Input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Field>
-        <Field
-          label="Senha provisória"
-          required
-          hint="Mínimo 6 caracteres. O técnico pode trocar depois."
-        >
-          <Input
-            type="text"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-          />
-        </Field>
-
-        {erroValidacao && <p className="ct-error">{erroValidacao}</p>}
-        {criar.isError && (
-          <p className="text-[14px]" style={{ color: 'var(--danger)' }}>
-            {criar.error.message}
+    <div>
+      <div className="mb-4 flex items-end justify-between gap-3">
+        <div>
+          <h1>Usuários</h1>
+          <p className="t-secondary mt-1">
+            Quem tem acesso, setores que responde e serviços realizados.
           </p>
-        )}
-        {sucesso && (
-          <p className="text-[14px]" style={{ color: 'var(--ok)' }}>
-            {sucesso}
-          </p>
-        )}
-
+        </div>
         <Button
-          type="submit"
           variant="primary"
           icon={UserPlus}
-          disabled={criar.isPending}
+          onClick={() => setFormAberto(true)}
         >
-          {criar.isPending ? 'Criando…' : 'Criar usuário'}
+          Novo usuário
         </Button>
-      </form>
+      </div>
+
+      {buscando && <p className="t-secondary">Carregando…</p>}
+      {isError && (
+        <p style={{ color: 'var(--danger)' }}>Erro: {error.message}</p>
+      )}
+
+      {!buscando && !isError && (
+        <div className="ct-card" style={{ padding: 0, overflowX: 'auto' }}>
+          <table className="ct-table">
+            <thead>
+              <tr>
+                <th>Usuário</th>
+                <th>Papel</th>
+                <th>Setores</th>
+                <th>Serviços</th>
+              </tr>
+            </thead>
+            <tbody>
+              {perfis.map((p) => {
+                const r = resumoMap.get(p.id)
+                return (
+                  <tr key={p.id}>
+                    <td>
+                      <div className="text-[15px] text-[var(--fg)]">
+                        {p.nome || '(sem nome)'}
+                      </div>
+                      <div className="t-caption">{p.email}</div>
+                    </td>
+                    <td>
+                      <PapelBadge role={p.role} />
+                    </td>
+                    <td className="text-[var(--fg-2)]">
+                      {r.setores.length > 0 ? r.setores.join(', ') : '—'}
+                    </td>
+                    <td>
+                      {r.totalServicos === 0 ? (
+                        <span className="text-[var(--fg-3)]">Nenhum</span>
+                      ) : (
+                        <div className="flex items-center gap-3">
+                          <span className="text-[var(--fg-2)]">
+                            <span className="text-[var(--fg)]">
+                              {r.totalServicos}
+                            </span>{' '}
+                            · último {formatarData(r.ultimoServico)}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setServicosDe(p)}
+                            className="ct-link text-[14px]"
+                          >
+                            Ver
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {formAberto && (
+        <Modal titulo="Novo usuário" onClose={() => setFormAberto(false)}>
+          <UsuarioForm
+            onSucesso={() => setFormAberto(false)}
+            onCancelar={() => setFormAberto(false)}
+          />
+        </Modal>
+      )}
+
+      {servicosDe && (
+        <ServicosUsuarioModal
+          usuario={servicosDe.nome || servicosDe.email}
+          servicos={servicosDoUsuario(manutencoes, servicosDe.id)}
+          onClose={() => setServicosDe(null)}
+        />
+      )}
     </div>
   )
 }

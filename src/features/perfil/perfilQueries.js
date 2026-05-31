@@ -5,7 +5,7 @@ import { supabase } from '../../core/supabase'
 export async function buscarPerfis() {
   const { data, error } = await supabase
     .from('perfis')
-    .select('id, nome, email')
+    .select('id, nome, email, role')
     .order('nome')
   if (error) throw error
   return data
