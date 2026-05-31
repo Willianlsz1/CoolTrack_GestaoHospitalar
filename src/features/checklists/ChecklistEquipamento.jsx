@@ -107,7 +107,10 @@ export default function ChecklistEquipamento({ equipamento }) {
     )
   }
 
-  const ultima = (manutencoes ?? []).find((m) => m.tipo === 'preventiva')
+  // Reprovada não vale como última preventiva (mesma regra da cadência).
+  const ultima = (manutencoes ?? []).find(
+    (m) => m.tipo === 'preventiva' && m.aprovacao_status !== 'reprovado',
+  )
   const status = calcularStatus(equipamento, ultima)
 
   return (

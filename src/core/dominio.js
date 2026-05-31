@@ -68,6 +68,10 @@ export function ultimaPreventivaPorEquipamento(manutencoes) {
   const mapa = new Map()
   for (const m of manutencoes) {
     if (m.tipo !== 'preventiva') continue
+    // Serviço REPROVADO pelo gestor não vale como preventiva: o trabalho foi
+    // considerado inadequado, então não zera o relógio do PMOC. Pendente e
+    // aprovado contam (a aprovação não atrasa a cadência).
+    if (m.aprovacao_status === 'reprovado') continue
     if (!mapa.has(m.equipamento_id)) mapa.set(m.equipamento_id, m)
   }
   return mapa

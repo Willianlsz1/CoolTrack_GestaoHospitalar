@@ -3,9 +3,13 @@ import { supabase } from '../../core/supabase'
 // Lista o histórico de manutenções de UM equipamento, mais recente
 // primeiro (ordenado por data).
 export async function buscarManutencoes(equipamentoId) {
+  // 2 FKs para perfis: registrado_por = técnico (key `perfis`);
+  // aprovador:perfis!aprovado_por = quem aprovou (assinatura na ficha).
   const { data, error } = await supabase
     .from('manutencoes')
-    .select('*, perfis(nome)')
+    .select(
+      '*, perfis!registrado_por(nome), aprovador:perfis!aprovado_por(nome)',
+    )
     .eq('equipamento_id', equipamentoId)
     .order('data', { ascending: false })
     .order('created_at', { ascending: false }) // desempate determinístico

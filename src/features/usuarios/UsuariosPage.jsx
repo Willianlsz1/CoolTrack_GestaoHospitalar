@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { UserPlus } from 'lucide-react'
-import { useEhAdmin } from '../perfil/useEhAdmin'
+import { SomenteAdmin } from '../../components/SomenteAdmin'
 import { usePerfis } from '../perfil/usePerfis'
 import { useSetores } from '../setores/useSetores'
 import { useTodasManutencoes } from '../dashboard/useTodasManutencoes'
@@ -14,22 +14,11 @@ import ServicosUsuarioModal from './ServicosUsuarioModal'
 // Página de gestão de usuários (só admin). A trava REAL é na Edge Function
 // e no RLS; a guarda aqui é UX/defesa.
 export default function UsuariosPage() {
-  const { ehAdmin, carregando } = useEhAdmin()
-
-  if (carregando) return <p className="t-secondary">Carregando…</p>
-
-  if (!ehAdmin) {
-    return (
-      <div>
-        <h1>Usuários</h1>
-        <p className="t-secondary mt-2">
-          Acesso restrito — apenas administradores podem gerenciar usuários.
-        </p>
-      </div>
-    )
-  }
-
-  return <GestaoUsuarios />
+  return (
+    <SomenteAdmin titulo="Usuários">
+      <GestaoUsuarios />
+    </SomenteAdmin>
+  )
 }
 
 // Badge do papel. Trocar o papel é SQL-only de propósito (migração 0017),
