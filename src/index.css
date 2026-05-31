@@ -1,4 +1,8 @@
+/* Ordem importa: regras @import precisam vir antes de tudo. */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap');
 @import 'tailwindcss';
+@import './styles/colors_and_type.css';
+@import './styles/kit.css';
 
 /* Impressão: mostra apenas a .etiqueta (QR + dados), escondendo o
    resto da página. Truque de visibility para não tocar no layout. */

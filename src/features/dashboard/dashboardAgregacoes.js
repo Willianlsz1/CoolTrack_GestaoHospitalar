@@ -1,7 +1,7 @@
 // Funções puras de agregação do dashboard. Recebem os dados já buscados
 // (equipamentos e manutenções) e devolvem os números/listas dos widgets.
 // Datas são comparadas como texto 'YYYY-MM-DD' (ordenável sem fuso).
-import { hojeLocal, diasAtras } from '../../core/data'
+import { hojeLocal, diasEntre } from '../../core/data'
 
 const DIAS_SEM_MANUTENCAO = 90
 
@@ -28,25 +28,44 @@ export function contarPorStatus(equipamentos) {
   return contagem
 }
 
-// Manutenção atrasada: a última manutenção tem proxima_manutencao
-// agendada e ela já passou (< hoje).
-export function equipamentosAtrasados(equipamentos, manutencoes) {
-  const hoje = hojeLocal()
-  const ultima = ultimaPorEquipamento(manutencoes)
-  return equipamentos.filter((eq) => {
-    const m = ultima.get(eq.id)
-    return m && m.proxima_manutencao && m.proxima_manutencao < hoje
-  })
+// Percentual formatado em pt-BR (vírgula decimal, 1 casa).
+export function percentual(parte, total) {
+  if (!total) return '0%'
+  return `${((parte / total) * 100).toFixed(1).replace('.', ',')}%`
 }
 
-// Sem manutenção há mais de 90 dias (ou nunca).
-export function equipamentosSemManutencao(equipamentos, manutencoes) {
-  const limite = diasAtras(DIAS_SEM_MANUTENCAO)
+// Atrasados COM dias de atraso, mais atrasado primeiro.
+// TODO: refinar. Hoje = (proxima_manutencao da última manutenção) vs hoje.
+// Não cobre regras mais finas (ex.: intervalo por tipo, feriados).
+export function atrasadosComDias(equipamentos, manutencoes) {
+  const hoje = hojeLocal()
   const ultima = ultimaPorEquipamento(manutencoes)
-  return equipamentos.filter((eq) => {
-    const m = ultima.get(eq.id)
-    return !m || m.data < limite
-  })
+  return equipamentos
+    .map((eq) => {
+      const m = ultima.get(eq.id)
+      if (!m?.proxima_manutencao || m.proxima_manutencao >= hoje) return null
+      return { eq, dias: diasEntre(m.proxima_manutencao, hoje) }
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.dias - a.dias)
+}
+
+// Sem manutenção há +90 dias, COM os dias desde a última manutenção
+// (ou, se nunca houve, desde o cadastro). Mais antigo primeiro.
+// TODO: a base "desde o cadastro" quando nunca houve manutenção é
+// provisória — definir a regra real (ex.: data de instalação).
+export function semManutencaoComDias(equipamentos, manutencoes) {
+  const hoje = hojeLocal()
+  const ultima = ultimaPorEquipamento(manutencoes)
+  return equipamentos
+    .map((eq) => {
+      const m = ultima.get(eq.id)
+      const base = m ? m.data : (eq.created_at?.slice(0, 10) ?? hoje)
+      const dias = diasEntre(base, hoje)
+      return dias > DIAS_SEM_MANUTENCAO ? { eq, dias } : null
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.dias - a.dias)
 }
 
 // As N manutenções mais recentes (já ordenadas por data desc).
@@ -54,12 +73,23 @@ export function ultimasManutencoes(manutencoes, n = 5) {
   return manutencoes.slice(0, n)
 }
 
-// Distribuição de equipamentos por setor (setor -> total).
-export function distribuicaoPorSetor(equipamentos) {
+// Distribuição por setor ORDENADA (maior primeiro), com os menores
+// agrupados em "Outros setores" acima do limite.
+export function porSetorOrdenado(equipamentos, limite = 8) {
   const mapa = {}
   for (const eq of equipamentos) {
     const setor = eq.setor || 'Sem setor'
     mapa[setor] = (mapa[setor] || 0) + 1
   }
-  return mapa
+
+  const ordenado = Object.entries(mapa)
+    .map(([setor, count]) => ({ setor, count }))
+    .sort((a, b) => b.count - a.count)
+
+  const principais = ordenado.slice(0, limite)
+  const outros = ordenado.slice(limite).reduce((s, x) => s + x.count, 0)
+  if (outros > 0) {
+    principais.push({ setor: 'Outros setores', count: outros, agrupado: true })
+  }
+  return principais
 }

@@ -1,5 +1,6 @@
 import { useManutencoes } from '../manutencoes/useManutencoes'
 import { preverManutencao } from './previsao'
+import { formatarData } from '../../core/data'
 
 // Sugestão estatística na ficha. Reusa o cache do histórico (mesma
 // queryKey ['manutencoes', id]) — não faz busca extra. Fica discreta
@@ -16,24 +17,24 @@ export default function SugestaoManutencao({ equipamentoId }) {
   const { intervalo, proxima } = preverManutencao(manutencoes)
 
   return (
-    <section className="mt-6 border-t border-gray-800 pt-6">
-      <h2 className="mb-3 text-sm uppercase tracking-wide text-gray-500">
+    <section className="mt-6 border-t border-[var(--border)] pt-6">
+      <h2 className="mb-3 text-[13px] text-[var(--fg-3)]">
         Sugestão (estatística)
       </h2>
       {!intervalo ? (
-        <p className="text-sm text-gray-500">
+        <p className="t-secondary">
           Dados insuficientes — são necessárias ao menos 2 manutenções em datas
           diferentes.
         </p>
       ) : (
-        <div className="rounded-lg border border-gray-800 bg-gray-900 p-4 text-sm">
-          <p className="text-gray-400">
+        <div className="ct-card text-sm">
+          <p className="t-secondary">
             Intervalo médio entre manutenções:{' '}
-            <span className="text-gray-200">{intervalo} dias</span>
+            <span className="text-[var(--fg)]">{intervalo} dias</span>
           </p>
-          <p className="mt-1 text-gray-400">
+          <p className="t-secondary mt-1">
             Próxima preventiva sugerida:{' '}
-            <span className="text-cyan-400">{proxima}</span>
+            <span className="text-[var(--link)]">{formatarData(proxima)}</span>
           </p>
         </div>
       )}

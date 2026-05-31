@@ -1,21 +1,11 @@
 import { useState } from 'react'
+import { Plus } from 'lucide-react'
 import { useManutencoes } from './useManutencoes'
 import ManutencaoForm from './ManutencaoForm'
 import Modal from '../../components/Modal'
-
-// Cor do badge por tipo de manutenção.
-function corDoTipo(tipo) {
-  switch (tipo) {
-    case 'preventiva':
-      return 'bg-green-500/15 text-green-400'
-    case 'corretiva':
-      return 'bg-red-500/15 text-red-400'
-    case 'preditiva':
-      return 'bg-blue-500/15 text-blue-400'
-    default:
-      return 'bg-gray-500/15 text-gray-400'
-  }
-}
+import { Button } from '../../components/Button'
+import { TipoManutencaoBadge } from '../../components/TipoManutencaoBadge'
+import { formatarData } from '../../core/data'
 
 export default function ManutencoesHistorico({ equipamentoId }) {
   const {
@@ -27,56 +17,51 @@ export default function ManutencoesHistorico({ equipamentoId }) {
   const [formAberto, setFormAberto] = useState(false)
 
   return (
-    <section className="mt-6 border-t border-gray-800 pt-6">
+    <section className="mt-6 border-t border-[var(--border)] pt-6">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm uppercase tracking-wide text-gray-500">
-          Manutenções
-        </h2>
-        <button
+        <h2 className="text-[13px] text-[var(--fg-3)]">Manutenções</h2>
+        <Button
+          size="sm"
+          variant="primary"
+          icon={Plus}
           onClick={() => setFormAberto(true)}
-          className="rounded bg-cyan-500 px-3 py-1 text-sm font-medium text-gray-950 hover:bg-cyan-400"
         >
-          + Registrar
-        </button>
+          Registrar
+        </Button>
       </div>
 
-      {isPending && <p className="text-gray-400">Carregando…</p>}
+      {isPending && <p className="t-secondary">Carregando…</p>}
 
-      {isError && <p className="text-red-400">Erro: {error.message}</p>}
+      {isError && (
+        <p style={{ color: 'var(--danger)' }}>Erro: {error.message}</p>
+      )}
 
       {!isPending && !isError && manutencoes.length === 0 && (
-        <p className="text-gray-400">Nenhuma manutenção registrada ainda.</p>
+        <p className="t-secondary">Nenhuma manutenção registrada ainda.</p>
       )}
 
       {!isPending && !isError && manutencoes.length > 0 && (
         <ul className="space-y-3">
           {manutencoes.map((m) => (
-            <li
-              key={m.id}
-              className="rounded-lg border border-gray-800 bg-gray-900 p-4"
-            >
+            <li key={m.id} className="ct-card">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-sm text-gray-300">{m.data}</span>
-                <span
-                  className={`rounded px-2 py-0.5 text-xs ${corDoTipo(m.tipo)}`}
-                >
-                  {m.tipo}
+                <span className="text-sm text-[var(--fg)]">
+                  {formatarData(m.data)}
                 </span>
+                <TipoManutencaoBadge tipo={m.tipo} />
               </div>
               {(m.perfis?.nome || m.tecnico) && (
-                <p className="mt-1 text-sm text-gray-400">
+                <p className="t-secondary mt-1">
                   Técnico: {m.perfis?.nome ?? m.tecnico}
                 </p>
               )}
               {m.descricao && (
-                <p className="mt-2 text-sm text-gray-300">{m.descricao}</p>
+                <p className="mt-2 text-sm text-[var(--fg-2)]">{m.descricao}</p>
               )}
-              {m.pecas && (
-                <p className="mt-2 text-sm text-gray-500">Peças: {m.pecas}</p>
-              )}
+              {m.pecas && <p className="t-caption mt-2">Peças: {m.pecas}</p>}
               {m.proxima_manutencao && (
-                <p className="mt-2 text-sm text-gray-500">
-                  Próxima: {m.proxima_manutencao}
+                <p className="t-caption mt-2">
+                  Próxima: {formatarData(m.proxima_manutencao)}
                 </p>
               )}
               {(m.foto_antes_url || m.foto_depois_url) && (
@@ -86,11 +71,9 @@ export default function ManutencoesHistorico({ equipamentoId }) {
                       <img
                         src={m.foto_antes_url}
                         alt="Antes"
-                        className="h-24 w-24 rounded object-cover"
+                        className="h-24 w-24 rounded-[var(--r)] object-cover"
                       />
-                      <figcaption className="mt-1 text-xs text-gray-500">
-                        Antes
-                      </figcaption>
+                      <figcaption className="t-caption mt-1">Antes</figcaption>
                     </figure>
                   )}
                   {m.foto_depois_url && (
@@ -98,11 +81,9 @@ export default function ManutencoesHistorico({ equipamentoId }) {
                       <img
                         src={m.foto_depois_url}
                         alt="Depois"
-                        className="h-24 w-24 rounded object-cover"
+                        className="h-24 w-24 rounded-[var(--r)] object-cover"
                       />
-                      <figcaption className="mt-1 text-xs text-gray-500">
-                        Depois
-                      </figcaption>
+                      <figcaption className="t-caption mt-1">Depois</figcaption>
                     </figure>
                   )}
                 </div>

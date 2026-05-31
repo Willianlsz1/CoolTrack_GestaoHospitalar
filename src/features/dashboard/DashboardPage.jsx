@@ -1,163 +1,108 @@
-import { Link } from '@tanstack/react-router'
+import { Boxes, RefreshCw, AlertTriangle, Clock } from 'lucide-react'
 import { useEquipamentos } from '../equipamentos/useEquipamentos'
 import { useTodasManutencoes } from './useTodasManutencoes'
 import {
   contarPorStatus,
-  equipamentosAtrasados,
-  equipamentosSemManutencao,
+  atrasadosComDias,
+  semManutencaoComDias,
   ultimasManutencoes,
-  distribuicaoPorSetor,
+  porSetorOrdenado,
 } from './dashboardAgregacoes'
-
-const STATUS_LABELS = {
-  ativo: 'Ativos',
-  manutencao: 'Em manutenção',
-  inativo: 'Inativos',
-}
-
-const tituloCls = 'mb-3 text-sm uppercase tracking-wide text-gray-500'
-const cardCls = 'rounded-lg border border-gray-800 bg-gray-900 p-4'
-
-// Card de alerta: número (vermelho quando > 0) + lista de equipamentos.
-function CardAlerta({ titulo, equipamentos }) {
-  return (
-    <section className={cardCls}>
-      <div className="flex items-baseline justify-between">
-        <h2 className="text-sm uppercase tracking-wide text-gray-500">
-          {titulo}
-        </h2>
-        <span
-          className={`text-2xl font-bold ${
-            equipamentos.length > 0 ? 'text-red-400' : 'text-gray-100'
-          }`}
-        >
-          {equipamentos.length}
-        </span>
-      </div>
-      {equipamentos.length === 0 ? (
-        <p className="mt-2 text-sm text-gray-500">Nenhum.</p>
-      ) : (
-        <ul className="mt-2 space-y-1">
-          {equipamentos.map((eq) => (
-            <li key={eq.id}>
-              <Link
-                to="/equipamentos/$id"
-                params={{ id: eq.id }}
-                className="text-sm text-cyan-400 hover:underline"
-              >
-                {eq.nome}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
-  )
-}
+import { AlertCard } from './AlertCard'
+import { PanoramaStatus } from './PanoramaStatus'
+import { UltimasManutencoes } from './UltimasManutencoes'
+import { PorSetor } from './PorSetor'
 
 export default function DashboardPage() {
-  const equipamentos = useEquipamentos()
-  const manutencoes = useTodasManutencoes()
+  const eqQuery = useEquipamentos()
+  const manQuery = useTodasManutencoes()
 
-  const carregando = equipamentos.isPending || manutencoes.isPending
-  const erro = equipamentos.isError || manutencoes.isError
+  const carregando = eqQuery.isPending || manQuery.isPending
+  const erro = eqQuery.isError || manQuery.isError
 
   if (carregando) {
     return (
       <Pagina>
-        <p className="text-gray-400">Carregando…</p>
+        <p className="t-secondary">Carregando…</p>
       </Pagina>
     )
   }
   if (erro) {
     return (
       <Pagina>
-        <p className="text-red-400">Erro ao carregar os dados.</p>
+        <p style={{ color: 'var(--danger)' }}>Erro ao carregar os dados.</p>
       </Pagina>
     )
   }
 
-  const eqs = equipamentos.data
-  const mans = manutencoes.data
-  const porStatus = contarPorStatus(eqs)
-  const atrasados = equipamentosAtrasados(eqs, mans)
-  const semManutencao = equipamentosSemManutencao(eqs, mans)
-  const ultimas = ultimasManutencoes(mans)
-  const porSetor = distribuicaoPorSetor(eqs)
+  const eqs = eqQuery.data
+  const mans = manQuery.data
+  const contagem = contarPorStatus(eqs)
+  const atrasados = atrasadosComDias(eqs, mans)
+  const semManut = semManutencaoComDias(eqs, mans)
 
   return (
-    <Pagina>
-      <div className="space-y-8">
-        <section>
-          <h2 className={tituloCls}>Equipamentos por status</h2>
-          <div className="grid gap-4 sm:grid-cols-3">
-            {Object.entries(porStatus).map(([status, total]) => (
-              <div key={status} className={cardCls}>
-                <p className="text-3xl font-bold text-gray-100">{total}</p>
-                <p className="text-sm text-gray-400">{STATUS_LABELS[status]}</p>
-              </div>
-            ))}
-          </div>
+    <Pagina total={eqs.length}>
+      <div className="flex flex-col gap-3">
+        {/* Nível 1 — alertas de ação */}
+        <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <AlertCard
+            variant="danger"
+            icon={AlertTriangle}
+            titulo="Manutenção atrasada"
+            hint="Próxima preventiva venceu — exige ação imediata"
+            total={atrasados.length}
+            itens={atrasados.slice(0, 5)}
+          />
+          <AlertCard
+            variant="warn"
+            icon={Clock}
+            titulo="Sem manutenção há +90 dias"
+            hint="Fora do intervalo recomendado — agendar revisão"
+            total={semManut.length}
+            itens={semManut.slice(0, 5)}
+          />
         </section>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <CardAlerta titulo="Manutenção atrasada" equipamentos={atrasados} />
-          <CardAlerta
-            titulo="Sem manutenção há +90 dias"
-            equipamentos={semManutencao}
-          />
-        </div>
+        {/* Nível 2 — panorama */}
+        <PanoramaStatus contagem={contagem} total={eqs.length} />
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <section>
-            <h2 className={tituloCls}>Últimas manutenções</h2>
-            {ultimas.length === 0 ? (
-              <p className="text-gray-400">Nenhuma manutenção registrada.</p>
-            ) : (
-              <ul className="space-y-2">
-                {ultimas.map((m) => (
-                  <li key={m.id} className={`${cardCls} text-sm`}>
-                    <div className="flex justify-between gap-2">
-                      <span className="text-gray-200">
-                        {m.equipamentos?.nome ?? '—'}
-                      </span>
-                      <span className="text-gray-500">{m.data}</span>
-                    </div>
-                    <span className="text-gray-400">{m.tipo}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-
-          <section>
-            <h2 className={tituloCls}>Por setor</h2>
-            <ul className="space-y-1">
-              {Object.entries(porSetor).map(([setor, total]) => (
-                <li
-                  key={setor}
-                  className="flex justify-between border-b border-gray-800 py-1 text-sm"
-                >
-                  <span className="text-gray-300">{setor}</span>
-                  <span className="text-gray-400">{total}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        </div>
+        {/* Nível 3 — contexto */}
+        <section className="grid grid-cols-1 gap-6 lg:grid-cols-[1.55fr_1fr]">
+          <UltimasManutencoes manutencoes={ultimasManutencoes(mans)} />
+          <PorSetor setores={porSetorOrdenado(eqs)} />
+        </section>
       </div>
     </Pagina>
   )
 }
 
-// Casca da página (cabeçalho fixo + conteúdo).
-function Pagina({ children }) {
+// Casca: título + chips (total real; "atualizado" provisório).
+function Pagina({ total, children }) {
+  const chip =
+    'inline-flex items-center gap-[7px] rounded-full border border-[var(--border)] bg-[var(--surface)] px-[14px] py-1.5 text-[13px] text-[var(--fg-2)]'
   return (
     <div>
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold text-cyan-400">Dashboard</h1>
-        <p className="text-sm text-gray-500">Visão geral dos equipamentos</p>
-      </header>
+      <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1>Dashboard</h1>
+          <p className="t-secondary mt-1">Visão geral dos equipamentos</p>
+        </div>
+        {total !== undefined && (
+          <div className="flex flex-wrap items-center gap-[10px]">
+            <span className={chip}>
+              <Boxes size={14} className="text-[var(--fg-3)]" />
+              <b className="font-medium text-[var(--fg)]">{total}</b>{' '}
+              equipamentos
+            </span>
+            {/* TODO: calcular "Atualizado há X min" de verdade (dataUpdatedAt). */}
+            <span className={chip}>
+              <RefreshCw size={14} className="text-[var(--fg-3)]" /> Atualizado
+              agora
+            </span>
+          </div>
+        )}
+      </div>
       {children}
     </div>
   )
