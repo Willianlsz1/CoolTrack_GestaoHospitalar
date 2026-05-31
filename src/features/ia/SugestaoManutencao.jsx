@@ -17,7 +17,7 @@ export default function SugestaoManutencao({ equipamentoId }) {
   const { intervalo, proxima } = preverManutencao(manutencoes)
 
   return (
-    <section className="mt-6 border-t border-[var(--border)] pt-6">
+    <section className="mt-1">
       <h2 className="mb-3 text-[13px] text-[var(--fg-3)]">
         Sugestão (estatística)
       </h2>
