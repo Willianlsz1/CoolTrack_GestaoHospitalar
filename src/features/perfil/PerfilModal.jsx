@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import Modal from '../../components/Modal'
-import { inputCls, labelCls } from '../../components/ui'
+import { Field } from '../../components/Field'
+import { Input } from '../../components/Input'
+import { Button } from '../../components/Button'
 import { useMeuPerfil } from './useMeuPerfil'
 import { useAtualizarMeuNome } from './useAtualizarMeuNome'
 
@@ -10,7 +12,7 @@ export default function PerfilModal({ onClose }) {
   return (
     <Modal titulo="Meu perfil" onClose={onClose}>
       {isPending ? (
-        <p className="text-gray-400">Carregando…</p>
+        <p className="t-secondary">Carregando…</p>
       ) : (
         <FormularioPerfil perfil={perfil} onClose={onClose} />
       )}
@@ -31,38 +33,25 @@ function FormularioPerfil({ perfil, onClose }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <p className="text-sm text-gray-500">{perfil?.email}</p>
-      <div>
-        <label className={labelCls} htmlFor="perfil-nome">
-          Nome
-        </label>
-        <input
-          id="perfil-nome"
-          className={inputCls}
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-        />
-      </div>
+      <p className="t-caption">{perfil?.email}</p>
+
+      <Field label="Nome">
+        <Input value={nome} onChange={(e) => setNome(e.target.value)} />
+      </Field>
 
       {atualizar.isError && (
-        <p className="text-sm text-red-400">Erro: {atualizar.error.message}</p>
+        <p className="text-[13px]" style={{ color: 'var(--danger)' }}>
+          Erro: {atualizar.error.message}
+        </p>
       )}
 
-      <div className="flex justify-end gap-2 pt-2">
-        <button
-          type="button"
-          onClick={onClose}
-          className="rounded px-4 py-2 text-gray-300 hover:bg-gray-800"
-        >
+      <div className="flex justify-end gap-2 pt-1">
+        <Button type="button" variant="ghost" onClick={onClose}>
           Cancelar
-        </button>
-        <button
-          type="submit"
-          disabled={atualizar.isPending}
-          className="rounded bg-cyan-500 px-4 py-2 font-medium text-gray-950 disabled:opacity-50"
-        >
+        </Button>
+        <Button type="submit" variant="primary" disabled={atualizar.isPending}>
           {atualizar.isPending ? 'Salvando…' : 'Salvar'}
-        </button>
+        </Button>
       </div>
     </form>
   )

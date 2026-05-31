@@ -1,11 +1,66 @@
 import { useState } from 'react'
+import { Check, Camera, CircleAlert } from 'lucide-react'
 import { useCriarManutencao } from './useCriarManutencao'
 import { hojeLocal } from '../../core/data'
-import { inputCls, labelCls, fileCls } from '../../components/ui'
 import { MANUTENCAO_TIPOS, MANUTENCAO_TIPO_LABELS } from './rotulos'
+import { Field } from '../../components/Field'
+import { Input } from '../../components/Input'
+import { Textarea } from '../../components/Textarea'
+import { Button } from '../../components/Button'
 
 // Limite de tamanho de cada foto (5 MB).
 const MAX_FOTO_BYTES = 5 * 1024 * 1024
+
+// Estilo do seletor de arquivo (mesmo do CampoFoto, mantém coesão).
+const fileInputCls =
+  'block w-full text-[13px] text-[var(--fg-2)] file:mr-3 file:rounded-[var(--r)] file:border file:border-[var(--border)] file:bg-[var(--surface-2)] file:px-3 file:py-1.5 file:text-[13px] file:text-[var(--fg)] hover:file:bg-[var(--surface)]'
+
+// Tipo como chips coloridos (substitui o <select>). Clicar seleciona;
+// o selecionado mostra ✓ e ganha a cor do tipo (via .ct-chip.is-sel).
+function ChipsTipo({ valor, aoSelecionar, erro }) {
+  return (
+    <div className={`ct-chips${erro ? ' ct-chips--err' : ''}`}>
+      {MANUTENCAO_TIPOS.map((t) => {
+        const sel = valor === t
+        return (
+          <button
+            key={t}
+            type="button"
+            data-tipo={t}
+            className={`ct-chip${sel ? ' is-sel' : ''}`}
+            onClick={() => aoSelecionar(t)}
+            aria-pressed={sel}
+          >
+            {sel ? (
+              <Check size={14} />
+            ) : (
+              <span className="ct-chip-dot" aria-hidden="true" />
+            )}
+            {MANUTENCAO_TIPO_LABELS[t]}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+// Uma célula de foto: legenda (câmera + rótulo) + seletor de arquivo.
+function CelulaFoto({ id, rotulo, aoEscolher }) {
+  return (
+    <div>
+      <span className="ct-label flex items-center gap-1.5">
+        <Camera size={14} className="text-[var(--fg-3)]" /> {rotulo}
+      </span>
+      <input
+        id={id}
+        type="file"
+        accept="image/*"
+        onChange={(e) => aoEscolher(e.target.files[0] ?? null)}
+        className={fileInputCls}
+      />
+    </div>
+  )
+}
 
 export default function ManutencaoForm({
   equipamentoId,
@@ -62,127 +117,83 @@ export default function ManutencaoForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className={labelCls} htmlFor="tipo">
-          Tipo *
-        </label>
-        <select
-          id="tipo"
-          className={inputCls}
-          value={tipo}
-          onChange={(e) => setTipo(e.target.value)}
-        >
-          <option value="">Selecione…</option>
-          {MANUTENCAO_TIPOS.map((t) => (
-            <option key={t} value={t}>
-              {MANUTENCAO_TIPO_LABELS[t]}
-            </option>
-          ))}
-        </select>
-      </div>
+    <form onSubmit={handleSubmit} className="space-y-[18px]">
+      <Field label="Tipo" required>
+        <ChipsTipo
+          valor={tipo}
+          aoSelecionar={setTipo}
+          erro={tipo === '' && Boolean(erroValidacao)}
+        />
+      </Field>
 
-      <div>
-        <label className={labelCls} htmlFor="data">
-          Data *
-        </label>
-        <input
-          id="data"
+      <Field label="Data" required>
+        <Input
           type="date"
-          className={inputCls}
           value={data}
           onChange={(e) => setData(e.target.value)}
         />
-      </div>
+      </Field>
 
-      <div>
-        <label className={labelCls} htmlFor="descricao">
-          Descrição
-        </label>
-        <textarea
-          id="descricao"
-          rows={3}
-          className={inputCls}
+      <Field label="Descrição">
+        <Textarea
+          placeholder="O que foi verificado e executado na visita…"
           value={descricao}
           onChange={(e) => setDescricao(e.target.value)}
         />
-      </div>
+      </Field>
 
-      <div>
-        <label className={labelCls} htmlFor="pecas">
-          Peças trocadas
-        </label>
-        <input
-          id="pecas"
-          className={inputCls}
-          value={pecas}
-          onChange={(e) => setPecas(e.target.value)}
-        />
-      </div>
+      <Field label="Peças trocadas">
+        <Input value={pecas} onChange={(e) => setPecas(e.target.value)} />
+      </Field>
 
-      <div>
-        <label className={labelCls} htmlFor="proxima">
-          Próxima manutenção
-        </label>
-        <input
-          id="proxima"
+      <Field label="Próxima manutenção">
+        <Input
           type="date"
-          className={inputCls}
           value={proxima}
           onChange={(e) => setProxima(e.target.value)}
         />
-      </div>
+      </Field>
 
       <div>
-        <label className={labelCls} htmlFor="foto-antes">
-          Foto antes
-        </label>
-        <input
-          id="foto-antes"
-          type="file"
-          accept="image/*"
-          className={fileCls}
-          onChange={(e) => setFotoAntes(e.target.files[0] ?? null)}
-        />
-      </div>
-
-      <div>
-        <label className={labelCls} htmlFor="foto-depois">
-          Foto depois
-        </label>
-        <input
-          id="foto-depois"
-          type="file"
-          accept="image/*"
-          className={fileCls}
-          onChange={(e) => setFotoDepois(e.target.files[0] ?? null)}
-        />
+        <span className="ct-label">Fotos antes e depois</span>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <CelulaFoto
+            id="foto-antes"
+            rotulo="Foto antes"
+            aoEscolher={setFotoAntes}
+          />
+          <CelulaFoto
+            id="foto-depois"
+            rotulo="Foto depois"
+            aoEscolher={setFotoDepois}
+          />
+        </div>
       </div>
 
       {erroValidacao && (
-        <p className="text-sm text-yellow-400">{erroValidacao}</p>
+        <p
+          className="flex items-center gap-1.5 text-[13px]"
+          style={{ color: 'var(--warn)' }}
+        >
+          <CircleAlert size={14} /> {erroValidacao}
+        </p>
       )}
       {criar.isError && (
-        <p className="text-sm text-red-400">
-          Erro ao salvar: {criar.error.message}
+        <p
+          className="flex items-center gap-1.5 text-[13px]"
+          style={{ color: 'var(--danger)' }}
+        >
+          <CircleAlert size={14} /> Erro ao salvar: {criar.error.message}
         </p>
       )}
 
-      <div className="flex justify-end gap-2 pt-2">
-        <button
-          type="button"
-          onClick={onCancelar}
-          className="rounded px-4 py-2 text-gray-300 hover:bg-gray-800"
-        >
+      <div className="flex justify-end gap-2 pt-1">
+        <Button type="button" variant="ghost" onClick={onCancelar}>
           Cancelar
-        </button>
-        <button
-          type="submit"
-          disabled={criar.isPending}
-          className="rounded bg-cyan-500 px-4 py-2 font-medium text-gray-950 disabled:opacity-50"
-        >
+        </Button>
+        <Button type="submit" variant="primary" disabled={criar.isPending}>
           {criar.isPending ? 'Salvando…' : 'Salvar'}
-        </button>
+        </Button>
       </div>
     </form>
   )

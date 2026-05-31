@@ -244,6 +244,72 @@ select.ct-input {
   background: transparent;
 }
 
+/* ---------- Chips de seleção (tipo de manutenção) ---------- */
+/* Alternativa ao <select>: 3 opções lado a lado, bolinha colorida por
+   tipo, e estado selecionado com o mesmo tratamento dos ct-badge--*. */
+.ct-chips {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.ct-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: var(--r);
+  font-size: var(--t-body);
+  cursor: pointer;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--fg-2);
+  transition:
+    border-color 0.12s,
+    background 0.12s,
+    color 0.12s;
+}
+.ct-chip:hover {
+  border-color: var(--border-strong);
+  color: var(--fg);
+}
+.ct-chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--r-full);
+  flex: none;
+}
+.ct-chip[data-tipo='preventiva'] .ct-chip-dot {
+  background: var(--type-prev);
+}
+.ct-chip[data-tipo='corretiva'] .ct-chip-dot {
+  background: var(--type-corr);
+}
+.ct-chip[data-tipo='preditiva'] .ct-chip-dot {
+  background: var(--type-pred);
+}
+.ct-chip.is-sel {
+  font-weight: var(--w-medium);
+}
+.ct-chip.is-sel[data-tipo='preventiva'] {
+  background: rgba(22, 163, 74, 0.12);
+  border-color: rgba(22, 163, 74, 0.4);
+  color: var(--type-prev);
+}
+.ct-chip.is-sel[data-tipo='corretiva'] {
+  background: rgba(220, 38, 38, 0.12);
+  border-color: rgba(220, 38, 38, 0.4);
+  color: var(--type-corr);
+}
+.ct-chip.is-sel[data-tipo='preditiva'] {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.4);
+  color: var(--type-pred);
+}
+.ct-chips--err .ct-chip {
+  border-color: var(--warn-border);
+}
+
 /* ---------- Misc ---------- */
 .ct-divider {
   border: 0;
