@@ -12,6 +12,7 @@ import UsuariosPage from '../features/usuarios/UsuariosPage.jsx'
 import SetoresPage from '../features/setores/SetoresPage.jsx'
 import RelatorioPmocPage from '../features/relatorio/RelatorioPmocPage.jsx'
 import ModelosChecklistPage from '../features/checklists/ModelosChecklistPage.jsx'
+import RondaPage from '../features/ronda/RondaPage.jsx'
 
 // Rota raiz: o "tronco" da árvore. Seu componente é o AppLayout (casco:
 // cabeçalho + navegação), que envolve TODAS as telas via <Outlet/>.
@@ -31,6 +32,10 @@ const indexRoute = createRoute({
 const fichaRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/equipamentos/$id',
+  // ?aba=checklist abre direto na aba Checklist (deep-link da ronda/scanner).
+  validateSearch: (search) => ({
+    aba: search.aba === 'checklist' ? 'checklist' : undefined,
+  }),
   component: EquipamentoFicha,
 })
 
@@ -76,6 +81,13 @@ const checklistsRoute = createRoute({
   component: ModelosChecklistPage,
 })
 
+// Ronda do mês: equipamentos com checklist pendente, por setor.
+const rondaRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/ronda',
+  component: RondaPage,
+})
+
 // A árvore de rotas: a raiz com suas filhas. Cada nova tela vira
 // um createRoute() adicionado aqui.
 const routeTree = rootRoute.addChildren([
@@ -87,6 +99,7 @@ const routeTree = rootRoute.addChildren([
   setoresRoute,
   relatorioRoute,
   checklistsRoute,
+  rondaRoute,
 ])
 
 // O router em si: junta a árvore e é entregue ao RouterProvider.
