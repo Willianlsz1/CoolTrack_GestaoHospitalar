@@ -228,6 +228,20 @@ select.ct-input {
   border-radius: var(--r-card);
   padding: 24px;
   box-shadow: var(--shadow-modal);
+  /* Barra de rolagem fina e discreta (Firefox). */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+/* Barra de rolagem fina e discreta (Chrome/Safari/Edge). */
+.ct-modal::-webkit-scrollbar {
+  width: 8px;
+}
+.ct-modal::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+.ct-modal::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 /* ---------- Misc ---------- */

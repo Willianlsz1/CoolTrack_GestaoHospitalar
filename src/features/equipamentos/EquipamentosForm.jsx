@@ -1,11 +1,33 @@
 import { useState } from 'react'
+import { Tag, ClipboardList, MapPin, Calendar, CircleAlert } from 'lucide-react'
 import { useCriarEquipamento } from './useCriarEquipamento'
 import { useAtualizarEquipamento } from './useAtualizarEquipamento'
-import { inputCls, labelCls, fileCls } from '../../components/ui'
 import { TIPOS, STATUS, TIPO_LABELS, STATUS_LABELS } from './rotulos'
+import { Field } from '../../components/Field'
+import { Input } from '../../components/Input'
+import { Select } from '../../components/Select'
+import { Button } from '../../components/Button'
+import { CampoFoto } from './CampoFoto'
 
 // Limite de tamanho da foto (5 MB). O accept="image/*" já restringe o tipo.
 const MAX_FOTO_BYTES = 5 * 1024 * 1024
+
+// Texto vazio (após trim) vira null — campos opcionais não gravam ''.
+const ouNull = (s) => (s.trim() === '' ? null : s.trim())
+
+// Seção do formulário: rótulo com ícone + os campos.
+function Secao({ icon: Icone, titulo, children }) {
+  return (
+    <section className="space-y-3">
+      <p className="flex items-center gap-2 text-[13px] text-[var(--fg-3)]">
+        <Icone size={15} /> {titulo}
+      </p>
+      {children}
+    </section>
+  )
+}
+
+const grid2 = 'grid grid-cols-1 gap-3 sm:grid-cols-2'
 
 // Form reaproveitado nos dois modos:
 // - sem `equipamento`  -> modo CRIAR
@@ -18,12 +40,21 @@ export default function EquipamentosForm({
   const editando = Boolean(equipamento)
 
   // Os estados iniciais vêm do equipamento quando editando. O form é
-  // remontado a cada abertura do modal, então o pré-preenchimento
-  // funciona a cada vez.
+  // remontado a cada abertura do modal, então o pré-preenchimento funciona.
   const [nome, setNome] = useState(equipamento?.nome ?? '')
   const [tipo, setTipo] = useState(equipamento?.tipo ?? '')
   const [status, setStatus] = useState(equipamento?.status ?? 'ativo')
+  const [marca, setMarca] = useState(equipamento?.marca ?? '')
+  const [modelo, setModelo] = useState(equipamento?.modelo ?? '')
+  const [serie, setSerie] = useState(equipamento?.serie ?? '')
+  const [patrimonio, setPatrimonio] = useState(equipamento?.patrimonio ?? '')
   const [setor, setSetor] = useState(equipamento?.setor ?? '')
+  const [andar, setAndar] = useState(equipamento?.andar ?? '')
+  const [sala, setSala] = useState(equipamento?.sala ?? '')
+  const [instalacao, setInstalacao] = useState(
+    equipamento?.data_instalacao ?? '',
+  )
+  const [garantia, setGarantia] = useState(equipamento?.data_garantia ?? '')
   const [foto, setFoto] = useState(null)
   const [removerFoto, setRemoverFoto] = useState(false)
   const [erroValidacao, setErroValidacao] = useState('')
@@ -55,8 +86,16 @@ export default function EquipamentosForm({
       nome: nome.trim(),
       tipo,
       status,
-      // Campo opcional: vazio vira null em vez de string vazia.
-      setor: setor.trim() === '' ? null : setor.trim(),
+      marca: ouNull(marca),
+      modelo: ouNull(modelo),
+      serie: ouNull(serie),
+      patrimonio: ouNull(patrimonio),
+      setor: ouNull(setor),
+      andar: ouNull(andar),
+      sala: ouNull(sala),
+      // Datas vazias precisam ser null: o tipo `date` recusa ''.
+      data_instalacao: instalacao || null,
+      data_garantia: garantia || null,
     }
 
     if (editando) {
@@ -78,129 +117,123 @@ export default function EquipamentosForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className={labelCls} htmlFor="nome">
-          Nome *
-        </label>
-        <input
-          id="nome"
-          className={inputCls}
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-        />
-      </div>
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <p className="t-secondary -mt-1">Campos com * são obrigatórios.</p>
 
-      <div>
-        <label className={labelCls} htmlFor="tipo">
-          Tipo *
-        </label>
-        <select
-          id="tipo"
-          className={inputCls}
-          value={tipo}
-          onChange={(e) => setTipo(e.target.value)}
-        >
-          <option value="">Selecione…</option>
-          {TIPOS.map((t) => (
-            <option key={t} value={t}>
-              {TIPO_LABELS[t]}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label className={labelCls} htmlFor="status">
-          Status
-        </label>
-        <select
-          id="status"
-          className={inputCls}
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-        >
-          {STATUS.map((s) => (
-            <option key={s} value={s}>
-              {STATUS_LABELS[s]}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label className={labelCls} htmlFor="setor">
-          Setor
-        </label>
-        <input
-          id="setor"
-          className={inputCls}
-          value={setor}
-          onChange={(e) => setSetor(e.target.value)}
-        />
-      </div>
-
-      <div>
-        <label className={labelCls} htmlFor="foto">
-          Foto
-        </label>
-        {editando && equipamento.foto_url && (
-          <img
-            src={equipamento.foto_url}
-            alt={equipamento.nome}
-            className={`mb-2 h-20 w-full rounded object-cover ${
-              removerFoto ? 'opacity-30' : ''
-            }`}
+      <Secao icon={Tag} titulo="Identificação">
+        <Field label="Nome" required>
+          <Input
+            placeholder="Ex.: Geladeira de medicamentos"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
           />
-        )}
-        <input
-          id="foto"
-          type="file"
-          accept="image/*"
-          className={fileCls}
-          onChange={(e) => setFoto(e.target.files[0] ?? null)}
-        />
-        {editando && equipamento.foto_url && (
-          <label className="mt-2 flex items-center gap-2 text-sm text-gray-400">
-            <input
-              type="checkbox"
-              checked={removerFoto}
-              onChange={(e) => setRemoverFoto(e.target.checked)}
+        </Field>
+        <div className={grid2}>
+          <Field label="Tipo" required>
+            <Select value={tipo} onChange={(e) => setTipo(e.target.value)}>
+              <option value="" disabled>
+                Selecione…
+              </option>
+              {TIPOS.map((t) => (
+                <option key={t} value={t}>
+                  {TIPO_LABELS[t]}
+                </option>
+              ))}
+            </Select>
+          </Field>
+          <Field label="Status">
+            <Select value={status} onChange={(e) => setStatus(e.target.value)}>
+              {STATUS.map((s) => (
+                <option key={s} value={s}>
+                  {STATUS_LABELS[s]}
+                </option>
+              ))}
+            </Select>
+          </Field>
+        </div>
+      </Secao>
+
+      <Secao icon={ClipboardList} titulo="Especificações">
+        <div className={grid2}>
+          <Field label="Marca">
+            <Input value={marca} onChange={(e) => setMarca(e.target.value)} />
+          </Field>
+          <Field label="Modelo">
+            <Input value={modelo} onChange={(e) => setModelo(e.target.value)} />
+          </Field>
+          <Field label="Nº de série">
+            <Input value={serie} onChange={(e) => setSerie(e.target.value)} />
+          </Field>
+          <Field label="Patrimônio">
+            <Input
+              value={patrimonio}
+              onChange={(e) => setPatrimonio(e.target.value)}
             />
-            Remover foto atual
-          </label>
-        )}
-        {editando && (
-          <p className="mt-1 text-xs text-gray-500">
-            Deixe vazio para manter a foto atual.
-          </p>
-        )}
-      </div>
+          </Field>
+        </div>
+      </Secao>
+
+      <Secao icon={MapPin} titulo="Localização">
+        <Field label="Setor">
+          <Input value={setor} onChange={(e) => setSetor(e.target.value)} />
+        </Field>
+        <div className={grid2}>
+          <Field label="Andar">
+            <Input value={andar} onChange={(e) => setAndar(e.target.value)} />
+          </Field>
+          <Field label="Sala">
+            <Input value={sala} onChange={(e) => setSala(e.target.value)} />
+          </Field>
+        </div>
+      </Secao>
+
+      <Secao icon={Calendar} titulo="Datas e foto">
+        <div className={grid2}>
+          <Field label="Instalação">
+            <Input
+              type="date"
+              value={instalacao}
+              onChange={(e) => setInstalacao(e.target.value)}
+            />
+          </Field>
+          <Field label="Garantia até">
+            <Input
+              type="date"
+              value={garantia}
+              onChange={(e) => setGarantia(e.target.value)}
+            />
+          </Field>
+        </div>
+        <CampoFoto
+          setFoto={setFoto}
+          removerFoto={removerFoto}
+          setRemoverFoto={setRemoverFoto}
+          fotoUrlAtual={equipamento?.foto_url}
+          editando={editando}
+        />
+      </Secao>
 
       {erroValidacao && (
-        <p className="text-sm text-yellow-400">{erroValidacao}</p>
+        <p
+          className="flex items-center gap-1.5 text-[13px]"
+          style={{ color: 'var(--warn)' }}
+        >
+          <CircleAlert size={14} /> {erroValidacao}
+        </p>
       )}
       {mutation.isError && (
-        <p className="text-sm text-red-400">
+        <p className="text-[13px]" style={{ color: 'var(--danger)' }}>
           Erro ao salvar: {mutation.error.message}
         </p>
       )}
 
-      <div className="flex justify-end gap-2 pt-2">
-        <button
-          type="button"
-          onClick={onCancelar}
-          className="rounded px-4 py-2 text-gray-300 hover:bg-gray-800"
-        >
+      <div className="flex justify-end gap-2 pt-1">
+        <Button type="button" variant="ghost" onClick={onCancelar}>
           Cancelar
-        </button>
-        <button
-          type="submit"
-          disabled={mutation.isPending}
-          className="rounded bg-cyan-500 px-4 py-2 font-medium text-gray-950 disabled:opacity-50"
-        >
+        </Button>
+        <Button type="submit" variant="primary" disabled={mutation.isPending}>
           {mutation.isPending ? 'Salvando…' : 'Salvar'}
-        </button>
+        </Button>
       </div>
     </form>
   )
