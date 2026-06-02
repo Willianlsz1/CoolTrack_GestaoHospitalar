@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ServicoDetalhe } from '../manutencoes/ServicoDetalhe'
 import { useAprovarManutencao } from '../manutencoes/useAprovarManutencao'
+import { useToast } from '../feedback/useToast'
 import { Button } from '../../components/Button'
 import { Textarea } from '../../components/Textarea'
 
@@ -9,6 +10,7 @@ import { Textarea } from '../../components/Textarea'
 // manutenções e o item sai dos pendentes.
 export function AprovacaoItem({ servico }) {
   const aprovar = useAprovarManutencao()
+  const toast = useToast()
   const [reprovando, setReprovando] = useState(false)
   const [motivo, setMotivo] = useState('')
   const [erro, setErro] = useState('')
@@ -19,11 +21,14 @@ export function AprovacaoItem({ servico }) {
       return
     }
     setErro('')
-    aprovar.mutate({
-      id: servico.id,
-      status: 'reprovado',
-      motivo: motivo.trim(),
-    })
+    aprovar.mutate(
+      {
+        id: servico.id,
+        status: 'reprovado',
+        motivo: motivo.trim(),
+      },
+      { onSuccess: () => toast.sucesso('Serviço reprovado') },
+    )
   }
 
   return (
@@ -34,7 +39,10 @@ export function AprovacaoItem({ servico }) {
             <Button
               variant="primary"
               onClick={() =>
-                aprovar.mutate({ id: servico.id, status: 'aprovado' })
+                aprovar.mutate(
+                  { id: servico.id, status: 'aprovado' },
+                  { onSuccess: () => toast.sucesso('Serviço aprovado') },
+                )
               }
               disabled={aprovar.isPending}
             >

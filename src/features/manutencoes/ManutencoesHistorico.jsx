@@ -6,6 +6,7 @@ import Modal from '../../components/Modal'
 import { Button } from '../../components/Button'
 import { TipoManutencaoBadge } from '../../components/TipoManutencaoBadge'
 import { AprovacaoBadge } from '../../components/AprovacaoBadge'
+import { useToast } from '../feedback/useToast'
 import { formatarData } from '../../core/data'
 
 // Lista parametrizável de manutenções de um equipamento. Reusada nas duas
@@ -26,6 +27,7 @@ export default function ManutencoesHistorico({
     error,
   } = useManutencoes(equipamentoId)
   const [formAberto, setFormAberto] = useState(false)
+  const toast = useToast()
 
   // Filtra pelos tipos pedidos (sem `tipos` = todos).
   const lista = (manutencoes ?? []).filter(
@@ -131,7 +133,10 @@ export default function ManutencoesHistorico({
           <ManutencaoForm
             equipamentoId={equipamentoId}
             tipos={tipos}
-            onSucesso={() => setFormAberto(false)}
+            onSucesso={() => {
+              setFormAberto(false)
+              toast.sucesso('Serviço registrado')
+            }}
             onCancelar={() => setFormAberto(false)}
           />
         </Modal>

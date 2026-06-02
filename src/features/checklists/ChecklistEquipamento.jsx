@@ -10,6 +10,7 @@ import Modal from '../../components/Modal'
 import ExecutarChecklist from './ExecutarChecklist'
 import SugestaoManutencao from '../ia/SugestaoManutencao'
 import ManutencoesHistorico from '../manutencoes/ManutencoesHistorico'
+import { useToast } from '../feedback/useToast'
 
 // Status do checklist mensal (usa o helper de domínio; aqui só formata texto).
 function calcularStatus(eq, ultima) {
@@ -87,6 +88,7 @@ export default function ChecklistEquipamento({ equipamento }) {
   const { data: manutencoes, isPending: manutencoesCarregando } =
     useManutencoes(equipamento.id)
   const [aberto, setAberto] = useState(false)
+  const toast = useToast()
 
   if (modelosCarregando || manutencoesCarregando) {
     return <p className="t-secondary">Carregando…</p>
@@ -149,7 +151,10 @@ export default function ChecklistEquipamento({ equipamento }) {
           <ExecutarChecklist
             equipamento={equipamento}
             modelo={modelo}
-            onSucesso={() => setAberto(false)}
+            onSucesso={() => {
+              setAberto(false)
+              toast.sucesso('Checklist registrado')
+            }}
             onCancelar={() => setAberto(false)}
           />
         </Modal>

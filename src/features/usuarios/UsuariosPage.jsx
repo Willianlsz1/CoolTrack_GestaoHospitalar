@@ -4,6 +4,7 @@ import { SomenteAdmin } from '../../components/SomenteAdmin'
 import { usePerfis } from '../perfil/usePerfis'
 import { useSetores } from '../setores/useSetores'
 import { useTodasManutencoes } from '../dashboard/useTodasManutencoes'
+import { useToast } from '../feedback/useToast'
 import { resumoUsuarios, servicosDoUsuario } from './usuariosAgregacoes'
 import { formatarData } from '../../core/data'
 import { Button } from '../../components/Button'
@@ -51,6 +52,7 @@ function GestaoUsuarios() {
   const [formAberto, setFormAberto] = useState(false)
   // Usuário cujo modal de serviços está aberto (ou null).
   const [servicosDe, setServicosDe] = useState(null)
+  const toast = useToast()
 
   const buscando = perfisPend || setoresPend || manPend
   const resumoMap = resumoUsuarios(perfis, setores, manutencoes)
@@ -138,7 +140,10 @@ function GestaoUsuarios() {
       {formAberto && (
         <Modal titulo="Novo usuário" onClose={() => setFormAberto(false)}>
           <UsuarioForm
-            onSucesso={() => setFormAberto(false)}
+            onSucesso={() => {
+              setFormAberto(false)
+              toast.sucesso('Usuário criado')
+            }}
             onCancelar={() => setFormAberto(false)}
           />
         </Modal>
