@@ -4,6 +4,7 @@ import { SomenteAdmin } from '../../components/SomenteAdmin'
 import { useSetores, useExcluirSetor } from './useSetores'
 import { useEquipamentos } from '../equipamentos/useEquipamentos'
 import { useTodasManutencoes } from '../dashboard/useTodasManutencoes'
+import { useToast } from '../feedback/useToast'
 import { resumoPorSetor, resumoVazio } from './setoresAgregacoes'
 import { SetorCard } from './SetorCard'
 import { Button } from '../../components/Button'
@@ -27,6 +28,7 @@ function GestaoSetores() {
   const { data: equipamentos = [], isPending: eqPend } = useEquipamentos()
   const { data: manutencoes = [], isPending: manPend } = useTodasManutencoes()
   const excluir = useExcluirSetor()
+  const toast = useToast()
   const [modalAberto, setModalAberto] = useState(false)
   const [editando, setEditando] = useState(null)
   const [busca, setBusca] = useState('')
@@ -122,7 +124,10 @@ function GestaoSetores() {
         >
           <SetorForm
             setor={editando}
-            onSucesso={() => setModalAberto(false)}
+            onSucesso={() => {
+              setModalAberto(false)
+              toast.sucesso('Setor salvo')
+            }}
             onCancelar={() => setModalAberto(false)}
           />
         </Modal>

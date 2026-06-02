@@ -5,6 +5,7 @@ import { RouterProvider } from '@tanstack/react-router'
 import './index.css'
 import { router } from './routes/router.jsx'
 import { AuthProvider } from './features/auth/AuthProvider.jsx'
+import { ToastProvider } from './features/feedback/ToastProvider.jsx'
 
 // O "cérebro" do TanStack Query: guarda o cache de todas as queries.
 // Criado UMA vez, fora do componente, para não recriar a cada render.
@@ -14,7 +15,9 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <ToastProvider>
+          <RouterProvider router={router} />
+        </ToastProvider>
       </AuthProvider>
     </QueryClientProvider>
   </StrictMode>,

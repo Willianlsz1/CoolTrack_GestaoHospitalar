@@ -3,6 +3,7 @@ import { Link, useSearch, useNavigate } from '@tanstack/react-router'
 import { Plus, ScanLine } from 'lucide-react'
 import { useEquipamentos } from './useEquipamentos'
 import { useMeuPerfil } from '../perfil/useMeuPerfil'
+import { useToast } from '../feedback/useToast'
 import { nomeSetorDoEquipamento } from '../../core/dominio'
 import { Button } from '../../components/Button'
 import Modal from '../../components/Modal'
@@ -27,6 +28,7 @@ export default function EquipamentosLista() {
   const { data: equipamentos, isPending, isError } = useEquipamentos()
   const { data: perfil } = useMeuPerfil()
   const podeExcluir = perfil?.role === 'admin'
+  const toast = useToast()
 
   // O filtro de SETOR é dirigido pela URL (?setor=<nome>): tanto o deep-link
   // vindo dos cards de Setores quanto a troca no dropdown atualizam o mesmo
@@ -157,7 +159,10 @@ export default function EquipamentosLista() {
         >
           <EquipamentosForm
             equipamento={equipamentoEditando}
-            onSucesso={() => setFormAberto(false)}
+            onSucesso={() => {
+              setFormAberto(false)
+              toast.sucesso('Equipamento salvo')
+            }}
             onCancelar={() => setFormAberto(false)}
           />
         </Modal>
