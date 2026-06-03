@@ -12,6 +12,7 @@ import { Button } from '../../components/Button'
 import Modal from '../../components/Modal'
 import ManutencoesHistorico from '../manutencoes/ManutencoesHistorico'
 import ChecklistEquipamento from '../checklists/ChecklistEquipamento'
+import { RondaBarra } from '../ronda/RondaBarra'
 
 // Botão de aba (Serviços / Checklist).
 function AbaBtn({ ativo, onClick, children }) {
@@ -51,30 +52,39 @@ function Campo({ rotulo, valor }) {
 export default function EquipamentoFicha() {
   // strict:false lê os params sem precisar amarrar ao id exato da rota.
   const { id } = useParams({ strict: false })
-  const { aba: abaUrl } = useSearch({ strict: false })
+  const { aba: abaUrl, origem } = useSearch({ strict: false })
   const navigate = useNavigate()
   const { data: eq, isPending, isError, error } = useEquipamento(id)
   const [qrAberto, setQrAberto] = useState(false)
 
+  // Chegou pela Ronda? Voltar volta para lá e mostra a barra "próximo pendente".
+  const emRonda = origem === 'ronda'
+
   // A aba é DIRIGIDA pela URL (fonte única): trocar de aba atualiza ?aba, e
-  // navegar entre equipamentos via deep-link já abre na aba certa.
+  // navegar entre equipamentos via deep-link já abre na aba certa. Preserva a
+  // origem (ronda) ao trocar de aba.
   const aba = abaUrl === 'checklist' ? 'checklist' : 'servicos'
   const irParaAba = (nova) =>
     navigate({
       to: '/equipamentos/$id',
       params: { id },
-      search: nova === 'checklist' ? { aba: 'checklist' } : {},
+      search: {
+        ...(nova === 'checklist' ? { aba: 'checklist' } : {}),
+        ...(emRonda ? { origem: 'ronda' } : {}),
+      },
       replace: true,
     })
 
   return (
     <div>
       <Link
-        to="/"
+        to={emRonda ? '/ronda' : '/'}
         className="ct-link inline-flex items-center gap-1 text-[14px]"
       >
-        <ArrowLeft size={14} /> Voltar
+        <ArrowLeft size={14} /> {emRonda ? 'Voltar à ronda' : 'Voltar'}
       </Link>
+
+      {emRonda && <RondaBarra equipamentoId={id} />}
 
       {isPending && <p className="t-secondary mt-4">Carregando…</p>}
 

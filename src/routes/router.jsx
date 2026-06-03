@@ -39,9 +39,11 @@ const indexRoute = createRoute({
 const fichaRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/equipamentos/$id',
-  // ?aba=checklist abre direto na aba Checklist (deep-link da ronda/scanner).
+  // ?aba=checklist abre direto na aba Checklist; ?origem=ronda liga o modo
+  // ronda (barra "próximo pendente" + Voltar para a ronda).
   validateSearch: (search) => ({
     aba: search.aba === 'checklist' ? 'checklist' : undefined,
+    origem: search.origem === 'ronda' ? 'ronda' : undefined,
   }),
   component: EquipamentoFicha,
 })

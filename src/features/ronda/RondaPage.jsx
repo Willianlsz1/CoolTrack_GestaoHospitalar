@@ -74,7 +74,7 @@ export default function RondaPage() {
                   <Link
                     to="/equipamentos/$id"
                     params={{ id: eq.id }}
-                    search={{ aba: 'checklist' }}
+                    search={{ aba: 'checklist', origem: 'ronda' }}
                     className="flex items-center gap-3 px-4 py-3 hover:bg-[var(--surface-2)]"
                     style={{ color: 'inherit', textDecoration: 'none' }}
                   >

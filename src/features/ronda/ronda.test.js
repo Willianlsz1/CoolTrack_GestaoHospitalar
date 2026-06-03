@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { montarRonda } from './ronda'
+import { montarRonda, pendentesDaRonda } from './ronda'
 
 beforeEach(() => {
   vi.useFakeTimers()
@@ -37,5 +37,12 @@ describe('montarRonda', () => {
   it('rotula o status de forma legível', () => {
     const { setores } = montarRonda(equipamentos, manutencoes, true)
     expect(setores[0].itens[0].status.label).toBe('Atrasado há 30 dias')
+  })
+})
+
+describe('pendentesDaRonda', () => {
+  it('lista só os pendentes, em ordem de ronda', () => {
+    const lista = pendentesDaRonda(equipamentos, manutencoes)
+    expect(lista.map((e) => e.id)).toEqual(['e1']) // e2 está em dia
   })
 })
