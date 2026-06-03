@@ -27,7 +27,19 @@ describe('montarRelatorioPmoc', () => {
     },
   ]
   const manutencoes = [
-    { equipamento_id: 'e1', tipo: 'preventiva', data: '2026-05-01' },
+    {
+      equipamento_id: 'e1',
+      tipo: 'preventiva',
+      data: '2026-05-01',
+      aprovacao_status: 'aprovado',
+    },
+    // Pendente de aprovação: NÃO deve contar na coluna "Última".
+    {
+      equipamento_id: 'e2',
+      tipo: 'preventiva',
+      data: '2026-05-01',
+      aprovacao_status: 'pendente',
+    },
   ]
 
   const { linhas, totais } = montarRelatorioPmoc(equipamentos, manutencoes)
@@ -41,7 +53,7 @@ describe('montarRelatorioPmoc', () => {
     expect(linhas[0].proxima).toBe('31/05/2026')
   })
 
-  it('mostra "—" quando não há preventiva', () => {
+  it('ignora preventiva PENDENTE — só conta a aprovada (mostra "—")', () => {
     expect(linhas[1].ultima).toBe('—')
     expect(linhas[1].proxima).toBe('—')
   })

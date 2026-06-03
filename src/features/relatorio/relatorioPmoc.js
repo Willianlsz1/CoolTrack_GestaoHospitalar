@@ -11,7 +11,11 @@ const BTU_POR_TR = 12000
 // Espelha as colunas do documento oficial (periodicidade, última/próxima,
 // localização, carga, área, ativo) e os totais (qtd, BTU, m², TR).
 export function montarRelatorioPmoc(equipamentos, manutencoes) {
-  const ultimaPrev = ultimaPreventivaPorEquipamento(manutencoes)
+  // Documento oficial: a coluna "Última" só conta preventiva APROVADA
+  // (pendente não certifica conformidade até o gestor validar).
+  const ultimaPrev = ultimaPreventivaPorEquipamento(manutencoes, {
+    somenteAprovadas: true,
+  })
 
   const linhas = equipamentos.map((eq) => {
     const m = ultimaPrev.get(eq.id)
