@@ -108,7 +108,7 @@ export default function DashboardPage() {
             titulo="Manutenção atrasada"
             hint="Passou do intervalo desde a última preventiva — ação imediata"
             total={atrasados.length}
-            itens={atrasados.slice(0, 5)}
+            itens={atrasados}
           />
           <AlertCard
             variant="warn"
@@ -116,7 +116,7 @@ export default function DashboardPage() {
             titulo="Vence em breve"
             hint="Higienização a vencer nos próximos 7 dias — agendar"
             total={aVencer.length}
-            itens={aVencer.slice(0, 5)}
+            itens={aVencer}
           />
         </section>
 

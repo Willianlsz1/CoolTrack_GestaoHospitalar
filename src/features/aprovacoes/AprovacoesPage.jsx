@@ -5,6 +5,7 @@ import { useAprovarVarios } from '../manutencoes/useAprovarManutencao'
 import { useToast } from '../feedback/useToast'
 import { ServicoDetalhe } from '../manutencoes/ServicoDetalhe'
 import { Button } from '../../components/Button'
+import { Input } from '../../components/Input'
 import {
   filtrarPorAprovacao,
   contagemPorAprovacao,
@@ -53,16 +54,28 @@ function FilaAprovacoes() {
   const aprovarVarios = useAprovarVarios()
   const toast = useToast()
   const [aba, setAba] = useState('pendente')
+  const [busca, setBusca] = useState('')
   const [selecionados, setSelecionados] = useState(() => new Set())
 
   const contagem = contagemPorAprovacao(manutencoes)
   const lista = filtrarPorAprovacao(manutencoes, aba)
 
-  // Só os ids ainda na lista (ignora seleção de itens que já saíram da fila).
-  const idsValidos = lista
+  // Busca por equipamento ou técnico, dentro da aba atual.
+  const termo = busca.trim().toLowerCase()
+  const listaFiltrada = termo
+    ? lista.filter((m) =>
+        `${m.equipamentos?.nome ?? ''} ${m.perfis?.nome ?? m.tecnico ?? ''}`
+          .toLowerCase()
+          .includes(termo),
+      )
+    : lista
+
+  // Só os ids ainda na lista visível (ignora seleção de itens que saíram).
+  const idsValidos = listaFiltrada
     .filter((m) => selecionados.has(m.id))
     .map((m) => m.id)
-  const todosSel = lista.length > 0 && idsValidos.length === lista.length
+  const todosSel =
+    listaFiltrada.length > 0 && idsValidos.length === listaFiltrada.length
 
   function alternar(id) {
     setSelecionados((s) => {
@@ -73,7 +86,9 @@ function FilaAprovacoes() {
     })
   }
   function alternarTodos() {
-    setSelecionados(todosSel ? new Set() : new Set(lista.map((m) => m.id)))
+    setSelecionados(
+      todosSel ? new Set() : new Set(listaFiltrada.map((m) => m.id)),
+    )
   }
   function aprovarSelecionados() {
     aprovarVarios.mutate(idsValidos, {
@@ -109,6 +124,17 @@ function FilaAprovacoes() {
         ))}
       </div>
 
+      {/* Busca dentro da aba (equipamento ou técnico) */}
+      {!isPending && !isError && lista.length > 0 && (
+        <div className="mb-3 sm:max-w-xs">
+          <Input
+            placeholder="Buscar equipamento ou técnico…"
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+          />
+        </div>
+      )}
+
       {isPending && <p className="t-secondary">Carregando…</p>}
       {isError && (
         <p style={{ color: 'var(--danger)' }}>Erro: {error.message}</p>
@@ -122,8 +148,17 @@ function FilaAprovacoes() {
         </p>
       )}
 
+      {!isPending &&
+        !isError &&
+        lista.length > 0 &&
+        listaFiltrada.length === 0 && (
+          <p className="t-secondary">
+            Nenhum serviço encontrado com essa busca.
+          </p>
+        )}
+
       {/* Barra de aprovação em lote — só na aba Pendentes */}
-      {aba === 'pendente' && lista.length > 0 && (
+      {aba === 'pendente' && listaFiltrada.length > 0 && (
         <div className="mb-3 flex flex-wrap items-center gap-3">
           <label className="flex items-center gap-2 text-[14px] text-[var(--fg-2)]">
             <input
@@ -132,7 +167,7 @@ function FilaAprovacoes() {
               onChange={alternarTodos}
               className="h-4 w-4 accent-[var(--brand)]"
             />
-            Selecionar todos ({lista.length})
+            Selecionar todos ({listaFiltrada.length})
           </label>
           <Button
             variant="primary"
@@ -149,9 +184,9 @@ function FilaAprovacoes() {
         </div>
       )}
 
-      {lista.length > 0 && (
+      {listaFiltrada.length > 0 && (
         <ul className="m-0 grid list-none grid-cols-1 items-start gap-4 p-0 lg:grid-cols-2">
-          {lista.map((m) =>
+          {listaFiltrada.map((m) =>
             aba === 'pendente' ? (
               <AprovacaoItem
                 key={m.id}

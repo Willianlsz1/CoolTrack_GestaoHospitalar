@@ -55,6 +55,7 @@ function CelulaFoto({ id, rotulo, aoEscolher }) {
         id={id}
         type="file"
         accept="image/*"
+        capture="environment"
         onChange={(e) => aoEscolher(e.target.files[0] ?? null)}
         className={fileInputCls}
       />

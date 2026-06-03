@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Pencil } from 'lucide-react'
 import { useExcluirEquipamento } from './useExcluirEquipamento'
+import { useToast } from '../feedback/useToast'
 import { contarManutencoes } from '../manutencoes/manutencoesQueries'
 import { TIPO_LABELS } from './rotulos'
 import { nomeSetorDoEquipamento } from '../../core/dominio'
@@ -18,6 +19,7 @@ const acoes = {
 
 export function EquipamentoLinha({ eq, onEditar, podeExcluir }) {
   const excluir = useExcluirEquipamento()
+  const toast = useToast()
   const [fase, setFase] = useState('idle') // idle | confirmando
   const [contagem, setContagem] = useState(null)
 
@@ -29,11 +31,14 @@ export function EquipamentoLinha({ eq, onEditar, podeExcluir }) {
   }
 
   function confirmar() {
-    excluir.mutate({
-      id: eq.id,
-      foto_url: eq.foto_url,
-      comManutencoes: (contagem ?? 0) > 0,
-    })
+    excluir.mutate(
+      {
+        id: eq.id,
+        foto_url: eq.foto_url,
+        comManutencoes: (contagem ?? 0) > 0,
+      },
+      { onError: () => toast.erro('Não foi possível excluir o equipamento.') },
+    )
   }
 
   const nomeSetor = nomeSetorDoEquipamento(eq)

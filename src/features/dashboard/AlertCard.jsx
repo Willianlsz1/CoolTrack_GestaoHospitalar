@@ -1,12 +1,14 @@
+import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { ChevronRight, ArrowRight } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 import { IconeTipo } from '../equipamentos/iconesTipo'
 import { nomeSetorDoEquipamento } from '../../core/dominio'
 
 // Card de alerta reutilizável (danger/warn): título + número grande +
 // lista de equipamentos (ícone do tipo, nome, setor·sala, "X dias",
-// chevron). Cada linha leva à ficha. Rodapé "Ver todos" se houver mais.
+// chevron). Cada linha leva à ficha. "Ver todos" expande a lista ali mesmo.
 const COR = { danger: 'var(--danger)', warn: 'var(--warn)' }
+const LIMITE = 5
 
 function localizacao(eq) {
   const nomeSetor = nomeSetorDoEquipamento(eq)
@@ -24,6 +26,8 @@ export function AlertCard({
   itens,
 }) {
   const cor = COR[variant]
+  const [mostrarTodos, setMostrarTodos] = useState(false)
+  const visiveis = mostrarTodos ? itens : itens.slice(0, LIMITE)
   return (
     <article className="flex flex-col rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)] px-[22px] py-4">
       <div className="flex items-start justify-between gap-4">
@@ -46,7 +50,7 @@ export function AlertCard({
         <p className="t-caption mt-2">Nenhum equipamento — tudo em dia.</p>
       ) : (
         <ul className="m-0 mt-2 list-none p-0">
-          {itens.map(({ eq, dias }) => {
+          {visiveis.map(({ eq, dias }) => {
             return (
               <li
                 key={eq.id}
@@ -86,16 +90,16 @@ export function AlertCard({
         </ul>
       )}
 
-      {/* Rodapé sempre presente quando há itens — simétrico entre os dois
-          cards. Leva ao inventário (TODO: filtrar por este alerta). */}
-      {total > 0 && (
+      {/* Expande/recolhe a lista ali mesmo, sem navegar nem carregar query. */}
+      {itens.length > LIMITE && (
         <div className="mt-auto pt-[10px]">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-[5px] text-[14px] text-[var(--link)]"
+          <button
+            type="button"
+            onClick={() => setMostrarTodos((v) => !v)}
+            className="text-[14px] text-[var(--link)]"
           >
-            Ver todos os {total} equipamentos <ArrowRight size={14} />
-          </Link>
+            {mostrarTodos ? 'Ver menos' : `Ver todos os ${total}`}
+          </button>
         </div>
       )}
     </article>

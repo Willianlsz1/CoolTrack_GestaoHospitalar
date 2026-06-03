@@ -3,6 +3,7 @@ import { Link, Outlet } from '@tanstack/react-router'
 import {
   Snowflake,
   Boxes,
+  ScanLine,
   LayoutDashboard,
   Route,
   FileText,
@@ -10,6 +11,7 @@ import {
   ClipboardCheck,
   MapPin,
   UserPlus,
+  Settings,
   User,
   LogOut,
   Menu,
@@ -26,6 +28,7 @@ import PerfilModal from '../features/perfil/PerfilModal'
 // exact marca o link da raiz (só ativo em "/"). A trava real é sempre o RLS.
 const ITENS_NAV = [
   { to: '/', label: 'Equipamentos', icon: Boxes, exact: true },
+  { to: '/escanear', label: 'Escanear', icon: ScanLine },
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/ronda', label: 'Ronda', icon: Route },
   { to: '/relatorio', label: 'Relatório', icon: FileText },
@@ -38,6 +41,7 @@ const ITENS_NAV = [
   { to: '/checklists', label: 'Checklists', icon: ListChecks, adminOnly: true },
   { to: '/setores', label: 'Setores', icon: MapPin, adminOnly: true },
   { to: '/usuarios', label: 'Usuários', icon: UserPlus, adminOnly: true },
+  { to: '/config-pmoc', label: 'Config', icon: Settings, adminOnly: true },
 ]
 
 // Itens da navegação, reusados no desktop e no menu mobile. aoNavegar
