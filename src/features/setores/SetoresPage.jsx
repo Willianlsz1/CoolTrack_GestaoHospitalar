@@ -52,11 +52,11 @@ function GestaoSetores() {
     setEditando(s)
     setModalAberto(true)
   }
-  function confirmarExcluir(s) {
-    const ok = window.confirm(
-      `Excluir o setor "${s.nome}"? Os equipamentos nele ficarão sem setor.`,
-    )
-    if (ok) excluir.mutate(s.id)
+  // A confirmação agora é inline no card; aqui só executa.
+  function excluirSetor(s) {
+    excluir.mutate(s.id, {
+      onError: () => toast.erro('Não foi possível excluir o setor.'),
+    })
   }
 
   return (
@@ -109,7 +109,7 @@ function GestaoSetores() {
                   setor={s}
                   resumo={resumoMap.get(s.id) ?? resumoVazio()}
                   onEditar={() => abrirEdicao(s)}
-                  onExcluir={() => confirmarExcluir(s)}
+                  onExcluir={() => excluirSetor(s)}
                 />
               ))}
             </div>

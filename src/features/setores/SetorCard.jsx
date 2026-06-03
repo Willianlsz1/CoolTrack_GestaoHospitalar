@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Clock, User, Boxes, Pencil, Trash2, ArrowRight } from 'lucide-react'
 
@@ -25,29 +26,56 @@ const acaoCls =
 export function SetorCard({ setor, resumo, onEditar, onExcluir }) {
   const responsavel = setor.responsavel?.nome || setor.responsavel?.email
   const semEquipamentos = resumo.total === 0
+  const [confirmando, setConfirmando] = useState(false)
 
   return (
     <article className="flex flex-col gap-3 rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)] p-4">
       {/* Cabeçalho: nome + ações */}
       <div className="flex items-start justify-between gap-2">
         <h2 className="text-[17px] font-medium">{setor.nome}</h2>
-        <div className="flex flex-none gap-1">
-          <button
-            type="button"
-            onClick={onEditar}
-            aria-label="Editar"
-            className={acaoCls}
-          >
-            <Pencil size={16} />
-          </button>
-          <button
-            type="button"
-            onClick={onExcluir}
-            aria-label="Excluir"
-            className={acaoCls}
-          >
-            <Trash2 size={16} />
-          </button>
+        <div className="flex flex-none items-center gap-1">
+          {confirmando ? (
+            <>
+              <button
+                type="button"
+                onClick={() => {
+                  setConfirmando(false)
+                  onExcluir()
+                }}
+                title="Os equipamentos do setor ficarão sem setor"
+                className="rounded-[var(--r)] px-2 py-1 text-[13px]"
+                style={{ color: 'var(--danger)' }}
+              >
+                Excluir
+              </button>
+              <button
+                type="button"
+                onClick={() => setConfirmando(false)}
+                className="rounded-[var(--r)] px-2 py-1 text-[13px] text-[var(--fg-3)] hover:text-[var(--fg)]"
+              >
+                Cancelar
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={onEditar}
+                aria-label="Editar"
+                className={acaoCls}
+              >
+                <Pencil size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setConfirmando(true)}
+                aria-label="Excluir"
+                className={acaoCls}
+              >
+                <Trash2 size={16} />
+              </button>
+            </>
+          )}
         </div>
       </div>
 
