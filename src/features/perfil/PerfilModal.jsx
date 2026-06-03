@@ -5,6 +5,7 @@ import { Input } from '../../components/Input'
 import { Button } from '../../components/Button'
 import { useMeuPerfil } from './useMeuPerfil'
 import { useAtualizarMeuNome } from './useAtualizarMeuNome'
+import { Carregando } from '../../components/Estado'
 
 export default function PerfilModal({ onClose }) {
   const { data: perfil, isPending } = useMeuPerfil()
@@ -12,7 +13,7 @@ export default function PerfilModal({ onClose }) {
   return (
     <Modal titulo="Meu perfil" onClose={onClose}>
       {isPending ? (
-        <p className="t-secondary">Carregando…</p>
+        <Carregando />
       ) : (
         <FormularioPerfil perfil={perfil} onClose={onClose} />
       )}

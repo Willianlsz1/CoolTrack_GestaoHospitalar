@@ -7,12 +7,13 @@ import { FREQ_LABELS } from './rotulos'
 import { Button } from '../../components/Button'
 import Modal from '../../components/Modal'
 import ModeloChecklistForm from './ModeloChecklistForm'
+import { Carregando, Erro } from '../../components/Estado'
 
 // Gestão dos modelos de checklist (só admin). A trava real é o RLS (0019).
 export default function ModelosChecklistPage() {
   const { ehAdmin, carregando } = useEhAdmin()
 
-  if (carregando) return <p className="t-secondary">Carregando…</p>
+  if (carregando) return <Carregando />
 
   if (!ehAdmin) {
     return (
@@ -66,10 +67,8 @@ function GestaoModelos() {
         </Button>
       </div>
 
-      {isPending && <p className="t-secondary">Carregando…</p>}
-      {isError && (
-        <p style={{ color: 'var(--danger)' }}>Erro: {error.message}</p>
-      )}
+      {isPending && <Carregando />}
+      {isError && <Erro>Erro: {error.message}</Erro>}
 
       {!isPending && !isError && modelos.length === 0 && (
         <div className="rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)] p-6 text-center">
