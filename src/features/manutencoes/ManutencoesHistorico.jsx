@@ -7,6 +7,7 @@ import { Button } from '../../components/Button'
 import { TipoManutencaoBadge } from '../../components/TipoManutencaoBadge'
 import { AprovacaoBadge } from '../../components/AprovacaoBadge'
 import { useToast } from '../feedback/useToast'
+import { Carregando, Erro } from '../../components/Estado'
 import { formatarData } from '../../core/data'
 
 // Lista parametrizável de manutenções de um equipamento. Reusada nas duas
@@ -50,10 +51,8 @@ export default function ManutencoesHistorico({
         )}
       </div>
 
-      {isPending && <p className="t-secondary">Carregando…</p>}
-      {isError && (
-        <p style={{ color: 'var(--danger)' }}>Erro: {error.message}</p>
-      )}
+      {isPending && <Carregando />}
+      {isError && <Erro>Erro: {error.message}</Erro>}
       {!isPending && !isError && lista.length === 0 && (
         <p className="t-secondary">{vazio}</p>
       )}

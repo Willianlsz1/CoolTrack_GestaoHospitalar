@@ -13,6 +13,7 @@ import Modal from '../../components/Modal'
 import ManutencoesHistorico from '../manutencoes/ManutencoesHistorico'
 import ChecklistEquipamento from '../checklists/ChecklistEquipamento'
 import { RondaBarra } from '../ronda/RondaBarra'
+import { Carregando, Erro } from '../../components/Estado'
 
 // Botão de aba (Serviços / Checklist).
 function AbaBtn({ ativo, onClick, children }) {
@@ -86,12 +87,12 @@ export default function EquipamentoFicha() {
 
       {emRonda && <RondaBarra equipamentoId={id} />}
 
-      {isPending && <p className="t-secondary mt-4">Carregando…</p>}
+      {isPending && <Carregando className="mt-4" />}
 
       {isError && (
-        <p className="mt-4" style={{ color: 'var(--danger)' }}>
+        <Erro className="mt-4">
           Erro ao carregar o equipamento: {error.message}
-        </p>
+        </Erro>
       )}
 
       {!isPending && !isError && !eq && (

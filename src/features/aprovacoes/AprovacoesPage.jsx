@@ -6,6 +6,7 @@ import { useToast } from '../feedback/useToast'
 import { ServicoDetalhe } from '../manutencoes/ServicoDetalhe'
 import { Button } from '../../components/Button'
 import { Input } from '../../components/Input'
+import { Carregando, Erro } from '../../components/Estado'
 import {
   filtrarPorAprovacao,
   contagemPorAprovacao,
@@ -135,10 +136,8 @@ function FilaAprovacoes() {
         </div>
       )}
 
-      {isPending && <p className="t-secondary">Carregando…</p>}
-      {isError && (
-        <p style={{ color: 'var(--danger)' }}>Erro: {error.message}</p>
-      )}
+      {isPending && <Carregando />}
+      {isError && <Erro>Erro: {error.message}</Erro>}
 
       {!isPending && !isError && lista.length === 0 && (
         <p className="t-secondary">

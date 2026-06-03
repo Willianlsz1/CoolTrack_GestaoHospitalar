@@ -12,6 +12,7 @@ import { useEquipamentos } from '../equipamentos/useEquipamentos'
 import { useTodasManutencoes } from './useTodasManutencoes'
 import { useEhAdmin } from '../perfil/useEhAdmin'
 import { contagemPorAprovacao } from '../aprovacoes/aprovacoesSelectors'
+import { Carregando, Erro } from '../../components/Estado'
 import {
   contarPorStatus,
   atrasadosComDias,
@@ -36,14 +37,14 @@ export default function DashboardPage() {
   if (carregando) {
     return (
       <Pagina>
-        <p className="t-secondary">Carregando…</p>
+        <Carregando />
       </Pagina>
     )
   }
   if (erro) {
     return (
       <Pagina>
-        <p style={{ color: 'var(--danger)' }}>Erro ao carregar os dados.</p>
+        <Erro>Erro ao carregar os dados.</Erro>
       </Pagina>
     )
   }

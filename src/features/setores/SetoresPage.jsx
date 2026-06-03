@@ -5,6 +5,7 @@ import { useSetores, useExcluirSetor } from './useSetores'
 import { useEquipamentos } from '../equipamentos/useEquipamentos'
 import { useTodasManutencoes } from '../dashboard/useTodasManutencoes'
 import { useToast } from '../feedback/useToast'
+import { Carregando, Erro } from '../../components/Estado'
 import { resumoPorSetor, resumoVazio } from './setoresAgregacoes'
 import { SetorCard } from './SetorCard'
 import { Button } from '../../components/Button'
@@ -73,10 +74,8 @@ function GestaoSetores() {
         </Button>
       </div>
 
-      {buscando && <p className="t-secondary">Carregando…</p>}
-      {isError && (
-        <p style={{ color: 'var(--danger)' }}>Erro: {error.message}</p>
-      )}
+      {buscando && <Carregando />}
+      {isError && <Erro>Erro: {error.message}</Erro>}
 
       {!buscando && !isError && setores.length === 0 && (
         <div className="rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)] p-6 text-center">

@@ -11,7 +11,27 @@ export default function Modal({ titulo, onClose, children }) {
   useEffect(() => {
     ref.current?.focus()
     function onKey(e) {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') {
+        onClose()
+        return
+      }
+      // Focus-trap: Tab/Shift+Tab ciclam dentro do diálogo (não vazam para o
+      // conteúdo atrás do overlay).
+      if (e.key !== 'Tab' || !ref.current) return
+      const focaveis = ref.current.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      )
+      if (focaveis.length === 0) return
+      const primeiro = focaveis[0]
+      const ultimo = focaveis[focaveis.length - 1]
+      const ativo = document.activeElement
+      if (e.shiftKey && (ativo === primeiro || ativo === ref.current)) {
+        e.preventDefault()
+        ultimo.focus()
+      } else if (!e.shiftKey && ativo === ultimo) {
+        e.preventDefault()
+        primeiro.focus()
+      }
     }
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)

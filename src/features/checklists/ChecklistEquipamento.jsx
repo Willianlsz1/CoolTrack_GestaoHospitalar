@@ -12,6 +12,7 @@ import SugestaoManutencao from '../ia/SugestaoManutencao'
 import ManutencoesHistorico from '../manutencoes/ManutencoesHistorico'
 import ManutencaoForm from '../manutencoes/ManutencaoForm'
 import { useToast } from '../feedback/useToast'
+import { Carregando } from '../../components/Estado'
 
 // Descrição pré-preenchida da corretiva a partir das exceções do checklist.
 function descricaoDeExcecoes(excecoes) {
@@ -121,7 +122,7 @@ export default function ChecklistEquipamento({ equipamento }) {
   const toast = useToast()
 
   if (modelosCarregando || manutencoesCarregando) {
-    return <p className="t-secondary">Carregando…</p>
+    return <Carregando />
   }
 
   const modelo = (modelos ?? []).find(

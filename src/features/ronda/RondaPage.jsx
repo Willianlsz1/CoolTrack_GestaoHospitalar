@@ -6,6 +6,7 @@ import { useTodasManutencoes } from '../dashboard/useTodasManutencoes'
 import { TIPO_LABELS } from '../equipamentos/rotulos'
 import { IconeTipo } from '../equipamentos/iconesTipo'
 import { montarRonda } from './ronda'
+import { Carregando, Erro } from '../../components/Estado'
 
 export default function RondaPage() {
   const eqQuery = useEquipamentos()
@@ -13,10 +14,10 @@ export default function RondaPage() {
   const [soPendentes, setSoPendentes] = useState(true)
 
   if (eqQuery.isPending || manQuery.isPending) {
-    return <p className="t-secondary">Carregando…</p>
+    return <Carregando />
   }
   if (eqQuery.isError || manQuery.isError) {
-    return <p style={{ color: 'var(--danger)' }}>Erro ao carregar os dados.</p>
+    return <Erro>Erro ao carregar os dados.</Erro>
   }
 
   const { setores, totalPendentes } = montarRonda(

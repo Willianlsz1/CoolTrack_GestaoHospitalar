@@ -6,6 +6,7 @@ import { useConfigPmoc, useSalvarConfigPmoc } from './useConfigPmoc'
 import { Field } from '../../components/Field'
 import { Input } from '../../components/Input'
 import { Button } from '../../components/Button'
+import { Carregando } from '../../components/Estado'
 
 const grid2 = 'grid grid-cols-1 gap-3 sm:grid-cols-2'
 
@@ -24,7 +25,7 @@ export default function ConfigPmocPage() {
   const { ehAdmin, carregando } = useEhAdmin()
   const { data: config, isPending } = useConfigPmoc()
 
-  if (carregando || isPending) return <p className="t-secondary">Carregando…</p>
+  if (carregando || isPending) return <Carregando />
 
   if (!ehAdmin) {
     return (

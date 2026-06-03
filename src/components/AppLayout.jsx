@@ -103,7 +103,11 @@ export default function AppLayout() {
 
   if (carregando) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[var(--bg)] text-[var(--fg-2)]">
+      <div
+        role="status"
+        aria-live="polite"
+        className="flex min-h-screen items-center justify-center bg-[var(--bg)] text-[var(--fg-2)]"
+      >
         Carregando…
       </div>
     )

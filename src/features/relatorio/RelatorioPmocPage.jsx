@@ -9,6 +9,7 @@ import { montarRelatorioPmoc } from './relatorioPmoc'
 import { nomeSetorDoEquipamento } from '../../core/dominio'
 import { Select } from '../../components/Select'
 import { Button } from '../../components/Button'
+import { Carregando, Erro } from '../../components/Estado'
 
 const num = (n, casas = 0) =>
   n == null ? '—' : n.toLocaleString('pt-BR', { maximumFractionDigits: casas })
@@ -35,10 +36,10 @@ export default function RelatorioPmocPage() {
   const [filtroSetor, setFiltroSetor] = useState('')
 
   if (eqQuery.isPending || manQuery.isPending) {
-    return <p className="t-secondary">Carregando…</p>
+    return <Carregando />
   }
   if (eqQuery.isError || manQuery.isError) {
-    return <p style={{ color: 'var(--danger)' }}>Erro ao carregar os dados.</p>
+    return <Erro>Erro ao carregar os dados.</Erro>
   }
 
   const eqs = eqQuery.data
