@@ -53,3 +53,10 @@ export function montarRonda(equipamentos, manutencoes, soPendentes) {
 
   return { setores, totalPendentes }
 }
+
+// Lista ORDENADA (como a ronda) dos equipamentos com checklist pendente.
+// Usada na ficha (modo ronda) para apontar o "próximo pendente".
+export function pendentesDaRonda(equipamentos, manutencoes) {
+  const { setores } = montarRonda(equipamentos, manutencoes, true)
+  return setores.flatMap((s) => s.itens.map((it) => it.eq))
+}
