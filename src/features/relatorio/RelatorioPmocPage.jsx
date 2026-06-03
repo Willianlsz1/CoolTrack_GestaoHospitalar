@@ -104,6 +104,10 @@ export default function RelatorioPmocPage() {
           </p>
         </header>
 
+        <p className="t-caption mb-3">
+          A coluna “Última” considera apenas preventivas aprovadas pela gestão.
+        </p>
+
         <div className="overflow-x-auto rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)]">
           <table className="w-full text-[14px]">
             <thead>

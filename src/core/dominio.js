@@ -94,7 +94,10 @@ export function nomeSetorDoEquipamento(eq) {
 // Mapa equipamento_id -> última manutenção PREVENTIVA (o que zera o relógio
 // do PMOC; corretiva/preditiva não contam). Espera as manutenções já
 // ordenadas por data desc, então a 1ª preventiva de cada id é a mais recente.
-export function ultimaPreventivaPorEquipamento(manutencoes) {
+export function ultimaPreventivaPorEquipamento(
+  manutencoes,
+  { somenteAprovadas = false } = {},
+) {
   const mapa = new Map()
   for (const m of manutencoes) {
     if (m.tipo !== 'preventiva') continue
@@ -102,6 +105,9 @@ export function ultimaPreventivaPorEquipamento(manutencoes) {
     // considerado inadequado, então não zera o relógio do PMOC. Pendente e
     // aprovado contam (a aprovação não atrasa a cadência).
     if (m.aprovacao_status === 'reprovado') continue
+    // somenteAprovadas: o RELATÓRIO oficial só certifica trabalho validado —
+    // pendente não conta na coluna "Última".
+    if (somenteAprovadas && m.aprovacao_status !== 'aprovado') continue
     if (!mapa.has(m.equipamento_id)) mapa.set(m.equipamento_id, m)
   }
   return mapa

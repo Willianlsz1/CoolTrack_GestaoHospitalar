@@ -68,6 +68,27 @@ describe('ultimaPreventivaPorEquipamento', () => {
     expect(mapa.get('e1').data).toBe('2026-05-10')
     expect(mapa.get('e2').data).toBe('2026-05-01')
   })
+  it('somenteAprovadas: ignora pendente, pega a última APROVADA', () => {
+    const mapa = ultimaPreventivaPorEquipamento(
+      [
+        {
+          equipamento_id: 'e1',
+          tipo: 'preventiva',
+          data: '2026-05-10',
+          aprovacao_status: 'pendente',
+        },
+        {
+          equipamento_id: 'e1',
+          tipo: 'preventiva',
+          data: '2026-04-10',
+          aprovacao_status: 'aprovado',
+        },
+      ],
+      { somenteAprovadas: true },
+    )
+    // a de 10/05 é pendente -> cai para a aprovada de 10/04
+    expect(mapa.get('e1').data).toBe('2026-04-10')
+  })
 })
 
 describe('classificarChecklistMensal', () => {
