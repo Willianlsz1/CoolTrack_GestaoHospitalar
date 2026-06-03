@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ClipboardCheck, ClipboardX, Plus } from 'lucide-react'
+import { ClipboardCheck, ClipboardX, Plus, Wrench } from 'lucide-react'
 import { useModelosChecklist } from './useModelosChecklist'
 import { useManutencoes } from '../manutencoes/useManutencoes'
 import { hojeLocal, formatarData } from '../../core/data'
@@ -10,7 +10,16 @@ import Modal from '../../components/Modal'
 import ExecutarChecklist from './ExecutarChecklist'
 import SugestaoManutencao from '../ia/SugestaoManutencao'
 import ManutencoesHistorico from '../manutencoes/ManutencoesHistorico'
+import ManutencaoForm from '../manutencoes/ManutencaoForm'
 import { useToast } from '../feedback/useToast'
+
+// Descrição pré-preenchida da corretiva a partir das exceções do checklist.
+function descricaoDeExcecoes(excecoes) {
+  const linhas = excecoes.map(
+    (it) => `- ${it.procedimento}${it.obs ? `: ${it.obs}` : ''}`,
+  )
+  return `Exceções do checklist mensal:\n${linhas.join('\n')}`
+}
 
 // Status do checklist mensal (usa o helper de domínio; aqui só formata texto).
 // `ultima` pode ser null mesmo em "atrasado" (nunca executado + fora da
@@ -56,8 +65,9 @@ function calcularStatus(eq, ultima) {
   }
 }
 
-// Resumo da última execução com checklist (data, quem, exceções).
-function ResumoExecucao({ manutencao }) {
+// Resumo da última execução com checklist (data, quem, exceções). Quando há
+// exceções, oferece abrir uma corretiva já pré-preenchida com elas.
+function ResumoExecucao({ manutencao, onAbrirCorretiva }) {
   const itens = manutencao.checklist?.itens ?? []
   const excecoes = itens.filter((it) => !it.ok)
   return (
@@ -69,18 +79,32 @@ function ResumoExecucao({ manutencao }) {
       {excecoes.length === 0 ? (
         <p className="t-secondary">Todos os {itens.length} itens OK.</p>
       ) : (
-        <ul className="space-y-1">
-          {excecoes.map((it, i) => (
-            <li
-              key={i}
-              className="text-[14px]"
-              style={{ color: 'var(--warn)' }}
-            >
-              ⚠ {it.procedimento}
-              {it.obs ? ` — ${it.obs}` : ''}
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className="space-y-1">
+            {excecoes.map((it, i) => (
+              <li
+                key={i}
+                className="text-[14px]"
+                style={{ color: 'var(--warn)' }}
+              >
+                ⚠ {it.procedimento}
+                {it.obs ? ` — ${it.obs}` : ''}
+              </li>
+            ))}
+          </ul>
+          {onAbrirCorretiva && (
+            <div className="mt-3">
+              <Button
+                size="sm"
+                variant="secondary"
+                icon={Wrench}
+                onClick={() => onAbrirCorretiva(descricaoDeExcecoes(excecoes))}
+              >
+                Abrir corretiva destas exceções
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   )
@@ -92,6 +116,8 @@ export default function ChecklistEquipamento({ equipamento }) {
   const { data: manutencoes, isPending: manutencoesCarregando } =
     useManutencoes(equipamento.id)
   const [aberto, setAberto] = useState(false)
+  // Corretiva pré-preenchida a partir das exceções (null = fechada).
+  const [corretivaPre, setCorretivaPre] = useState(null)
   const toast = useToast()
 
   if (modelosCarregando || manutencoesCarregando) {
@@ -136,7 +162,12 @@ export default function ChecklistEquipamento({ equipamento }) {
         </Button>
       </div>
 
-      {ultima?.checklist && <ResumoExecucao manutencao={ultima} />}
+      {ultima?.checklist && (
+        <ResumoExecucao
+          manutencao={ultima}
+          onAbrirCorretiva={(descricao) => setCorretivaPre({ descricao })}
+        />
+      )}
 
       <SugestaoManutencao equipamentoId={equipamento.id} />
 
@@ -160,6 +191,25 @@ export default function ChecklistEquipamento({ equipamento }) {
               toast.sucesso('Checklist registrado')
             }}
             onCancelar={() => setAberto(false)}
+          />
+        </Modal>
+      )}
+
+      {corretivaPre && (
+        <Modal
+          titulo="Registrar corretiva"
+          onClose={() => setCorretivaPre(null)}
+        >
+          <ManutencaoForm
+            equipamentoId={equipamento.id}
+            tipos={['corretiva', 'preditiva']}
+            tipoInicial="corretiva"
+            descricaoInicial={corretivaPre.descricao}
+            onSucesso={() => {
+              setCorretivaPre(null)
+              toast.sucesso('Serviço registrado')
+            }}
+            onCancelar={() => setCorretivaPre(null)}
           />
         </Modal>
       )}

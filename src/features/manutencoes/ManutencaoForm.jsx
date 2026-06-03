@@ -65,12 +65,14 @@ function CelulaFoto({ id, rotulo, aoEscolher }) {
 export default function ManutencaoForm({
   equipamentoId,
   tipos,
+  tipoInicial,
+  descricaoInicial,
   onSucesso,
   onCancelar,
 }) {
-  const [tipo, setTipo] = useState('')
+  const [tipo, setTipo] = useState(tipoInicial ?? '')
   const [data, setData] = useState(hojeLocal())
-  const [descricao, setDescricao] = useState('')
+  const [descricao, setDescricao] = useState(descricaoInicial ?? '')
   const [pecas, setPecas] = useState('')
   const [proxima, setProxima] = useState('')
   const [fotoAntes, setFotoAntes] = useState(null)
