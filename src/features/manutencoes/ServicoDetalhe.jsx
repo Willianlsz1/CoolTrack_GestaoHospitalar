@@ -27,10 +27,13 @@ function ItemChecklist({ item }) {
 // descrição, peças, checklist preenchido, fotos e a decisão do gestor
 // (assinatura na aprovação / motivo na reprovação). `children`, se houver,
 // vira um rodapé dentro do card (ex.: botões Aprovar/Reprovar).
-export function ServicoDetalhe({ servico: m, children }) {
+export function ServicoDetalhe({ servico: m, children, destacado }) {
   const itens = m.checklist?.itens ?? []
   return (
-    <div className="ct-card">
+    <div
+      className="ct-card"
+      style={destacado ? { borderColor: 'var(--link)' } : undefined}
+    >
       <div className="flex items-start justify-between gap-2">
         <div>
           <div className="text-[15px] text-[var(--fg)]">

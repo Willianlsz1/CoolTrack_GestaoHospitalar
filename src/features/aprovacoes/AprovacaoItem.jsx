@@ -8,7 +8,7 @@ import { Textarea } from '../../components/Textarea'
 // Um item da fila de PENDENTES: o detalhe do serviço com as ações
 // Aprovar / Reprovar no rodapé do card. Ao decidir, a mutação invalida as
 // manutenções e o item sai dos pendentes.
-export function AprovacaoItem({ servico }) {
+export function AprovacaoItem({ servico, selecionado, onToggleSelecao }) {
   const aprovar = useAprovarManutencao()
   const toast = useToast()
   const [reprovando, setReprovando] = useState(false)
@@ -33,28 +33,41 @@ export function AprovacaoItem({ servico }) {
 
   return (
     <li>
-      <ServicoDetalhe servico={servico}>
+      <ServicoDetalhe servico={servico} destacado={selecionado}>
         {!reprovando ? (
-          <div className="flex gap-2">
-            <Button
-              variant="primary"
-              onClick={() =>
-                aprovar.mutate(
-                  { id: servico.id, status: 'aprovado' },
-                  { onSuccess: () => toast.sucesso('Serviço aprovado') },
-                )
-              }
-              disabled={aprovar.isPending}
-            >
-              Aprovar
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => setReprovando(true)}
-              disabled={aprovar.isPending}
-            >
-              Reprovar
-            </Button>
+          <div className="flex items-center gap-3">
+            {onToggleSelecao && (
+              <label className="flex items-center gap-2 text-[14px] text-[var(--fg-2)]">
+                <input
+                  type="checkbox"
+                  checked={selecionado}
+                  onChange={onToggleSelecao}
+                  className="h-4 w-4 accent-[var(--brand)]"
+                />
+                Selecionar
+              </label>
+            )}
+            <div className="ml-auto flex gap-2">
+              <Button
+                variant="primary"
+                onClick={() =>
+                  aprovar.mutate(
+                    { id: servico.id, status: 'aprovado' },
+                    { onSuccess: () => toast.sucesso('Serviço aprovado') },
+                  )
+                }
+                disabled={aprovar.isPending}
+              >
+                Aprovar
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => setReprovando(true)}
+                disabled={aprovar.isPending}
+              >
+                Reprovar
+              </Button>
+            </div>
           </div>
         ) : (
           <div className="space-y-2">
