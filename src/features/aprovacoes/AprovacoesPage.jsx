@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { SomenteAdmin } from '../../components/SomenteAdmin'
 import { useTodasManutencoes } from '../dashboard/useTodasManutencoes'
+import { useAprovarVarios } from '../manutencoes/useAprovarManutencao'
+import { useToast } from '../feedback/useToast'
 import { ServicoDetalhe } from '../manutencoes/ServicoDetalhe'
+import { Button } from '../../components/Button'
 import {
   filtrarPorAprovacao,
   contagemPorAprovacao,
@@ -47,10 +50,43 @@ function FilaAprovacoes() {
     isError,
     error,
   } = useTodasManutencoes()
+  const aprovarVarios = useAprovarVarios()
+  const toast = useToast()
   const [aba, setAba] = useState('pendente')
+  const [selecionados, setSelecionados] = useState(() => new Set())
 
   const contagem = contagemPorAprovacao(manutencoes)
   const lista = filtrarPorAprovacao(manutencoes, aba)
+
+  // Só os ids ainda na lista (ignora seleção de itens que já saíram da fila).
+  const idsValidos = lista
+    .filter((m) => selecionados.has(m.id))
+    .map((m) => m.id)
+  const todosSel = lista.length > 0 && idsValidos.length === lista.length
+
+  function alternar(id) {
+    setSelecionados((s) => {
+      const n = new Set(s)
+      if (n.has(id)) n.delete(id)
+      else n.add(id)
+      return n
+    })
+  }
+  function alternarTodos() {
+    setSelecionados(todosSel ? new Set() : new Set(lista.map((m) => m.id)))
+  }
+  function aprovarSelecionados() {
+    aprovarVarios.mutate(idsValidos, {
+      onSuccess: () => {
+        toast.sucesso(
+          `${idsValidos.length} ${
+            idsValidos.length === 1 ? 'serviço aprovado' : 'serviços aprovados'
+          }`,
+        )
+        setSelecionados(new Set())
+      },
+    })
+  }
 
   return (
     <div>
@@ -86,11 +122,43 @@ function FilaAprovacoes() {
         </p>
       )}
 
+      {/* Barra de aprovação em lote — só na aba Pendentes */}
+      {aba === 'pendente' && lista.length > 0 && (
+        <div className="mb-3 flex flex-wrap items-center gap-3">
+          <label className="flex items-center gap-2 text-[14px] text-[var(--fg-2)]">
+            <input
+              type="checkbox"
+              checked={todosSel}
+              onChange={alternarTodos}
+              className="h-4 w-4 accent-[var(--brand)]"
+            />
+            Selecionar todos ({lista.length})
+          </label>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={aprovarSelecionados}
+            disabled={idsValidos.length === 0 || aprovarVarios.isPending}
+          >
+            {idsValidos.length > 0
+              ? `Aprovar ${idsValidos.length} selecionado${
+                  idsValidos.length === 1 ? '' : 's'
+                }`
+              : 'Aprovar selecionados'}
+          </Button>
+        </div>
+      )}
+
       {lista.length > 0 && (
         <ul className="m-0 grid list-none grid-cols-1 items-start gap-4 p-0 lg:grid-cols-2">
           {lista.map((m) =>
             aba === 'pendente' ? (
-              <AprovacaoItem key={m.id} servico={m} />
+              <AprovacaoItem
+                key={m.id}
+                servico={m}
+                selecionado={selecionados.has(m.id)}
+                onToggleSelecao={() => alternar(m.id)}
+              />
             ) : (
               <li key={m.id}>
                 <ServicoDetalhe servico={m} />
