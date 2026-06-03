@@ -15,6 +15,9 @@ export function MiniaturaEquipamento({ eq }) {
       <img
         src={eq.foto_url}
         alt={eq.nome}
+        loading="lazy"
+        width={40}
+        height={40}
         style={{ ...caixa, objectFit: 'cover' }}
       />
     )

@@ -9,6 +9,7 @@ import { Button } from '../../components/Button'
 import Modal from '../../components/Modal'
 import EquipamentosForm from './EquipamentosForm'
 import { EquipamentoLinha } from './EquipamentoLinha'
+import { EquipamentoCard } from './EquipamentoCard'
 import { FiltrosEquipamentos } from './FiltrosEquipamentos'
 
 // Filtro client-side por busca (nome/série), setor e status.
@@ -125,29 +126,41 @@ export default function EquipamentosLista() {
       )}
 
       {!isPending && !isError && filtrados.length > 0 && (
-        <div className="ct-card" style={{ padding: 0, overflowX: 'auto' }}>
-          <table className="ct-table">
-            <thead>
-              <tr>
-                <th style={{ width: 56 }}></th>
-                <th>Equipamento</th>
-                <th>Localização</th>
-                <th>Status</th>
-                <th style={{ textAlign: 'right' }}>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtrados.map((eq) => (
-                <EquipamentoLinha
-                  key={eq.id}
-                  eq={eq}
-                  onEditar={abrirEditar}
-                  podeExcluir={podeExcluir}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <>
+          {/* Desktop (>= sm): tabela */}
+          <div className="hidden sm:block">
+            <div className="ct-card" style={{ padding: 0, overflowX: 'auto' }}>
+              <table className="ct-table">
+                <thead>
+                  <tr>
+                    <th style={{ width: 56 }}></th>
+                    <th>Equipamento</th>
+                    <th>Localização</th>
+                    <th>Status</th>
+                    <th style={{ textAlign: 'right' }}>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtrados.map((eq) => (
+                    <EquipamentoLinha
+                      key={eq.id}
+                      eq={eq}
+                      onEditar={abrirEditar}
+                      podeExcluir={podeExcluir}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Mobile (< sm): cartões, área toda tocável -> ficha */}
+          <ul className="m-0 flex list-none flex-col gap-2 p-0 sm:hidden">
+            {filtrados.map((eq) => (
+              <EquipamentoCard key={eq.id} eq={eq} />
+            ))}
+          </ul>
+        </>
       )}
 
       {formAberto && (
