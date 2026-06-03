@@ -4,17 +4,19 @@ import {
   createRouter,
 } from '@tanstack/react-router'
 import AppLayout from '../components/AppLayout.jsx'
-import EquipamentosLista from '../features/equipamentos/EquipamentosLista.jsx'
-import EquipamentoFicha from '../features/equipamentos/EquipamentoFicha.jsx'
-import EquipamentoScanner from '../features/equipamentos/EquipamentoScanner.jsx'
-import DashboardPage from '../features/dashboard/DashboardPage.jsx'
-import UsuariosPage from '../features/usuarios/UsuariosPage.jsx'
-import SetoresPage from '../features/setores/SetoresPage.jsx'
-import RelatorioPmocPage from '../features/relatorio/RelatorioPmocPage.jsx'
-import ModelosChecklistPage from '../features/checklists/ModelosChecklistPage.jsx'
-import RondaPage from '../features/ronda/RondaPage.jsx'
-import ConfigPmocPage from '../features/config/ConfigPmocPage.jsx'
-import AprovacoesPage from '../features/aprovacoes/AprovacoesPage.jsx'
+import {
+  EquipamentosLista,
+  EquipamentoFicha,
+  EquipamentoScanner,
+  DashboardPage,
+  UsuariosPage,
+  SetoresPage,
+  RelatorioPmocPage,
+  ModelosChecklistPage,
+  RondaPage,
+  ConfigPmocPage,
+  AprovacoesPage,
+} from './paginas.jsx'
 
 // Rota raiz: o "tronco" da árvore. Seu componente é o AppLayout (casco:
 // cabeçalho + navegação), que envolve TODAS as telas via <Outlet/>.

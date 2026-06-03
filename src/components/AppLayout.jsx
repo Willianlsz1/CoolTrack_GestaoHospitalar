@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { Link, Outlet } from '@tanstack/react-router'
 import {
   Snowflake,
@@ -23,6 +23,7 @@ import { usePendentesAprovacao } from '../features/aprovacoes/usePendentesAprova
 import { sair } from '../features/auth/authApi'
 import LoginPage from '../features/auth/LoginPage'
 import PerfilModal from '../features/perfil/PerfilModal'
+import { Carregando } from './Estado'
 
 // Itens de navegação (ordem do menu). adminOnly esconde de quem não é admin;
 // exact marca o link da raiz (só ativo em "/"). A trava real é sempre o RLS.
@@ -164,7 +165,9 @@ export default function AppLayout() {
       </header>
 
       <main className="mx-auto max-w-[1440px] p-6">
-        <Outlet />
+        <Suspense fallback={<Carregando />}>
+          <Outlet />
+        </Suspense>
       </main>
 
       {perfilAberto && <PerfilModal onClose={() => setPerfilAberto(false)} />}
