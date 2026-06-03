@@ -1,17 +1,20 @@
 // Funções puras de agregação do dashboard. Recebem os dados já buscados
 // (equipamentos e manutenções) e devolvem os números/listas dos widgets.
 // Datas são comparadas como texto 'YYYY-MM-DD' (ordenável sem fuso).
-import { hojeLocal, diasEntre } from '../../core/data'
-import { nomeSetorDoEquipamento } from '../../core/dominio'
+import { hojeLocal } from '../../core/data'
+import {
+  nomeSetorDoEquipamento,
+  classificarChecklistMensal,
+} from '../../core/dominio'
 
-const JANELA_VENCE_EM_BREVE = 7
-
-// Data-base da cadência: última preventiva ou, na falta, a instalação
-// (ou o cadastro). Retorna 'YYYY-MM-DD' ou null.
-function baseCadencia(eq, ultimaPrev) {
-  const m = ultimaPrev.get(eq.id)
-  if (m) return m.data
-  return eq.data_instalacao ?? eq.created_at?.slice(0, 10) ?? null
+// Status do checklist de um equipamento pela regra canônica (mesma da
+// ronda/setores/ficha) — garante que "atrasado" bata em todas as telas.
+function statusChecklist(eq, ultimaPrev, hoje) {
+  return classificarChecklistMensal(
+    eq,
+    ultimaPrev.get(eq.id)?.data ?? null,
+    hoje,
+  )
 }
 
 // Conta equipamentos por status (ordem fixa).
@@ -31,43 +34,30 @@ export function percentual(parte, total) {
   return `${((parte / total) * 100).toFixed(1).replace('.', ',')}%`
 }
 
-// Atrasados: passou do `intervalo_mensal` desde a última preventiva (ou,
-// se nunca houve, desde a instalação). Mostra os DIAS DE ATRASO. Equipamento
-// sem intervalo (sem setor/cadência) fica fora. Mais atrasado primeiro.
+// Atrasados (chave 'atrasado' da regra canônica): passou do intervalo desde
+// a base (última preventiva ou, na falta, a instalação). Equipamento novo sem
+// checklist NÃO entra aqui enquanto está na carência (cai em "nunca"). Mostra
+// os DIAS DE ATRASO; mais atrasado primeiro.
 export function atrasadosComDias(equipamentos, ultimaPrev) {
   const hoje = hojeLocal()
   return equipamentos
     .map((eq) => {
-      const intervalo = eq.intervalo_mensal
-      if (!intervalo) return null
-      const base = baseCadencia(eq, ultimaPrev)
-      if (!base) return null
-      const atraso = diasEntre(base, hoje) - intervalo
-      return atraso > 0
-        ? { eq, dias: atraso, nuncaPreventiva: !ultimaPrev.has(eq.id) }
-        : null
+      const c = statusChecklist(eq, ultimaPrev, hoje)
+      if (c.chave !== 'atrasado') return null
+      return { eq, dias: c.dias, nuncaPreventiva: !ultimaPrev.has(eq.id) }
     })
     .filter(Boolean)
     .sort((a, b) => b.dias - a.dias)
 }
 
-// Vence em breve: higienização a vencer dentro da janela (0..N dias), ainda
-// não vencida. Só conta quem já teve preventiva (quem nunca teve cai em
-// atrasados). Mais perto de vencer primeiro.
-export function venceEmBreve(
-  equipamentos,
-  ultimaPrev,
-  janela = JANELA_VENCE_EM_BREVE,
-) {
+// Vence em breve (chave 'vence'): higienização a vencer dentro da janela,
+// ainda não vencida. Mais perto de vencer primeiro.
+export function venceEmBreve(equipamentos, ultimaPrev) {
   const hoje = hojeLocal()
   return equipamentos
     .map((eq) => {
-      const intervalo = eq.intervalo_mensal
-      if (!intervalo) return null
-      const m = ultimaPrev.get(eq.id)
-      if (!m) return null
-      const faltam = intervalo - diasEntre(m.data, hoje)
-      return faltam >= 0 && faltam <= janela ? { eq, dias: faltam } : null
+      const c = statusChecklist(eq, ultimaPrev, hoje)
+      return c.chave === 'vence' ? { eq, dias: c.dias } : null
     })
     .filter(Boolean)
     .sort((a, b) => a.dias - b.dias)

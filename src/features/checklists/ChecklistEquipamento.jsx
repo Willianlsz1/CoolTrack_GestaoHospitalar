@@ -13,41 +13,45 @@ import ManutencoesHistorico from '../manutencoes/ManutencoesHistorico'
 import { useToast } from '../feedback/useToast'
 
 // Status do checklist mensal (usa o helper de domínio; aqui só formata texto).
+// `ultima` pode ser null mesmo em "atrasado" (nunca executado + fora da
+// carência), por isso a formatação da data é à prova de nulo.
 function calcularStatus(eq, ultima) {
   const c = classificarChecklistMensal(eq, ultima?.data ?? null, hojeLocal())
-  if (c.chave === 'nunca') {
-    return {
-      cor: c.cor,
-      titulo: 'Nunca executado',
-      detalhe: 'Sem preventiva registrada.',
-    }
-  }
-  const dataFmt = formatarData(ultima.data)
   const plural = (n) => `${n} ${n === 1 ? 'dia' : 'dias'}`
+  const ultimaFmt = ultima ? formatarData(ultima.data) : null
+
   switch (c.chave) {
     case 'sem_cadencia':
       return {
         cor: c.cor,
-        titulo: `Última: ${dataFmt}`,
-        detalhe: 'Sem cadência (equipamento sem setor).',
+        titulo: 'Sem cadência',
+        detalhe: 'Equipamento sem setor/intervalo definido.',
+      }
+    case 'nunca':
+      return {
+        cor: c.cor,
+        titulo: 'Nunca executado',
+        detalhe: c.dias
+          ? `Primeiro checklist vence em ${plural(c.dias)}.`
+          : 'Sem preventiva registrada.',
       }
     case 'atrasado':
       return {
         cor: c.cor,
         titulo: `Atrasado há ${plural(c.dias)}`,
-        detalhe: `Última: ${dataFmt}`,
+        detalhe: ultimaFmt ? `Última: ${ultimaFmt}` : 'Nunca executado.',
       }
     case 'vence':
       return {
         cor: c.cor,
         titulo: 'Vence em breve',
-        detalhe: `Última: ${dataFmt} · vence em ${plural(c.dias)}`,
+        detalhe: `Última: ${ultimaFmt} · vence em ${plural(c.dias)}`,
       }
     default:
       return {
         cor: c.cor,
         titulo: 'Em dia',
-        detalhe: `Última: ${dataFmt} · vence em ${plural(c.dias)}`,
+        detalhe: `Última: ${ultimaFmt} · vence em ${plural(c.dias)}`,
       }
   }
 }

@@ -106,6 +106,11 @@ export function SetorCard({ setor, resumo, onEditar, onExcluir }) {
               n={resumo.atrasados}
               label={resumo.atrasados === 1 ? 'atrasado' : 'atrasados'}
             />
+            <Pilula
+              cor="var(--warn)"
+              n={resumo.nunca}
+              label="nunca executado"
+            />
             <Pilula cor="var(--warn)" n={resumo.aVencer} label="a vencer" />
             <Pilula cor="var(--ok)" n={resumo.emDia} label="em dia" />
             <Pilula

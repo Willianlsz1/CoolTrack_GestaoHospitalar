@@ -5,9 +5,18 @@ import { diasEntre } from './data'
 const JANELA_VENCE = 7
 
 // Classifica o status do checklist MENSAL de um equipamento vs a cadência.
-// `ultima` = data 'YYYY-MM-DD' da última preventiva (ou null); `hoje` idem.
-// Retorna { chave, cor, ordem, pendente, dias } — cada tela formata o texto.
-// Fonte única usada pela ficha (aba Checklist) e pela ronda.
+// REGRA CANÔNICA — usada por ficha, ronda, setores E dashboard, para o
+// "atrasado" significar a mesma coisa em todas as telas.
+//
+// `ultima` = data 'YYYY-MM-DD' da última preventiva válida (ou null); `hoje` idem.
+// Base do relógio: a última preventiva ou, na falta dela, a data de INSTALAÇÃO
+// (ou o cadastro). Assim um equipamento recém-instalado SEM checklist tem uma
+// carência de um ciclo antes de "atrasar" — só vira atrasado ao passar o
+// intervalo desde a instalação.
+//
+// Chaves: atrasado (passou do intervalo) · nunca (sem preventiva, ainda na
+// carência) · vence (≤ JANELA_VENCE) · emdia · sem_cadencia.
+// Retorna { chave, cor, ordem, pendente, dias }.
 export function classificarChecklistMensal(eq, ultima, hoje) {
   if (!eq.intervalo_mensal) {
     return {
@@ -18,7 +27,13 @@ export function classificarChecklistMensal(eq, ultima, hoje) {
       dias: 0,
     }
   }
-  if (!ultima) {
+
+  const nunca = !ultima
+  const base =
+    ultima ?? eq.data_instalacao ?? eq.created_at?.slice(0, 10) ?? null
+
+  // Nunca executado e sem data de instalação/cadastro: não dá para datar.
+  if (!base) {
     return {
       chave: 'nunca',
       cor: 'var(--warn)',
@@ -27,14 +42,29 @@ export function classificarChecklistMensal(eq, ultima, hoje) {
       dias: 0,
     }
   }
-  const restam = eq.intervalo_mensal - diasEntre(ultima, hoje)
+
+  const restam = eq.intervalo_mensal - diasEntre(base, hoje)
+
   if (restam < 0) {
+    // Passou do intervalo desde a base — atrasado (com ou sem preventiva).
     return {
       chave: 'atrasado',
       cor: 'var(--danger)',
       ordem: 0,
       pendente: true,
       dias: -restam,
+    }
+  }
+  if (nunca) {
+    // Sem preventiva, mas ainda dentro do 1º ciclo desde a instalação:
+    // pendente (precisa do 1º checklist), porém NÃO atrasado. `dias` = quanto
+    // falta para o primeiro vencer.
+    return {
+      chave: 'nunca',
+      cor: 'var(--warn)',
+      ordem: 1,
+      pendente: true,
+      dias: restam,
     }
   }
   if (restam <= JANELA_VENCE) {
