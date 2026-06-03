@@ -36,6 +36,7 @@ describe('resumoVazio', () => {
     expect(resumoVazio()).toEqual({
       total: 0,
       atrasados: 0,
+      nunca: 0,
       aVencer: 0,
       emDia: 0,
       semCadencia: 0,
@@ -48,7 +49,8 @@ describe('resumoPorSetor', () => {
     const mapa = resumoPorSetor(equipamentos, manutencoes)
     expect(mapa.get(S1)).toEqual({
       total: 5,
-      atrasados: 2, // a1 (atrasado) + a2 (nunca: corretiva não conta)
+      atrasados: 1, // a1 (atrasado pela preventiva antiga)
+      nunca: 1, // a2 (só corretiva, sem instalação → nunca)
       aVencer: 1, // a3
       emDia: 1, // a4
       semCadencia: 1, // a5
@@ -56,6 +58,7 @@ describe('resumoPorSetor', () => {
     expect(mapa.get(S2)).toEqual({
       total: 1,
       atrasados: 0,
+      nunca: 0,
       aVencer: 0,
       emDia: 1,
       semCadencia: 0,

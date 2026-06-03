@@ -111,4 +111,23 @@ describe('classificarChecklistMensal', () => {
     expect(c.chave).toBe('emdia')
     expect(c.pendente).toBe(false)
   })
+  it('nunca executado, recém-instalado → nunca (carência, não atrasado)', () => {
+    const c = classificarChecklistMensal(
+      { intervalo_mensal: 30, data_instalacao: '2026-05-20' }, // 11 dias atrás
+      null,
+      hoje,
+    )
+    expect(c.chave).toBe('nunca')
+    expect(c.pendente).toBe(true)
+    expect(c.dias).toBe(19) // faltam 19 para o 1º vencer
+  })
+  it('nunca executado e instalado há muito → atrasado pela instalação', () => {
+    const c = classificarChecklistMensal(
+      { intervalo_mensal: 30, data_instalacao: '2026-01-01' }, // 150 dias atrás
+      null,
+      hoje,
+    )
+    expect(c.chave).toBe('atrasado')
+    expect(c.dias).toBe(120) // 150 - 30
+  })
 })

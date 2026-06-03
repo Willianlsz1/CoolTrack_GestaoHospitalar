@@ -60,6 +60,14 @@ describe('atrasadosComDias', () => {
     const r = atrasadosComDias([{ id: 'e3' }], new Map())
     expect(r).toHaveLength(0)
   })
+
+  it('nunca teve preventiva mas recém-instalado NÃO é atrasado (carência)', () => {
+    const r = atrasadosComDias(
+      [{ id: 'e4', intervalo_mensal: 30, data_instalacao: '2026-05-20' }],
+      new Map(),
+    )
+    expect(r).toHaveLength(0) // dentro da carência → cai em "nunca", não atrasado
+  })
 })
 
 describe('venceEmBreve', () => {
