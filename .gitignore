@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Docs internos (não publicar em repo público): instruções do agente,
+# ADRs (registros de decisões/mudanças), notas de review e segurança.
+AGENTS.md
+CLAUDE.md
+docs/decisoes/
+SECURITY.md
