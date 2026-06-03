@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { useSessao } from '../features/auth/useSessao'
 import { useEhAdmin } from '../features/perfil/useEhAdmin'
+import { usePendentesAprovacao } from '../features/aprovacoes/usePendentesAprovacao'
 import { sair } from '../features/auth/authApi'
 import LoginPage from '../features/auth/LoginPage'
 import PerfilModal from '../features/perfil/PerfilModal'
@@ -41,11 +42,12 @@ const ITENS_NAV = [
 
 // Itens da navegação, reusados no desktop e no menu mobile. aoNavegar
 // fecha o menu mobile ao clicar num item.
-function ItensNav({ aoAbrirPerfil, aoNavegar, ehAdmin }) {
+function ItensNav({ aoAbrirPerfil, aoNavegar, ehAdmin, pendentes }) {
   return (
     <>
       {ITENS_NAV.filter((i) => !i.adminOnly || ehAdmin).map((item) => {
         const Icone = item.icon
+        const badge = item.to === '/aprovacoes' && pendentes > 0
         return (
           <Link
             key={item.to}
@@ -56,6 +58,15 @@ function ItensNav({ aoAbrirPerfil, aoNavegar, ehAdmin }) {
             onClick={aoNavegar}
           >
             <Icone size={16} /> {item.label}
+            {badge && (
+              <span
+                className="ml-1 inline-flex min-w-[18px] items-center justify-center rounded-full px-1.5 text-[11px] font-medium text-[var(--bg)]"
+                style={{ background: 'var(--warn)' }}
+                aria-label={`${pendentes} aguardando aprovação`}
+              >
+                {pendentes}
+              </span>
+            )}
           </Link>
         )
       })}
@@ -82,6 +93,7 @@ function ItensNav({ aoAbrirPerfil, aoNavegar, ehAdmin }) {
 export default function AppLayout() {
   const { sessao, carregando } = useSessao()
   const { ehAdmin } = useEhAdmin()
+  const { data: pendentes = 0 } = usePendentesAprovacao(ehAdmin)
   const [perfilAberto, setPerfilAberto] = useState(false)
   const [menuAberto, setMenuAberto] = useState(false)
 
@@ -114,6 +126,7 @@ export default function AppLayout() {
             <ItensNav
               aoAbrirPerfil={() => setPerfilAberto(true)}
               ehAdmin={ehAdmin}
+              pendentes={pendentes}
             />
           </nav>
 
@@ -136,6 +149,7 @@ export default function AppLayout() {
               aoAbrirPerfil={() => setPerfilAberto(true)}
               aoNavegar={() => setMenuAberto(false)}
               ehAdmin={ehAdmin}
+              pendentes={pendentes}
             />
           </nav>
         )}

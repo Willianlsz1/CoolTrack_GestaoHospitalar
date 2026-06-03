@@ -1,7 +1,17 @@
 import { useState, useEffect } from 'react'
-import { Boxes, RefreshCw, AlertTriangle, Clock } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import {
+  Boxes,
+  RefreshCw,
+  AlertTriangle,
+  Clock,
+  ClipboardCheck,
+  ArrowRight,
+} from 'lucide-react'
 import { useEquipamentos } from '../equipamentos/useEquipamentos'
 import { useTodasManutencoes } from './useTodasManutencoes'
+import { useEhAdmin } from '../perfil/useEhAdmin'
+import { contagemPorAprovacao } from '../aprovacoes/aprovacoesSelectors'
 import {
   contarPorStatus,
   atrasadosComDias,
@@ -18,6 +28,7 @@ import { PorSetor } from './PorSetor'
 export default function DashboardPage() {
   const eqQuery = useEquipamentos()
   const manQuery = useTodasManutencoes()
+  const { ehAdmin } = useEhAdmin()
 
   const carregando = eqQuery.isPending || manQuery.isPending
   const erro = eqQuery.isError || manQuery.isError
@@ -44,6 +55,8 @@ export default function DashboardPage() {
   const ultimaPrev = ultimaPreventivaPorEquipamento(mans)
   const atrasados = atrasadosComDias(eqs, ultimaPrev)
   const aVencer = venceEmBreve(eqs, ultimaPrev)
+  // Serviços aguardando aprovação (só relevante p/ o gestor/admin).
+  const pendentesAprov = ehAdmin ? contagemPorAprovacao(mans).pendente : 0
   // Quando os dados foram buscados (o mais recente das duas queries).
   const atualizadoEm = Math.max(eqQuery.dataUpdatedAt, manQuery.dataUpdatedAt)
   const atualizar = () => {
@@ -58,6 +71,35 @@ export default function DashboardPage() {
       onAtualizar={atualizar}
     >
       <div className="flex flex-col gap-3">
+        {/* Ação do gestor: serviços aguardando aprovação (só admin, só se houver) */}
+        {pendentesAprov > 0 && (
+          <Link
+            to="/aprovacoes"
+            className="group flex items-center gap-3 rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)] px-5 py-3 text-[15px]"
+            style={{ textDecoration: 'none' }}
+          >
+            <ClipboardCheck
+              size={18}
+              className="flex-none"
+              style={{ color: 'var(--warn)' }}
+            />
+            <span className="text-[var(--fg)]">
+              <b className="font-medium">{pendentesAprov}</b>{' '}
+              {pendentesAprov === 1
+                ? 'serviço aguardando'
+                : 'serviços aguardando'}{' '}
+              aprovação
+            </span>
+            <span className="ml-auto inline-flex items-center gap-1 text-[var(--link)]">
+              Revisar
+              <ArrowRight
+                size={15}
+                className="transition-transform group-hover:translate-x-0.5"
+              />
+            </span>
+          </Link>
+        )}
+
         {/* Nível 1 — alertas de ação */}
         <section className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
           <AlertCard
