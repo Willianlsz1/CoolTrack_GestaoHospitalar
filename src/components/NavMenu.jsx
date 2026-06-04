@@ -16,7 +16,7 @@ import {
   User,
   LogOut,
 } from 'lucide-react'
-import { sair } from '../features/auth/authApi'
+import { useSair } from '../features/auth/useSair'
 
 // Itens sempre visíveis na barra (Aprovações é admin, mas fica no topo pelo
 // badge de pendentes). adminOnly esconde de quem não é admin; exact marca o
@@ -138,6 +138,7 @@ function ItemDropdown({ item }) {
 
 // Navegação do desktop (>= sm): itens de topo + dropdowns Administração e Perfil.
 export function NavDesktop({ ehAdmin, pendentes, aoAbrirPerfil }) {
+  const sairComFeedback = useSair()
   return (
     <>
       {ITENS_TOPO.filter((i) => !i.adminOnly || ehAdmin).map((item) => (
@@ -154,7 +155,11 @@ export function NavDesktop({ ehAdmin, pendentes, aoAbrirPerfil }) {
         <button type="button" className="ct-menu-item" onClick={aoAbrirPerfil}>
           <User size={16} /> Meu perfil
         </button>
-        <button type="button" className="ct-menu-item" onClick={() => sair()}>
+        <button
+          type="button"
+          className="ct-menu-item"
+          onClick={sairComFeedback}
+        >
           <LogOut size={16} /> Sair
         </button>
       </NavDropdown>
@@ -165,6 +170,7 @@ export function NavDesktop({ ehAdmin, pendentes, aoAbrirPerfil }) {
 // Navegação do mobile (< sm): lista vertical achatada, com um rótulo de seção
 // separando os itens de administração (dropdown não faz sentido na lista).
 export function NavMobile({ ehAdmin, pendentes, aoAbrirPerfil, aoNavegar }) {
+  const sairComFeedback = useSair()
   return (
     <>
       {ITENS_TOPO.filter((i) => !i.adminOnly || ehAdmin).map((item) => (
@@ -195,7 +201,7 @@ export function NavMobile({ ehAdmin, pendentes, aoAbrirPerfil, aoNavegar }) {
       >
         <User size={16} /> Perfil
       </button>
-      <button type="button" className="ct-nav" onClick={() => sair()}>
+      <button type="button" className="ct-nav" onClick={sairComFeedback}>
         <LogOut size={16} /> Sair
       </button>
     </>

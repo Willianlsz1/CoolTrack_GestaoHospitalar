@@ -1,4 +1,5 @@
 import { supabase } from '../../core/supabase'
+import { mensagemErroAuth } from './authMensagens'
 
 // Envolvem o supabase.auth. Lançam o erro para a tela tratar a mensagem.
 
@@ -7,7 +8,8 @@ export async function entrar(email, senha) {
     email,
     password: senha,
   })
-  if (error) throw error
+  // Traduz aqui (na borda) para o usuário ver PT, não a string crua do Supabase.
+  if (error) throw new Error(mensagemErroAuth(error))
 }
 
 export async function sair() {
