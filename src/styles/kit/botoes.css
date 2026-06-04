@@ -1,0 +1,78 @@
+/* CoolTrack UI Kit — Botões (hierarquia de 3 níveis).
+   Tokens vêm de ../colors_and_type.css. */
+.ct-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  padding: 9px 16px;
+  border-radius: var(--r);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--fg);
+  transition:
+    background-color 0.13s ease,
+    color 0.13s ease,
+    border-color 0.13s ease;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.ct-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ct-btn--primary {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--fg-on-brand);
+}
+.ct-btn--primary:not(:disabled):hover {
+  background: var(--brand-hover);
+  border-color: var(--brand-hover);
+}
+
+.ct-btn--secondary {
+  border-color: var(--border-strong);
+  color: var(--fg);
+}
+.ct-btn--secondary:not(:disabled):hover {
+  background: var(--surface-2);
+  border-color: var(--fg-3);
+}
+
+.ct-btn--danger {
+  border-color: var(--danger-border);
+  color: var(--danger);
+}
+.ct-btn--danger:not(:disabled):hover {
+  background: var(--danger-fill);
+  color: var(--danger-hover);
+}
+.ct-btn--danger-solid {
+  background: var(--danger-solid);
+  border-color: var(--danger-solid);
+  color: #fff;
+}
+.ct-btn--danger-solid:not(:disabled):hover {
+  background: var(--danger-hover);
+  border-color: var(--danger-hover);
+}
+
+.ct-btn--ghost {
+  padding: 6px 8px;
+  color: var(--fg-3);
+}
+.ct-btn--ghost:not(:disabled):hover {
+  color: var(--link);
+}
+.ct-btn--ghost.is-danger:not(:disabled):hover {
+  color: var(--danger);
+}
+
+.ct-btn--sm {
+  font-size: 13px;
+  padding: 6px 12px;
+}

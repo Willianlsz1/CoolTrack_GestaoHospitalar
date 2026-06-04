@@ -1,0 +1,37 @@
+/* CoolTrack UI Kit — Modal (overlay + caixa com rolagem fina).
+   Tokens vêm de ../colors_and_type.css. */
+.ct-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.ct-modal {
+  width: 100%;
+  max-width: 460px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+  padding: 24px;
+  box-shadow: var(--shadow-modal);
+  /* Barra de rolagem fina e discreta (Firefox). */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+/* Barra de rolagem fina e discreta (Chrome/Safari/Edge). */
+.ct-modal::-webkit-scrollbar {
+  width: 8px;
+}
+.ct-modal::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+.ct-modal::-webkit-scrollbar-track {
+  background: transparent;
+}

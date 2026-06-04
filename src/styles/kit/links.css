@@ -1,0 +1,18 @@
+/* CoolTrack UI Kit — Links.
+   Tokens vêm de ../colors_and_type.css. */
+.ct-link {
+  color: var(--link);
+  cursor: pointer;
+}
+.ct-link:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+.ct-quiet {
+  color: var(--fg-3);
+  cursor: pointer;
+  transition: color 0.13s ease;
+}
+.ct-quiet:hover {
+  color: var(--link);
+}
