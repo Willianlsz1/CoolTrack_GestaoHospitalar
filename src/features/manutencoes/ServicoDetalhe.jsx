@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { TipoManutencaoBadge } from '../../components/TipoManutencaoBadge'
 import { AprovacaoBadge } from '../../components/AprovacaoBadge'
 import { formatarData } from '../../core/data'
+import { HistoricoDecisoes } from './HistoricoDecisoes'
 
 // Um item do checklist preenchido: ✓ OK / ✗ exceção + observação.
 function ItemChecklist({ item }) {
@@ -130,6 +131,8 @@ export function ServicoDetalhe({ servico: m, children, destacado }) {
           </Link>
         </div>
       )}
+
+      <HistoricoDecisoes manutencaoId={m.id} />
 
       {children && (
         <div className="mt-3 border-t border-[var(--border)] pt-3">

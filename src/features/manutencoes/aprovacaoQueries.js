@@ -1,5 +1,20 @@
 import { supabase } from '../../core/supabase'
 
+// Trilha de decisões de um serviço (aprovacoes_log, migração 0026). A própria
+// RLS da tabela só devolve linhas para admin (técnico recebe []), então a
+// consulta é direta. Embute o nome de quem decidiu (FK única decidido_por).
+export async function buscarAprovacoesLog(manutencaoId) {
+  const { data, error } = await supabase
+    .from('aprovacoes_log')
+    .select(
+      'id, status_anterior, status, motivo, decidido_em, decididor:perfis(nome)',
+    )
+    .eq('manutencao_id', manutencaoId)
+    .order('decidido_em', { ascending: true })
+  if (error) throw error
+  return data
+}
+
 // Aprova ou reprova um serviço (manutenção). Só admin consegue (RLS da
 // migração 0023). Grava quem decidiu, quando, e o motivo (que só faz
 // sentido na reprovação — na aprovação volta a null).
