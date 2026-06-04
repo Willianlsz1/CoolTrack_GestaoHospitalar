@@ -15,7 +15,7 @@ export function PorSetor({ setores }) {
         <Building2 size={14} /> Equipamentos por setor
       </p>
       <p className="t-caption mb-[10px] mt-0.5">
-        Quantos equipamentos cada setor tem.
+        Quantos equipamentos cada setor tem — e quantos estão atrasados.
       </p>
       {setores.length === 0 ? (
         <p className="t-secondary">Sem setores.</p>
@@ -26,10 +26,20 @@ export function PorSetor({ setores }) {
               key={s.setor}
               className="grid grid-cols-[110px_1fr_44px] items-center gap-[14px] border-t border-[var(--border)] py-1.5 first:border-t-0"
             >
-              <span
-                className={`truncate text-[15px] ${s.agrupado ? 'text-[var(--fg-3)]' : 'text-[var(--fg-2)]'}`}
-              >
-                {s.setor}
+              <span className="min-w-0">
+                <span
+                  className={`block truncate text-[15px] ${s.agrupado ? 'text-[var(--fg-3)]' : 'text-[var(--fg-2)]'}`}
+                >
+                  {s.setor}
+                </span>
+                {s.atrasados > 0 && (
+                  <span
+                    className="block text-[12px]"
+                    style={{ color: 'var(--danger)' }}
+                  >
+                    {s.atrasados} atrasado{s.atrasados > 1 ? 's' : ''}
+                  </span>
+                )}
               </span>
               <span className="h-1.5 overflow-hidden rounded-full bg-[var(--surface-2)]">
                 <i

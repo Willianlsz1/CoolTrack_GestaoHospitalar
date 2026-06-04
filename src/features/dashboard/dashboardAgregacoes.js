@@ -150,9 +150,21 @@ export function ultimasManutencoes(manutencoes, n = 5) {
   return manutencoes.slice(0, n)
 }
 
-// Distribuição por setor ORDENADA (maior primeiro), com os menores
-// agrupados em "Outros setores" acima do limite.
-export function porSetorOrdenado(equipamentos, limite = 8) {
+// Distribuição por setor ORDENADA (maior primeiro), com os menores agrupados
+// em "Outros setores" acima do limite. Cada setor traz também `atrasados` —
+// quantos dos seus equipamentos estão atrasados (só ativos, regra canônica) —
+// para o painel sinalizar onde está o risco, não só a contagem.
+export function porSetorOrdenado(
+  equipamentos,
+  ultimaPrev = new Map(),
+  limite = 8,
+) {
+  const atrasoPorSetor = {}
+  for (const { eq } of atrasadosComDias(equipamentos, ultimaPrev)) {
+    const setor = nomeSetorDoEquipamento(eq) ?? 'Sem setor'
+    atrasoPorSetor[setor] = (atrasoPorSetor[setor] || 0) + 1
+  }
+
   const mapa = {}
   for (const eq of equipamentos) {
     const setor = nomeSetorDoEquipamento(eq) ?? 'Sem setor'
@@ -160,13 +172,23 @@ export function porSetorOrdenado(equipamentos, limite = 8) {
   }
 
   const ordenado = Object.entries(mapa)
-    .map(([setor, count]) => ({ setor, count }))
+    .map(([setor, count]) => ({
+      setor,
+      count,
+      atrasados: atrasoPorSetor[setor] || 0,
+    }))
     .sort((a, b) => b.count - a.count)
 
   const principais = ordenado.slice(0, limite)
-  const outros = ordenado.slice(limite).reduce((s, x) => s + x.count, 0)
+  const resto = ordenado.slice(limite)
+  const outros = resto.reduce((s, x) => s + x.count, 0)
   if (outros > 0) {
-    principais.push({ setor: 'Outros setores', count: outros, agrupado: true })
+    principais.push({
+      setor: 'Outros setores',
+      count: outros,
+      atrasados: resto.reduce((s, x) => s + x.atrasados, 0),
+      agrupado: true,
+    })
   }
   return principais
 }

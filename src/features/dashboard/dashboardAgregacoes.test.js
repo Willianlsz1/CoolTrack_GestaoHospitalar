@@ -219,16 +219,37 @@ describe('resumoConformidade', () => {
 })
 
 describe('porSetorOrdenado', () => {
-  it('agrupa por setor e ordena do maior para o menor', () => {
-    const r = porSetorOrdenado([
-      { setores: { nome: 'CME' } },
-      { setores: { nome: 'CME' } },
-      { setores: { nome: 'CME' } },
-      { setores: { nome: 'Radiologia' } },
+  it('agrupa por setor, conta e marca os atrasados (só ativos)', () => {
+    const equipamentos = [
+      // CME: 2 equipamentos, 1 atrasado (sem preventiva, instalado há muito).
+      {
+        id: 'c1',
+        status: 'ativo',
+        intervalo_mensal: 30,
+        data_instalacao: '2025-01-01',
+        setores: { nome: 'CME' },
+      },
+      {
+        id: 'c2',
+        status: 'ativo',
+        intervalo_mensal: 30,
+        setores: { nome: 'CME' },
+      },
+      // Radiologia: 1 equipamento, em dia.
+      {
+        id: 'r1',
+        status: 'ativo',
+        intervalo_mensal: 30,
+        setores: { nome: 'Radiologia' },
+      },
+    ]
+    const ultimaPrev = new Map([
+      ['c2', { data: '2026-05-21' }],
+      ['r1', { data: '2026-05-21' }],
     ])
-    expect(r).toEqual([
-      { setor: 'CME', count: 3 },
-      { setor: 'Radiologia', count: 1 },
+    expect(porSetorOrdenado(equipamentos, ultimaPrev)).toEqual([
+      { setor: 'CME', count: 2, atrasados: 1 },
+      { setor: 'Radiologia', count: 1, atrasados: 0 },
     ])
   })
 })
