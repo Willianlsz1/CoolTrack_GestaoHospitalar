@@ -16,6 +16,7 @@ import {
   RondaPage,
   ConfigPmocPage,
   AprovacoesPage,
+  EvidenciaChecklistPage,
 } from './paginas.jsx'
 
 // Rota raiz: o "tronco" da árvore. Seu componente é o AppLayout (casco:
@@ -113,6 +114,13 @@ const aprovacoesRoute = createRoute({
   component: AprovacoesPage,
 })
 
+// Evidência (Ordem de Serviço) de uma execução de checklist — imprimível.
+const evidenciaRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/evidencia/$id',
+  component: EvidenciaChecklistPage,
+})
+
 // A árvore de rotas: a raiz com suas filhas. Cada nova tela vira
 // um createRoute() adicionado aqui.
 const routeTree = rootRoute.addChildren([
@@ -127,6 +135,7 @@ const routeTree = rootRoute.addChildren([
   rondaRoute,
   configPmocRoute,
   aprovacoesRoute,
+  evidenciaRoute,
 ])
 
 // O router em si: junta a árvore e é entregue ao RouterProvider.

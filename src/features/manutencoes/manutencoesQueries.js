@@ -18,6 +18,21 @@ export async function buscarManutencoes(equipamentoId) {
   return data
 }
 
+// Uma manutenção pelo id, com os dados necessários ao documento de evidência
+// (equipamento + setor, técnico que executou, gestor que aprovou).
+export async function buscarManutencaoPorId(id) {
+  const { data, error } = await supabase
+    .from('manutencoes')
+    .select(
+      '*, equipamentos(nome, tipo, patrimonio, andar, sala, setores(nome)), perfis!registrado_por(nome), aprovador:perfis!aprovado_por(nome)',
+    )
+    .eq('id', id)
+    .maybeSingle()
+
+  if (error) throw error
+  return data
+}
+
 // Registra uma manutenção. Retorna a linha criada (com equipamento_id),
 // usada para invalidar o cache do equipamento certo.
 export async function criarManutencao(manutencao) {

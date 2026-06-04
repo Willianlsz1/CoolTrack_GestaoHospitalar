@@ -36,3 +36,6 @@ export const ConfigPmocPage = lazy(
 export const AprovacoesPage = lazy(
   () => import('../features/aprovacoes/AprovacoesPage.jsx'),
 )
+export const EvidenciaChecklistPage = lazy(
+  () => import('../features/manutencoes/EvidenciaChecklistPage.jsx'),
+)
