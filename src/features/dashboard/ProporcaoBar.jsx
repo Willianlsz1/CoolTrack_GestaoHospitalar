@@ -1,5 +1,9 @@
-// Barra horizontal proporcional (faixa única dividida) + legenda.
-function Legenda({ cor, texto }) {
+import { percentual } from './dashboardAgregacoes'
+
+// Barra horizontal proporcional (faixa única dividida) + legenda. A legenda
+// mostra a contagem e, mais discreto, o % do parque (o que os antigos stat
+// cards traziam — assim a compressão do painel não perde informação).
+function Legenda({ cor, texto, pct }) {
   return (
     <span className="inline-flex items-center gap-1.5">
       <i
@@ -7,6 +11,7 @@ function Legenda({ cor, texto }) {
         style={{ background: cor }}
       />
       {texto}
+      <span className="opacity-60">· {pct}</span>
     </span>
   )
 }
@@ -33,12 +38,21 @@ export function ProporcaoBar({ contagem, total }) {
         />
       </div>
       <div className="mt-[10px] flex flex-wrap gap-x-6 gap-y-1 text-[13px] text-[var(--fg-3)]">
-        <Legenda cor="var(--ok)" texto={`Ativos ${contagem.ativo}`} />
+        <Legenda
+          cor="var(--ok)"
+          texto={`Ativos ${contagem.ativo}`}
+          pct={percentual(contagem.ativo, total)}
+        />
         <Legenda
           cor="var(--warn)"
           texto={`Em manutenção ${contagem.manutencao}`}
+          pct={percentual(contagem.manutencao, total)}
         />
-        <Legenda cor="var(--idle)" texto={`Inativos ${contagem.inativo}`} />
+        <Legenda
+          cor="var(--idle)"
+          texto={`Inativos ${contagem.inativo}`}
+          pct={percentual(contagem.inativo, total)}
+        />
       </div>
     </div>
   )
