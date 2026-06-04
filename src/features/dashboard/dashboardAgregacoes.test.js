@@ -39,7 +39,14 @@ describe('atrasadosComDias', () => {
   it('marca atrasado pela última preventiva e calcula o atraso', () => {
     const ultimaPrev = new Map([['e1', { data: '2026-04-01' }]])
     const r = atrasadosComDias(
-      [{ id: 'e1', intervalo_mensal: 30, data_instalacao: '2025-01-01' }],
+      [
+        {
+          id: 'e1',
+          status: 'ativo',
+          intervalo_mensal: 30,
+          data_instalacao: '2025-01-01',
+        },
+      ],
       ultimaPrev,
     )
     expect(r).toHaveLength(1)
@@ -49,7 +56,14 @@ describe('atrasadosComDias', () => {
 
   it('quem nunca teve preventiva atrasa pela instalação', () => {
     const r = atrasadosComDias(
-      [{ id: 'e2', intervalo_mensal: 30, data_instalacao: '2026-01-01' }],
+      [
+        {
+          id: 'e2',
+          status: 'ativo',
+          intervalo_mensal: 30,
+          data_instalacao: '2026-01-01',
+        },
+      ],
       new Map(),
     )
     expect(r[0].dias).toBe(120) // 150 dias desde a instalação - 30
@@ -57,29 +71,58 @@ describe('atrasadosComDias', () => {
   })
 
   it('equipamento sem intervalo fica fora', () => {
-    const r = atrasadosComDias([{ id: 'e3' }], new Map())
+    const r = atrasadosComDias([{ id: 'e3', status: 'ativo' }], new Map())
     expect(r).toHaveLength(0)
   })
 
   it('nunca teve preventiva mas recém-instalado NÃO é atrasado (carência)', () => {
     const r = atrasadosComDias(
-      [{ id: 'e4', intervalo_mensal: 30, data_instalacao: '2026-05-20' }],
+      [
+        {
+          id: 'e4',
+          status: 'ativo',
+          intervalo_mensal: 30,
+          data_instalacao: '2026-05-20',
+        },
+      ],
       new Map(),
     )
     expect(r).toHaveLength(0) // dentro da carência → cai em "nunca", não atrasado
+  })
+
+  it('equipamento não ativo não entra nos atrasados', () => {
+    const ultimaPrev = new Map([['e5', { data: '2026-01-01' }]])
+    const r = atrasadosComDias(
+      [
+        {
+          id: 'e5',
+          status: 'inativo',
+          intervalo_mensal: 30,
+          data_instalacao: '2025-01-01',
+        },
+      ],
+      ultimaPrev,
+    )
+    expect(r).toHaveLength(0) // inativo e atrasadíssimo, mas não é inspecionado
   })
 })
 
 describe('venceEmBreve', () => {
   it('lista quem vence dentro de 7 dias', () => {
     const ultimaPrev = new Map([['e1', { data: '2026-05-06' }]])
-    const r = venceEmBreve([{ id: 'e1', intervalo_mensal: 30 }], ultimaPrev)
+    const r = venceEmBreve(
+      [{ id: 'e1', status: 'ativo', intervalo_mensal: 30 }],
+      ultimaPrev,
+    )
     expect(r).toHaveLength(1)
     expect(r[0].dias).toBe(5) // faltam 5
   })
   it('não lista quem está em dia com folga', () => {
     const ultimaPrev = new Map([['e1', { data: '2026-05-21' }]])
-    const r = venceEmBreve([{ id: 'e1', intervalo_mensal: 30 }], ultimaPrev)
+    const r = venceEmBreve(
+      [{ id: 'e1', status: 'ativo', intervalo_mensal: 30 }],
+      ultimaPrev,
+    )
     expect(r).toHaveLength(0)
   })
 })

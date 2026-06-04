@@ -42,6 +42,9 @@ export function atrasadosComDias(equipamentos, ultimaPrev) {
   const hoje = hojeLocal()
   return equipamentos
     .map((eq) => {
+      // Só ativos contam como atrasados (igual à ronda); em manutenção/inativo
+      // não são inspecionados.
+      if (eq.status !== 'ativo') return null
       const c = statusChecklist(eq, ultimaPrev, hoje)
       if (c.chave !== 'atrasado') return null
       return { eq, dias: c.dias, nuncaPreventiva: !ultimaPrev.has(eq.id) }
@@ -56,6 +59,7 @@ export function venceEmBreve(equipamentos, ultimaPrev) {
   const hoje = hojeLocal()
   return equipamentos
     .map((eq) => {
+      if (eq.status !== 'ativo') return null
       const c = statusChecklist(eq, ultimaPrev, hoje)
       return c.chave === 'vence' ? { eq, dias: c.dias } : null
     })
