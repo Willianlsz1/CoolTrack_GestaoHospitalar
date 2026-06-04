@@ -1,4 +1,4 @@
-import { hojeLocal } from '../../core/data'
+import { hojeLocal, pluralDias } from '../../core/data'
 import {
   ultimaPreventivaPorEquipamento,
   nomeSetorDoEquipamento,
@@ -7,12 +7,11 @@ import {
 
 // Rótulo do status do checklist mensal para a lista da ronda.
 function rotulo(c) {
-  const plural = (n) => `${n} ${n === 1 ? 'dia' : 'dias'}`
   switch (c.chave) {
     case 'atrasado':
-      return `Atrasado há ${plural(c.dias)}`
+      return `Atrasado há ${pluralDias(c.dias)}`
     case 'vence':
-      return `Vence em ${plural(c.dias)}`
+      return `Vence em ${pluralDias(c.dias)}`
     case 'nunca':
       return 'Nunca executado'
     case 'sem_cadencia':

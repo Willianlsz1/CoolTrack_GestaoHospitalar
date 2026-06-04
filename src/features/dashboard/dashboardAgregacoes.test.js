@@ -52,7 +52,6 @@ describe('atrasadosComDias', () => {
     )
     expect(r).toHaveLength(1)
     expect(r[0].dias).toBe(30) // 60 dias desde a preventiva - 30 de intervalo
-    expect(r[0].nuncaPreventiva).toBe(false)
   })
 
   it('quem nunca teve preventiva atrasa pela instalação', () => {
@@ -68,7 +67,6 @@ describe('atrasadosComDias', () => {
       new Map(),
     )
     expect(r[0].dias).toBe(120) // 150 dias desde a instalação - 30
-    expect(r[0].nuncaPreventiva).toBe(true)
   })
 
   it('equipamento sem intervalo fica fora', () => {

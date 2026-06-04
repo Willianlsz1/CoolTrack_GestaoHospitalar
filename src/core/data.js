@@ -6,12 +6,6 @@ export function hojeLocal() {
   return new Date().toLocaleDateString('en-CA')
 }
 
-export function diasAtras(n) {
-  const d = new Date()
-  d.setDate(d.getDate() - n)
-  return d.toLocaleDateString('en-CA')
-}
-
 const MS_DIA = 86400000
 
 // Dias inteiros entre duas datas 'YYYY-MM-DD' (UTC só para contar dias).
@@ -40,4 +34,10 @@ export function somarDias(dataStr, n) {
   const d = new Date(`${dataStr.slice(0, 10)}T00:00:00`)
   d.setDate(d.getDate() + n)
   return d.toLocaleDateString('en-CA')
+}
+
+// 'N dia' / 'N dias' — pluralização da contagem de dias, usada nos rótulos de
+// cadência (ronda, dashboard, ficha).
+export function pluralDias(n) {
+  return `${n} ${n === 1 ? 'dia' : 'dias'}`
 }

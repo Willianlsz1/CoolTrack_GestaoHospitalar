@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { ClipboardCheck, ClipboardX, Plus, Wrench } from 'lucide-react'
 import { useModelosChecklist } from './useModelosChecklist'
 import { useManutencoes } from '../manutencoes/useManutencoes'
-import { hojeLocal, formatarData } from '../../core/data'
+import { hojeLocal, formatarData, pluralDias } from '../../core/data'
 import { classificarChecklistMensal } from '../../core/dominio'
 import { TIPO_LABELS } from '../equipamentos/rotulos'
 import { Button } from '../../components/Button'
@@ -27,7 +27,6 @@ function descricaoDeExcecoes(excecoes) {
 // carência), por isso a formatação da data é à prova de nulo.
 function calcularStatus(eq, ultima) {
   const c = classificarChecklistMensal(eq, ultima?.data ?? null, hojeLocal())
-  const plural = (n) => `${n} ${n === 1 ? 'dia' : 'dias'}`
   const ultimaFmt = ultima ? formatarData(ultima.data) : null
 
   switch (c.chave) {
@@ -45,27 +44,27 @@ function calcularStatus(eq, ultima) {
         detalhe: !temBase
           ? 'Sem preventiva registrada.'
           : c.dias > 0
-            ? `Primeiro checklist vence em ${plural(c.dias)}.`
+            ? `Primeiro checklist vence em ${pluralDias(c.dias)}.`
             : 'Primeiro checklist vence hoje.',
       }
     }
     case 'atrasado':
       return {
         cor: c.cor,
-        titulo: `Atrasado há ${plural(c.dias)}`,
+        titulo: `Atrasado há ${pluralDias(c.dias)}`,
         detalhe: ultimaFmt ? `Última: ${ultimaFmt}` : 'Nunca executado.',
       }
     case 'vence':
       return {
         cor: c.cor,
         titulo: 'Vence em breve',
-        detalhe: `Última: ${ultimaFmt} · vence em ${plural(c.dias)}`,
+        detalhe: `Última: ${ultimaFmt} · vence em ${pluralDias(c.dias)}`,
       }
     default:
       return {
         cor: c.cor,
         titulo: 'Em dia',
-        detalhe: `Última: ${ultimaFmt} · vence em ${plural(c.dias)}`,
+        detalhe: `Última: ${ultimaFmt} · vence em ${pluralDias(c.dias)}`,
       }
   }
 }

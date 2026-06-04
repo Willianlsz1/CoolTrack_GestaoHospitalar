@@ -1,5 +1,19 @@
 import { describe, it, expect } from 'vitest'
-import { diasEntre, somarDias, formatarData, formatarDiaMes } from './data'
+import {
+  diasEntre,
+  somarDias,
+  formatarData,
+  formatarDiaMes,
+  pluralDias,
+} from './data'
+
+describe('pluralDias', () => {
+  it('usa singular só para 1', () => {
+    expect(pluralDias(1)).toBe('1 dia')
+    expect(pluralDias(0)).toBe('0 dias')
+    expect(pluralDias(30)).toBe('30 dias')
+  })
+})
 
 describe('diasEntre', () => {
   it('conta os dias inteiros entre duas datas', () => {
