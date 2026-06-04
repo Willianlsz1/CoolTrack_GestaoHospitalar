@@ -24,6 +24,8 @@ function rotulo(c) {
 
 // Monta a ronda: equipamentos agrupados por setor, com seu status, ordenados
 // por urgência. soPendentes filtra os que já estão em dia / sem cadência.
+// Só entram equipamentos ATIVOS: os em manutenção/inativos não são inspecionados
+// (continuam no inventário e no relatório PMOC, com a flag Ativo S/N).
 export function montarRonda(equipamentos, manutencoes, soPendentes) {
   const hoje = hojeLocal()
   const ultimaPrev = ultimaPreventivaPorEquipamento(manutencoes)
@@ -31,6 +33,7 @@ export function montarRonda(equipamentos, manutencoes, soPendentes) {
   const grupos = new Map()
   let totalPendentes = 0
   for (const eq of equipamentos) {
+    if (eq.status !== 'ativo') continue
     const c = classificarChecklistMensal(
       eq,
       ultimaPrev.get(eq.id)?.data ?? null,

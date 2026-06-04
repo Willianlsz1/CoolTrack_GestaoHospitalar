@@ -8,8 +8,13 @@ beforeEach(() => {
 afterEach(() => vi.useRealTimers())
 
 const equipamentos = [
-  { id: 'e1', intervalo_mensal: 30, setores: { nome: 'CME' } }, // atrasado
-  { id: 'e2', intervalo_mensal: 30, setores: { nome: 'Radiologia' } }, // em dia
+  { id: 'e1', status: 'ativo', intervalo_mensal: 30, setores: { nome: 'CME' } }, // atrasado
+  {
+    id: 'e2',
+    status: 'ativo',
+    intervalo_mensal: 30,
+    setores: { nome: 'Radiologia' },
+  }, // em dia
 ]
 const manutencoes = [
   { equipamento_id: 'e1', tipo: 'preventiva', data: '2026-04-01' },
@@ -37,6 +42,30 @@ describe('montarRonda', () => {
   it('rotula o status de forma legível', () => {
     const { setores } = montarRonda(equipamentos, manutencoes, true)
     expect(setores[0].itens[0].status.label).toBe('Atrasado há 30 dias')
+  })
+
+  it('ignora equipamento não ativo (em manutenção/inativo)', () => {
+    const comInativo = [
+      ...equipamentos,
+      // Inativo e atrasadíssimo: não pode entrar na ronda nem contar.
+      {
+        id: 'e3',
+        status: 'inativo',
+        intervalo_mensal: 30,
+        setores: { nome: 'Almoxarifado' },
+      },
+    ]
+    const comManInativo = [
+      ...manutencoes,
+      { equipamento_id: 'e3', tipo: 'preventiva', data: '2026-01-01' },
+    ]
+    const { setores, totalPendentes } = montarRonda(
+      comInativo,
+      comManInativo,
+      false,
+    )
+    expect(totalPendentes).toBe(1) // só e1; e3 não conta
+    expect(setores.map((s) => s.setor)).toEqual(['CME', 'Radiologia']) // sem Almoxarifado
   })
 })
 
