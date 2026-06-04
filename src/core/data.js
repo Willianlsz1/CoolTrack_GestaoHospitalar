@@ -21,10 +21,21 @@ export function formatarDiaMes(dataStr) {
 
 // 'YYYY-MM-DD' -> 'DD/MM/AAAA' (formato brasileiro, data cheia na UI).
 // O banco guarda em ISO (bom para ordenar/comparar); aqui só exibimos.
+// Use SÓ para colunas de DATA pura (YYYY-MM-DD), como `data`. Para timestamps
+// com hora/fuso (campos *_em), use formatarDataLocal — fatiar um timestamp UTC
+// aqui adiantaria o dia à noite no Brasil (UTC-3).
 export function formatarData(dataStr) {
   if (!dataStr) return '—'
   const [ano, mes, dia] = dataStr.slice(0, 10).split('-')
   return `${dia}/${mes}/${ano}`
+}
+
+// Timestamp ISO com hora/fuso (ex.: aprovado_em, decidido_em) -> 'DD/MM/AAAA'
+// no fuso LOCAL. Converte antes de exibir, então uma decisão tomada à noite
+// não "pula" para o dia seguinte (como aconteceria fatiando a porção UTC).
+export function formatarDataLocal(ts) {
+  if (!ts) return '—'
+  return new Date(ts).toLocaleDateString('pt-BR')
 }
 
 // 'YYYY-MM-DD' + n dias -> 'YYYY-MM-DD' (fuso local). Usado para calcular

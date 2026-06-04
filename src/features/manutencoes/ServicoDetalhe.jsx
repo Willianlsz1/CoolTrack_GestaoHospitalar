@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { TipoManutencaoBadge } from '../../components/TipoManutencaoBadge'
 import { AprovacaoBadge } from '../../components/AprovacaoBadge'
-import { formatarData } from '../../core/data'
+import { formatarData, formatarDataLocal } from '../../core/data'
 import { HistoricoDecisoes } from './HistoricoDecisoes'
 
 // Um item do checklist preenchido: ✓ OK / ✗ exceção + observação.
@@ -109,7 +109,7 @@ export function ServicoDetalhe({ servico: m, children, destacado }) {
       {m.aprovacao_status === 'aprovado' && (
         <p className="t-caption mt-3" style={{ color: 'var(--ok)' }}>
           Aprovado por {m.aprovador?.nome ?? '—'}
-          {m.aprovado_em && ` · ${formatarData(m.aprovado_em)}`}
+          {m.aprovado_em && ` · ${formatarDataLocal(m.aprovado_em)}`}
         </p>
       )}
       {m.aprovacao_status === 'reprovado' && m.aprovacao_motivo && (

@@ -5,7 +5,7 @@ import { useConfigPmoc } from '../config/useConfigPmoc'
 import { TIPO_LABELS } from '../equipamentos/rotulos'
 import { MANUTENCAO_TIPO_LABELS } from './rotulos'
 import { FREQ_LABELS } from '../checklists/rotulos'
-import { formatarData } from '../../core/data'
+import { formatarData, formatarDataLocal } from '../../core/data'
 import { nomeSetorDoEquipamento } from '../../core/dominio'
 import { Button } from '../../components/Button'
 import { Carregando, Erro } from '../../components/Estado'
@@ -176,7 +176,7 @@ export default function EvidenciaChecklistPage() {
             linhaNome={aprovado ? m.aprovador?.nome : null}
             papel={
               aprovado && m.aprovado_em
-                ? `Gestor · ${formatarData(m.aprovado_em)}`
+                ? `Gestor · ${formatarDataLocal(m.aprovado_em)}`
                 : 'Gestor'
             }
             detalhe={aprovado ? 'Aprovado' : 'Aguardando aprovação'}

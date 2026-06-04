@@ -9,7 +9,7 @@ import { TipoManutencaoBadge } from '../../components/TipoManutencaoBadge'
 import { AprovacaoBadge } from '../../components/AprovacaoBadge'
 import { useToast } from '../feedback/useToast'
 import { Carregando, Erro } from '../../components/Estado'
-import { formatarData } from '../../core/data'
+import { formatarData, formatarDataLocal } from '../../core/data'
 
 // Lista parametrizável de manutenções de um equipamento. Reusada nas duas
 // abas da ficha:
@@ -79,7 +79,7 @@ export default function ManutencoesHistorico({
               {m.aprovacao_status === 'aprovado' && (
                 <p className="t-caption mt-1" style={{ color: 'var(--ok)' }}>
                   Aprovado por {m.aprovador?.nome ?? '—'}
-                  {m.aprovado_em && ` · ${formatarData(m.aprovado_em)}`}
+                  {m.aprovado_em && ` · ${formatarDataLocal(m.aprovado_em)}`}
                 </p>
               )}
               {m.aprovacao_status === 'reprovado' && m.aprovacao_motivo && (

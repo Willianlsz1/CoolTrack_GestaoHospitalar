@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { History } from 'lucide-react'
 import { useAprovacoesLog } from './useAprovacoesLog'
 import { rotuloDecisao } from './rotuloDecisao'
-import { formatarData } from '../../core/data'
+import { formatarDataLocal } from '../../core/data'
 
 // Seção recolhível com a trilha de decisões de um serviço (aprovacoes_log).
 // Carrega sob demanda (só ao abrir). Cada linha: data · quem · ação (+ motivo
@@ -42,8 +42,8 @@ export function HistoricoDecisoes({ manutencaoId }) {
             <ul className="m-0 list-none space-y-1 p-0">
               {log.map((l) => (
                 <li key={l.id} className="t-caption">
-                  {formatarData(l.decidido_em)} · {l.decididor?.nome ?? '—'} ·{' '}
-                  {rotuloDecisao(l.status)}
+                  {formatarDataLocal(l.decidido_em)} ·{' '}
+                  {l.decididor?.nome ?? '—'} · {rotuloDecisao(l.status)}
                   {l.status === 'reprovado' && l.motivo && ` — ${l.motivo}`}
                 </li>
               ))}
