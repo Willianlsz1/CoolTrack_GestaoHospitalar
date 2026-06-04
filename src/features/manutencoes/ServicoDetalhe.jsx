@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { TipoManutencaoBadge } from '../../components/TipoManutencaoBadge'
 import { AprovacaoBadge } from '../../components/AprovacaoBadge'
 import { formatarData } from '../../core/data'
@@ -114,6 +115,20 @@ export function ServicoDetalhe({ servico: m, children, destacado }) {
         <p className="mt-3 text-[14px]" style={{ color: 'var(--danger)' }}>
           Motivo da reprovação: {m.aprovacao_motivo}
         </p>
+      )}
+
+      {/* Execução com checklist → documento de evidência (OS) imprimível.
+          Na fila, é o documento que o gestor está de fato aprovando. */}
+      {m.checklist && (
+        <div className="mt-3">
+          <Link
+            to="/evidencia/$id"
+            params={{ id: m.id }}
+            className="ct-link text-[14px]"
+          >
+            Ver evidência / OS →
+          </Link>
+        </div>
       )}
 
       {children && (
