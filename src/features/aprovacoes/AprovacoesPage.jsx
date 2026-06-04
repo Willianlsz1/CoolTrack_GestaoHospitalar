@@ -78,13 +78,22 @@ function FilaAprovacoes() {
     )
   }
   function aprovarSelecionados() {
+    const pedidos = idsValidos.length
     aprovarVarios.mutate(idsValidos, {
-      onSuccess: () => {
-        toast.sucesso(
-          `${idsValidos.length} ${
-            idsValidos.length === 1 ? 'serviço aprovado' : 'serviços aprovados'
-          }`,
-        )
+      // `n` = quantos foram DE FATO aprovados (pode ser menos que o pedido se
+      // algum já tiver sido decidido por outra sessão entre o clique e o envio).
+      onSuccess: (n) => {
+        if (n === 0) {
+          toast.erro('Nenhum aprovado — já decididos por outro gestor.')
+        } else if (n < pedidos) {
+          toast.sucesso(
+            `${n} de ${pedidos} aprovados (os demais já estavam decididos).`,
+          )
+        } else {
+          toast.sucesso(
+            `${n} ${n === 1 ? 'serviço aprovado' : 'serviços aprovados'}`,
+          )
+        }
         setSelecionados(new Set())
       },
       onError: () => toast.erro('Não foi possível aprovar os serviços.'),

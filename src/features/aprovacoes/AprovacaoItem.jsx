@@ -27,7 +27,12 @@ export function AprovacaoItem({ servico, selecionado, onToggleSelecao }) {
         status: 'reprovado',
         motivo: motivo.trim(),
       },
-      { onSuccess: () => toast.sucesso('Serviço reprovado') },
+      {
+        onSuccess: (n) =>
+          n > 0
+            ? toast.sucesso('Serviço reprovado')
+            : toast.erro('Este serviço já foi decidido por outro gestor.'),
+      },
     )
   }
 
@@ -53,7 +58,14 @@ export function AprovacaoItem({ servico, selecionado, onToggleSelecao }) {
                 onClick={() =>
                   aprovar.mutate(
                     { id: servico.id, status: 'aprovado' },
-                    { onSuccess: () => toast.sucesso('Serviço aprovado') },
+                    {
+                      onSuccess: (n) =>
+                        n > 0
+                          ? toast.sucesso('Serviço aprovado')
+                          : toast.erro(
+                              'Este serviço já foi decidido por outro gestor.',
+                            ),
+                    },
                   )
                 }
                 disabled={aprovar.isPending}
