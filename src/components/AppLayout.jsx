@@ -1,6 +1,6 @@
 import { useState, Suspense } from 'react'
 import { Link, Outlet } from '@tanstack/react-router'
-import { Snowflake, Menu, X } from 'lucide-react'
+import { Snowflake, Menu, X, Loader2 } from 'lucide-react'
 import { useSessao } from '../features/auth/useSessao'
 import { useEhAdmin } from '../features/perfil/useEhAdmin'
 import { usePendentesAprovacao } from '../features/aprovacoes/usePendentesAprovacao'
@@ -24,8 +24,9 @@ export default function AppLayout() {
       <div
         role="status"
         aria-live="polite"
-        className="flex min-h-screen items-center justify-center bg-[var(--bg)] text-[var(--fg-2)]"
+        className="flex min-h-screen items-center justify-center gap-2 bg-[var(--bg)] text-[var(--fg-2)]"
       >
+        <Loader2 size={20} className="animate-spin" aria-hidden="true" />
         Carregando…
       </div>
     )

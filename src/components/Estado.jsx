@@ -1,16 +1,21 @@
+import { Loader2 } from 'lucide-react'
+
 // Estados de consulta acessíveis, reusados nas telas (remove a duplicação
 // dos <p> inline e dá semântica para leitores de tela):
-//  - Carregando: role=status + aria-live=polite (anuncia ao aparecer).
+//  - Carregando: spinner animado + texto. role=status + aria-live=polite
+//    (anuncia ao aparecer). O spinner girando deixa claro "está carregando",
+//    não "travou" — o texto cinza sozinho some no fundo escuro.
 //  - Erro:       role=alert (anuncia imediatamente uma falha).
 export function Carregando({ texto = 'Carregando…', className = '' }) {
   return (
-    <p
+    <div
       role="status"
       aria-live="polite"
-      className={`t-secondary ${className}`.trim()}
+      className={`flex items-center justify-center gap-2 py-8 text-[var(--fg-3)] ${className}`.trim()}
     >
-      {texto}
-    </p>
+      <Loader2 size={18} className="animate-spin" aria-hidden="true" />
+      <span className="t-secondary">{texto}</span>
+    </div>
   )
 }
 
