@@ -160,6 +160,14 @@ export default function EquipamentoFicha() {
             </AbaBtn>
           </div>
 
+          {/* Legenda da aba ativa — explica a diferença Serviços × Checklist
+              para quem está começando, no contexto, sem tooltip escondido. */}
+          <p className="t-caption mt-3">
+            {aba === 'servicos'
+              ? 'Manutenções pontuais: corretiva (conserto) e preditiva.'
+              : 'Inspeção preventiva mensal do PMOC — a higienização periódica.'}
+          </p>
+
           <div className="pt-4">
             {aba === 'servicos' ? (
               <ManutencoesHistorico

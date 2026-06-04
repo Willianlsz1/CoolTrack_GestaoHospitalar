@@ -1,11 +1,12 @@
 import { useState, useMemo } from 'react'
 import { Link, useSearch, useNavigate } from '@tanstack/react-router'
-import { Plus, ScanLine } from 'lucide-react'
+import { Plus, ScanLine, Boxes } from 'lucide-react'
 import { useEquipamentos } from './useEquipamentos'
 import { useMeuPerfil } from '../perfil/useMeuPerfil'
 import { useToast } from '../feedback/useToast'
 import { nomeSetorDoEquipamento } from '../../core/dominio'
 import { Button } from '../../components/Button'
+import { Carregando, Erro } from '../../components/Estado'
 import Modal from '../../components/Modal'
 import EquipamentosForm from './EquipamentosForm'
 import { EquipamentoLinha } from './EquipamentoLinha'
@@ -112,12 +113,26 @@ export default function EquipamentosLista() {
         setores={setores}
       />
 
-      {isPending && <p className="t-secondary">Carregando equipamentos…</p>}
-      {isError && (
-        <p style={{ color: 'var(--danger)' }}>Erro ao carregar equipamentos.</p>
-      )}
+      {isPending && <Carregando texto="Carregando equipamentos…" />}
+      {isError && <Erro>Erro ao carregar equipamentos.</Erro>}
       {semCadastro && (
-        <p className="t-secondary">Nenhum equipamento cadastrado ainda.</p>
+        <div className="ct-card ct-card--pad24 mt-2 text-center">
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--surface-2)]">
+            <Boxes size={24} className="text-[var(--fg-3)]" />
+          </div>
+          <h2 className="text-[17px] font-medium">
+            Comece cadastrando seu primeiro equipamento
+          </h2>
+          <p className="t-secondary mx-auto mt-1 max-w-md">
+            Cadastre os equipamentos de refrigeração para acompanhar a cadência
+            do PMOC, registrar serviços e gerar o relatório.
+          </p>
+          <div className="mt-4 flex justify-center">
+            <Button variant="primary" icon={Plus} onClick={abrirCriar}>
+              Cadastrar primeiro equipamento
+            </Button>
+          </div>
+        </div>
       )}
       {semResultado && (
         <p className="t-secondary">
