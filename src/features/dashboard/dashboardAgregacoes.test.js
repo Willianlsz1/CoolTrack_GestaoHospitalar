@@ -6,6 +6,7 @@ import {
   venceEmBreve,
   porSetorOrdenado,
   reprovadosDoUsuario,
+  resumoConformidade,
 } from './dashboardAgregacoes'
 
 // Fixa "hoje" = 31/05/2026 para os cálculos que dependem da data atual.
@@ -161,6 +162,45 @@ describe('reprovadosDoUsuario', () => {
 
   it('é vazio sem usuário', () => {
     expect(reprovadosDoUsuario(mans, null)).toEqual([])
+  })
+})
+
+describe('resumoConformidade', () => {
+  // hoje fixado em 31/05/2026 pelos fake timers do topo do arquivo.
+  it('agrega os baldes sobre os ativos (em dia = em dia + a vencer)', () => {
+    const equipamentos = [
+      { id: 'd', status: 'ativo', intervalo_mensal: 30 }, // em dia
+      { id: 'v', status: 'ativo', intervalo_mensal: 30 }, // a vencer
+      { id: 'a', status: 'ativo', intervalo_mensal: 30 }, // atrasado 30d
+      { id: 'c', status: 'ativo', intervalo_mensal: 30 }, // crítico 89d
+      {
+        id: 'n',
+        status: 'ativo',
+        intervalo_mensal: 30,
+        data_instalacao: '2026-05-20',
+      }, // nunca (carência)
+      { id: 's', status: 'ativo' }, // sem cadência
+      { id: 'x', status: 'inativo', intervalo_mensal: 30 }, // ignorado (não ativo)
+    ]
+    const ultimaPrev = new Map([
+      ['d', { data: '2026-05-21' }],
+      ['v', { data: '2026-05-06' }],
+      ['a', { data: '2026-04-01' }],
+      ['c', { data: '2026-02-01' }],
+    ])
+    const r = resumoConformidade(equipamentos, ultimaPrev)
+    expect(r.emDia).toBe(2)
+    expect(r.aVencer).toBe(1)
+    expect(r.atrasados).toBe(2)
+    expect(r.criticos).toBe(1)
+    expect(r.nunca).toBe(1)
+    expect(r.semCadencia).toBe(1)
+    expect(r.base).toBe(5) // emDia(2) + atrasados(2) + nunca(1); sem_cadencia fora
+    expect(r.pct).toBe(40) // 2/5
+  })
+
+  it('pct é 0 quando não há base', () => {
+    expect(resumoConformidade([], new Map()).pct).toBe(0)
   })
 })
 
