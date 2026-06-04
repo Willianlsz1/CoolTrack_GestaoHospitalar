@@ -33,6 +33,9 @@ export async function decidirAprovacao(id, { status, motivo }) {
       aprovado_em: new Date().toISOString(),
     })
     .eq('id', id)
+    // Só decide o que está pendente: a regra vive na fronteira de dados, não
+    // só na seleção da UI. Evita re-carimbar uma decisão já tomada.
+    .eq('aprovacao_status', 'pendente')
 
   if (error) throw error
 }
@@ -77,6 +80,9 @@ export async function aprovarVarios(ids) {
       aprovado_em: new Date().toISOString(),
     })
     .in('id', ids)
+    // Só aprova o que está pendente (mesma defesa do decidirAprovacao): não
+    // re-carimba serviços já decididos nem polui a trilha de auditoria.
+    .eq('aprovacao_status', 'pendente')
 
   if (error) throw error
 }

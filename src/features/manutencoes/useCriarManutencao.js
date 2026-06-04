@@ -12,19 +12,23 @@ export function useCriarManutencao() {
   return useMutation({
     mutationFn: async ({ fotoAntes, fotoDepois, ...dados }) => {
       const enviadas = []
-      let foto_antes_url = null
-      let foto_depois_url = null
 
-      if (fotoAntes) {
-        foto_antes_url = await enviarFoto(fotoAntes)
-        enviadas.push(foto_antes_url)
-      }
-      if (fotoDepois) {
-        foto_depois_url = await enviarFoto(fotoDepois)
-        enviadas.push(foto_depois_url)
-      }
-
+      // Uploads E insert no mesmo try: se a 2ª foto (ou o insert) falhar, o
+      // catch remove qualquer foto JÁ enviada — senão a 1ª ficaria órfã no
+      // bucket, sem nenhuma linha apontando para ela.
       try {
+        let foto_antes_url = null
+        let foto_depois_url = null
+
+        if (fotoAntes) {
+          foto_antes_url = await enviarFoto(fotoAntes)
+          enviadas.push(foto_antes_url)
+        }
+        if (fotoDepois) {
+          foto_depois_url = await enviarFoto(fotoDepois)
+          enviadas.push(foto_depois_url)
+        }
+
         return await criarManutencao({
           ...dados,
           foto_antes_url,
