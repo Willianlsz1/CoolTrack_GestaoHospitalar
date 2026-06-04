@@ -202,6 +202,20 @@ describe('resumoConformidade', () => {
   it('pct é 0 quando não há base', () => {
     expect(resumoConformidade([], new Map()).pct).toBe(0)
   })
+
+  it('conta os em dia cuja última preventiva ainda aguarda aprovação', () => {
+    const equipamentos = [
+      { id: 'ap', status: 'ativo', intervalo_mensal: 30 }, // em dia, aprovado
+      { id: 'pe', status: 'ativo', intervalo_mensal: 30 }, // em dia, pendente
+    ]
+    const ultimaPrev = new Map([
+      ['ap', { data: '2026-05-21', aprovacao_status: 'aprovado' }],
+      ['pe', { data: '2026-05-22', aprovacao_status: 'pendente' }],
+    ])
+    const r = resumoConformidade(equipamentos, ultimaPrev)
+    expect(r.emDia).toBe(2)
+    expect(r.aguardandoAprovacao).toBe(1) // só 'pe'
+  })
 })
 
 describe('porSetorOrdenado', () => {
