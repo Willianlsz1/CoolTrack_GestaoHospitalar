@@ -13,6 +13,7 @@ import {
   contagemPorAprovacao,
 } from './aprovacoesSelectors'
 import { AprovacaoItem } from './AprovacaoItem'
+import { ReabrirBotao } from './ReabrirBotao'
 
 const ABAS = [
   { chave: 'pendente', label: 'Pendentes' },
@@ -181,7 +182,9 @@ function FilaAprovacoes() {
               />
             ) : (
               <li key={m.id}>
-                <ServicoDetalhe servico={m} />
+                <ServicoDetalhe servico={m}>
+                  <ReabrirBotao servicoId={m.id} />
+                </ServicoDetalhe>
               </li>
             ),
           )}

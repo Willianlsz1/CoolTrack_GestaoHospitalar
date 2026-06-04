@@ -1,5 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { decidirAprovacao, aprovarVarios } from './aprovacaoQueries'
+import {
+  decidirAprovacao,
+  aprovarVarios,
+  reabrirDecisao,
+} from './aprovacaoQueries'
 
 // Mutação aprovar/reprovar (um serviço). Invalida ['manutencoes'] (prefixo)
 // para a fila e o histórico do equipamento refletirem a decisão.
@@ -17,6 +21,15 @@ export function useAprovarVarios() {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: (ids) => aprovarVarios(ids),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['manutencoes'] }),
+  })
+}
+
+// Reabre um serviço decidido (volta para 'pendente').
+export function useReabrirManutencao() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (id) => reabrirDecisao(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['manutencoes'] }),
   })
 }
