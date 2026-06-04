@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 import { useManutencoes } from './useManutencoes'
 import ManutencaoForm from './ManutencaoForm'
@@ -120,6 +121,18 @@ export default function ManutencoesHistorico({
                       <figcaption className="t-caption mt-1">Depois</figcaption>
                     </figure>
                   )}
+                </div>
+              )}
+              {/* Execução com checklist → documento de evidência imprimível. */}
+              {m.checklist && (
+                <div className="mt-3">
+                  <Link
+                    to="/evidencia/$id"
+                    params={{ id: m.id }}
+                    className="ct-link text-[14px]"
+                  >
+                    Imprimir evidência →
+                  </Link>
                 </div>
               )}
             </li>
