@@ -22,8 +22,10 @@ export function PorSetor({ setores }) {
       ) : (
         <ul className="m-0 list-none p-0">
           {setores.map((s) => (
+            // Chave estável: o bucket agrupado usa um id sintético próprio, para
+            // não colidir com um setor real que por acaso se chame "Outros setores".
             <li
-              key={s.setor}
+              key={s.agrupado ? '__outros__' : s.setor}
               className="grid grid-cols-[110px_1fr_44px] items-center gap-[14px] border-t border-[var(--border)] py-1.5 first:border-t-0"
             >
               <span className="min-w-0">
