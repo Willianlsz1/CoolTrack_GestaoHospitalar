@@ -12,9 +12,12 @@ function diasDesdeEpoca(dataStr) {
   return new Date(dataStr).getTime() / MS_DIA
 }
 
-// Ordena UMA vez, calcula o intervalo médio (dias) entre manutenções
-// consecutivas e projeta a próxima. Retorna { intervalo, proxima };
-// ambos null quando há menos de 2 manutenções. Não muta a lista.
+// Ordena UMA vez, calcula o intervalo médio (dias) entre manutenções e
+// projeta a próxima. Retorna { intervalo, proxima }; ambos null quando há
+// menos de 2 manutenções OU quando o intervalo médio dá 0 (datas iguais).
+// Não muta a lista. Só a MÉDIA importa aqui — a variância é ignorada de
+// propósito; por isso o intervalo médio = (última - primeira) / (n - 1)
+// (a soma das diferenças consecutivas é telescópica e colapsa nisso).
 export function preverManutencao(manutencoes) {
   if (manutencoes.length < 2) {
     return { intervalo: null, proxima: null }
@@ -25,11 +28,12 @@ export function preverManutencao(manutencoes) {
     .slice()
     .sort()
 
-  let soma = 0
-  for (let i = 1; i < datas.length; i++) {
-    soma += diasDesdeEpoca(datas[i]) - diasDesdeEpoca(datas[i - 1])
+  const span =
+    diasDesdeEpoca(datas[datas.length - 1]) - diasDesdeEpoca(datas[0])
+  const intervalo = Math.round(span / (datas.length - 1))
+  if (intervalo === 0) {
+    return { intervalo: null, proxima: null }
   }
-  const intervalo = Math.round(soma / (datas.length - 1))
 
   const ultima = datas[datas.length - 1]
   const ms = new Date(ultima).getTime() + intervalo * MS_DIA

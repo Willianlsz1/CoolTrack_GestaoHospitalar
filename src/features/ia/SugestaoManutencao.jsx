@@ -14,7 +14,10 @@ export default function SugestaoManutencao({ equipamentoId }) {
 
   if (isPending || isError) return null
 
-  const { intervalo, proxima } = preverManutencao(manutencoes)
+  // Só preventivas: a sugestão é a cadência de higienização. Corretivas e
+  // preditivas são eventos esporádicos (quebras) e distorceriam a média.
+  const preventivas = manutencoes.filter((m) => m.tipo === 'preventiva')
+  const { intervalo, proxima } = preverManutencao(preventivas)
 
   return (
     <section className="mt-1">
