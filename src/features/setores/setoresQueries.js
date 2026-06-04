@@ -7,7 +7,7 @@ export async function buscarSetores() {
   // Embute o responsável (perfil) via a FK responsavel_id -> perfis.id.
   const { data, error } = await supabase
     .from('setores')
-    .select('*, responsavel:perfis(id, nome, email)')
+    .select('*, responsavel:perfis(id, nome)')
     .order('nome')
   if (error) throw error
   return data
