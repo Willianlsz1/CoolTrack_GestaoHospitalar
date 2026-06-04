@@ -2,17 +2,18 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import {
   Boxes,
-  ScanLine,
+  ScanQrCode,
   LayoutDashboard,
-  Route,
+  Footprints,
   FileText,
   ClipboardCheck,
   ListChecks,
-  MapPin,
+  Map,
   Users,
-  Building2,
-  Settings,
+  FileCog,
+  ShieldCheck,
   ChevronDown,
+  CircleUser,
   User,
   LogOut,
 } from 'lucide-react'
@@ -23,9 +24,9 @@ import { useSair } from '../features/auth/useSair'
 // link da raiz. A trava real é sempre o RLS.
 const ITENS_TOPO = [
   { to: '/', label: 'Equipamentos', icon: Boxes, exact: true },
-  { to: '/escanear', label: 'Escanear', icon: ScanLine },
+  { to: '/escanear', label: 'Escanear', icon: ScanQrCode },
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/ronda', label: 'Ronda', icon: Route },
+  { to: '/ronda', label: 'Ronda', icon: Footprints },
   { to: '/relatorio', label: 'Relatório', icon: FileText },
   {
     to: '/aprovacoes',
@@ -38,9 +39,9 @@ const ITENS_TOPO = [
 // Itens agrupados sob "Administração" (todos admin-only).
 const ITENS_ADMIN = [
   { to: '/checklists', label: 'Checklists', icon: ListChecks },
-  { to: '/setores', label: 'Setores', icon: MapPin },
+  { to: '/setores', label: 'Setores', icon: Map },
   { to: '/usuarios', label: 'Usuários', icon: Users },
-  { to: '/config-pmoc', label: 'Config PMOC', icon: Building2 },
+  { to: '/config-pmoc', label: 'Config PMOC', icon: FileCog },
 ]
 
 function BadgePendentes({ n }) {
@@ -144,14 +145,19 @@ export function NavDesktop({ ehAdmin, pendentes, aoAbrirPerfil }) {
       {ITENS_TOPO.filter((i) => !i.adminOnly || ehAdmin).map((item) => (
         <NavLink key={item.to} item={item} pendentes={pendentes} />
       ))}
+      {/* Separa a OPERAÇÃO (acima) da GESTÃO (Administração/Perfil). */}
+      <span
+        aria-hidden="true"
+        className="mx-1 h-5 w-px self-center bg-[var(--border)]"
+      />
       {ehAdmin && (
-        <NavDropdown label="Administração" icon={Settings}>
+        <NavDropdown label="Administração" icon={ShieldCheck}>
           {ITENS_ADMIN.map((item) => (
             <ItemDropdown key={item.to} item={item} />
           ))}
         </NavDropdown>
       )}
-      <NavDropdown label="Perfil" icon={User}>
+      <NavDropdown label="Perfil" icon={CircleUser}>
         <button type="button" className="ct-menu-item" onClick={aoAbrirPerfil}>
           <User size={16} /> Meu perfil
         </button>
@@ -199,7 +205,7 @@ export function NavMobile({ ehAdmin, pendentes, aoAbrirPerfil, aoNavegar }) {
           aoNavegar?.()
         }}
       >
-        <User size={16} /> Perfil
+        <CircleUser size={16} /> Perfil
       </button>
       <button type="button" className="ct-nav" onClick={sairComFeedback}>
         <LogOut size={16} /> Sair
