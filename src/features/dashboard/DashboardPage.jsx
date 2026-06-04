@@ -145,7 +145,7 @@ export default function DashboardPage() {
         {/* Nível 3 — contexto */}
         <section className="grid grid-cols-1 gap-6 lg:grid-cols-[1.55fr_1fr]">
           <UltimasManutencoes manutencoes={ultimasManutencoes(mans)} />
-          <PorSetor setores={porSetorOrdenado(eqs)} />
+          <PorSetor setores={porSetorOrdenado(eqs, ultimaPrev)} />
         </section>
       </div>
     </Pagina>
