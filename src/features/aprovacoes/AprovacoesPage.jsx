@@ -6,6 +6,7 @@ import { useToast } from '../feedback/useToast'
 import { ServicoDetalhe } from '../manutencoes/ServicoDetalhe'
 import { Button } from '../../components/Button'
 import { Input } from '../../components/Input'
+import { AbaBtn } from '../../components/AbaBtn'
 import { Carregando, Erro } from '../../components/Estado'
 import {
   filtrarPorAprovacao,
@@ -26,22 +27,6 @@ export default function AprovacoesPage() {
     <SomenteAdmin titulo="Aprovações">
       <FilaAprovacoes />
     </SomenteAdmin>
-  )
-}
-
-function AbaBtn({ ativo, onClick, children }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`-mb-px border-b-2 px-3 py-2 text-[15px] ${
-        ativo
-          ? 'border-[var(--link)] text-[var(--fg)]'
-          : 'border-transparent text-[var(--fg-3)] hover:text-[var(--fg)]'
-      }`}
-    >
-      {children}
-    </button>
   )
 }
 
@@ -101,6 +86,7 @@ function FilaAprovacoes() {
         )
         setSelecionados(new Set())
       },
+      onError: () => toast.erro('Não foi possível aprovar os serviços.'),
     })
   }
 

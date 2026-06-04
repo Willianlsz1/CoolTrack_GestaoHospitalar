@@ -10,24 +10,26 @@ export function servicosDoUsuario(manutencoes, usuarioId) {
 // Resumo por usuário: setores que responde + total de serviços + data do
 // último. Retorna um Map: usuario_id -> { setores, totalServicos, ultimoServico }.
 export function resumoUsuarios(perfis, setores, manutencoes) {
-  // Agrupa os serviços por quem registrou (uma passada). Como as manutenções
-  // chegam em ordem desc, o 1º de cada grupo é o mais recente.
-  const servicosPorUsuario = new Map()
+  // Conta os serviços e guarda só o mais recente por usuário (uma passada),
+  // sem materializar a lista inteira. Manutenções chegam em ordem desc, então
+  // o 1º visto de cada usuário é o mais recente.
+  const porUsuario = new Map() // id -> { total, ultimo }
   for (const m of manutencoes) {
-    const arr = servicosPorUsuario.get(m.registrado_por) ?? []
-    arr.push(m)
-    servicosPorUsuario.set(m.registrado_por, arr)
+    const r = porUsuario.get(m.registrado_por) ?? { total: 0, ultimo: null }
+    r.total += 1
+    if (r.ultimo === null) r.ultimo = m.data
+    porUsuario.set(m.registrado_por, r)
   }
 
   const mapa = new Map()
   for (const p of perfis) {
-    const servicos = servicosPorUsuario.get(p.id) ?? []
+    const r = porUsuario.get(p.id) ?? { total: 0, ultimo: null }
     mapa.set(p.id, {
       setores: setores
         .filter((s) => s.responsavel_id === p.id)
         .map((s) => s.nome),
-      totalServicos: servicos.length,
-      ultimoServico: servicos[0]?.data ?? null,
+      totalServicos: r.total,
+      ultimoServico: r.ultimo,
     })
   }
   return mapa

@@ -37,14 +37,18 @@ function calcularStatus(eq, ultima) {
         titulo: 'Sem cadência',
         detalhe: 'Equipamento sem setor/intervalo definido.',
       }
-    case 'nunca':
+    case 'nunca': {
+      const temBase = eq.data_instalacao || eq.created_at
       return {
         cor: c.cor,
         titulo: 'Nunca executado',
-        detalhe: c.dias
-          ? `Primeiro checklist vence em ${plural(c.dias)}.`
-          : 'Sem preventiva registrada.',
+        detalhe: !temBase
+          ? 'Sem preventiva registrada.'
+          : c.dias > 0
+            ? `Primeiro checklist vence em ${plural(c.dias)}.`
+            : 'Primeiro checklist vence hoje.',
       }
+    }
     case 'atrasado':
       return {
         cor: c.cor,
