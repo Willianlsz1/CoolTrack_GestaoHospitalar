@@ -7,6 +7,11 @@ import {
   classificarChecklistMensal,
 } from '../../core/dominio'
 
+// A partir de quantos dias de atraso um equipamento é "crítico" (dois ciclos
+// mensais perdidos). Compartilhado entre o card de atrasados e o cabeçalho de
+// conformidade.
+export const DIAS_CRITICO = 60
+
 // Status do checklist de um equipamento pela regra canônica (mesma da
 // ronda/setores/ficha) — garante que "atrasado" bata em todas as telas.
 function statusChecklist(eq, ultimaPrev, hoje) {
