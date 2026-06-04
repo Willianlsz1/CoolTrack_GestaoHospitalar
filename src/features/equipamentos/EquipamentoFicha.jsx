@@ -13,24 +13,8 @@ import Modal from '../../components/Modal'
 import ManutencoesHistorico from '../manutencoes/ManutencoesHistorico'
 import ChecklistEquipamento from '../checklists/ChecklistEquipamento'
 import { RondaBarra } from '../ronda/RondaBarra'
+import { AbaBtn } from '../../components/AbaBtn'
 import { Carregando, Erro } from '../../components/Estado'
-
-// Botão de aba (Serviços / Checklist).
-function AbaBtn({ ativo, onClick, children }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`-mb-px border-b-2 px-3 py-2 text-[15px] ${
-        ativo
-          ? 'border-[var(--link)] text-[var(--fg)]'
-          : 'border-transparent text-[var(--fg-3)] hover:text-[var(--fg)]'
-      }`}
-    >
-      {children}
-    </button>
-  )
-}
 
 // URL absoluta da ficha — é o que o QR Code codifica. Em produção,
 // VITE_APP_BASE_URL aponta pro domínio publicado (para o QR funcionar
