@@ -110,7 +110,10 @@ export default function DashboardPage() {
         {/* Ação do técnico: serviços seus que foram reprovados (só se houver) */}
         {reprovados.length > 0 && <ReprovadosCard itens={reprovados} />}
 
-        {/* Nível 1 — alertas de ação */}
+        {/* Alertas de ação + panorama. O alerta mais crítico (atrasados) fica
+            à esquerda como âncora; "vence em breve" + o panorama se empilham à
+            direita, preenchendo o espaço que antes ficava vazio sob a caixa
+            curta. */}
         <section className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
           <AlertCard
             variant="danger"
@@ -120,18 +123,18 @@ export default function DashboardPage() {
             total={atrasados.length}
             itens={atrasados}
           />
-          <AlertCard
-            variant="warn"
-            icon={Clock}
-            titulo="Vence em breve"
-            hint="Higienização a vencer nos próximos 7 dias — agendar"
-            total={aVencer.length}
-            itens={aVencer}
-          />
+          <div className="flex flex-col gap-6">
+            <AlertCard
+              variant="warn"
+              icon={Clock}
+              titulo="Vence em breve"
+              hint="Higienização a vencer nos próximos 7 dias — agendar"
+              total={aVencer.length}
+              itens={aVencer}
+            />
+            <PanoramaStatus contagem={contagem} total={eqs.length} />
+          </div>
         </section>
-
-        {/* Nível 2 — panorama */}
-        <PanoramaStatus contagem={contagem} total={eqs.length} />
 
         {/* Nível 3 — contexto */}
         <section className="grid grid-cols-1 gap-6 lg:grid-cols-[1.55fr_1fr]">
