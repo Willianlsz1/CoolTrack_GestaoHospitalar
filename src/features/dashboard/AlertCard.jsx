@@ -4,6 +4,7 @@ import { ChevronRight } from 'lucide-react'
 import { IconeTipo } from '../equipamentos/iconesTipo'
 import { nomeSetorDoEquipamento } from '../../core/dominio'
 import { pluralDias } from '../../core/data'
+import { DIAS_CRITICO } from './dashboardAgregacoes'
 
 // Card de alerta reutilizável (danger/warn): título + número grande +
 // lista de equipamentos (ícone do tipo, nome, setor·sala, "X dias",
@@ -71,11 +72,28 @@ export function AlertCard({
                   <div className="text-[15px] text-[var(--fg)]">{eq.nome}</div>
                   <div className="t-caption">{localizacao(eq)}</div>
                 </div>
+                {variant === 'danger' && dias >= DIAS_CRITICO && (
+                  <span
+                    className="ml-auto rounded-full border px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide"
+                    style={{
+                      color: 'var(--danger)',
+                      borderColor: 'var(--danger-border)',
+                    }}
+                  >
+                    Crítico
+                  </span>
+                )}
                 <span
-                  className="ml-auto whitespace-nowrap text-[14px]"
+                  className={`whitespace-nowrap text-[14px] ${
+                    variant === 'danger' && dias >= DIAS_CRITICO
+                      ? ''
+                      : 'ml-auto'
+                  }`}
                   style={{ color: cor }}
                 >
-                  {pluralDias(dias)}
+                  {variant === 'warn' && dias === 0
+                    ? 'vence hoje'
+                    : pluralDias(dias)}
                 </span>
                 <ChevronRight
                   size={16}
