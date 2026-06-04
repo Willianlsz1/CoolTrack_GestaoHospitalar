@@ -47,7 +47,7 @@ export function atrasadosComDias(equipamentos, ultimaPrev) {
       if (eq.status !== 'ativo') return null
       const c = statusChecklist(eq, ultimaPrev, hoje)
       if (c.chave !== 'atrasado') return null
-      return { eq, dias: c.dias, nuncaPreventiva: !ultimaPrev.has(eq.id) }
+      return { eq, dias: c.dias }
     })
     .filter(Boolean)
     .sort((a, b) => b.dias - a.dias)

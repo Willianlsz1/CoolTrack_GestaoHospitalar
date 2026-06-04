@@ -8,9 +8,10 @@ import {
   Box,
 } from 'lucide-react'
 
-// Ícone (lucide) por tipo de equipamento. Reusado na miniatura da lista,
-// nas linhas dos alertas e nas últimas manutenções do dashboard.
-export const TIPO_ICON = {
+// Ícone (lucide) por tipo de equipamento. Internos ao módulo — só o
+// componente IconeTipo cruza a fronteira (usado na miniatura da lista, nos
+// alertas e nas últimas manutenções do dashboard).
+const TIPO_ICON = {
   geladeira: Refrigerator,
   freezer: Snowflake,
   camara_fria: Container,
@@ -19,7 +20,7 @@ export const TIPO_ICON = {
   outro: Box,
 }
 
-export function iconeDoTipo(tipo) {
+function iconeDoTipo(tipo) {
   return TIPO_ICON[tipo] ?? Box
 }
 

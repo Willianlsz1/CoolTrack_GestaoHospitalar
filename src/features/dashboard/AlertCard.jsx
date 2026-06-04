@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 import { IconeTipo } from '../equipamentos/iconesTipo'
 import { nomeSetorDoEquipamento } from '../../core/dominio'
+import { pluralDias } from '../../core/data'
 
 // Card de alerta reutilizável (danger/warn): título + número grande +
 // lista de equipamentos (ícone do tipo, nome, setor·sala, "X dias",
@@ -50,43 +51,39 @@ export function AlertCard({
         <p className="t-caption mt-2">Nenhum equipamento — tudo em dia.</p>
       ) : (
         <ul className="m-0 mt-2 list-none p-0">
-          {visiveis.map(({ eq, dias }) => {
-            return (
-              <li
-                key={eq.id}
-                className="border-t border-[var(--border)] first:border-t-0"
+          {visiveis.map(({ eq, dias }) => (
+            <li
+              key={eq.id}
+              className="border-t border-[var(--border)] first:border-t-0"
+            >
+              <Link
+                to="/equipamentos/$id"
+                params={{ id: eq.id }}
+                className="-mx-[10px] flex items-center gap-3 rounded-[var(--r)] px-[10px] py-1 hover:bg-[var(--surface-2)]"
+                style={{ color: 'inherit', textDecoration: 'none' }}
               >
-                <Link
-                  to="/equipamentos/$id"
-                  params={{ id: eq.id }}
-                  className="-mx-[10px] flex items-center gap-3 rounded-[var(--r)] px-[10px] py-1 hover:bg-[var(--surface-2)]"
-                  style={{ color: 'inherit', textDecoration: 'none' }}
+                <IconeTipo
+                  tipo={eq.tipo}
+                  size={17}
+                  className="flex-none text-[var(--fg-3)]"
+                />
+                <div className="min-w-0">
+                  <div className="text-[15px] text-[var(--fg)]">{eq.nome}</div>
+                  <div className="t-caption">{localizacao(eq)}</div>
+                </div>
+                <span
+                  className="ml-auto whitespace-nowrap text-[14px]"
+                  style={{ color: cor }}
                 >
-                  <IconeTipo
-                    tipo={eq.tipo}
-                    size={17}
-                    className="flex-none text-[var(--fg-3)]"
-                  />
-                  <div className="min-w-0">
-                    <div className="text-[15px] text-[var(--fg)]">
-                      {eq.nome}
-                    </div>
-                    <div className="t-caption">{localizacao(eq)}</div>
-                  </div>
-                  <span
-                    className="ml-auto whitespace-nowrap text-[14px]"
-                    style={{ color: cor }}
-                  >
-                    {dias} {dias === 1 ? 'dia' : 'dias'}
-                  </span>
-                  <ChevronRight
-                    size={16}
-                    className="flex-none text-[var(--fg-3)]"
-                  />
-                </Link>
-              </li>
-            )
-          })}
+                  {pluralDias(dias)}
+                </span>
+                <ChevronRight
+                  size={16}
+                  className="flex-none text-[var(--fg-3)]"
+                />
+              </Link>
+            </li>
+          ))}
         </ul>
       )}
 
