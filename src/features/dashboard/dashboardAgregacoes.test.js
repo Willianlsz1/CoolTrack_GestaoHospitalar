@@ -5,6 +5,7 @@ import {
   atrasadosComDias,
   venceEmBreve,
   porSetorOrdenado,
+  reprovadosDoUsuario,
 } from './dashboardAgregacoes'
 
 // Fixa "hoje" = 31/05/2026 para os cálculos que dependem da data atual.
@@ -124,6 +125,44 @@ describe('venceEmBreve', () => {
       ultimaPrev,
     )
     expect(r).toHaveLength(0)
+  })
+})
+
+describe('reprovadosDoUsuario', () => {
+  const mans = [
+    {
+      id: 'm1',
+      aprovacao_status: 'reprovado',
+      registrado_por: 'u1',
+      aprovado_em: '2026-05-10',
+    },
+    {
+      id: 'm2',
+      aprovacao_status: 'aprovado',
+      registrado_por: 'u1',
+      aprovado_em: '2026-05-12',
+    },
+    {
+      id: 'm3',
+      aprovacao_status: 'reprovado',
+      registrado_por: 'u2',
+      aprovado_em: '2026-05-11',
+    },
+    {
+      id: 'm4',
+      aprovacao_status: 'reprovado',
+      registrado_por: 'u1',
+      aprovado_em: '2026-05-20',
+    },
+  ]
+
+  it('traz só os reprovados do próprio usuário, mais recente primeiro', () => {
+    const r = reprovadosDoUsuario(mans, 'u1')
+    expect(r.map((m) => m.id)).toEqual(['m4', 'm1']) // m2 aprovado, m3 é de u2
+  })
+
+  it('é vazio sem usuário', () => {
+    expect(reprovadosDoUsuario(mans, null)).toEqual([])
   })
 })
 

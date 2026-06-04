@@ -67,6 +67,19 @@ export function venceEmBreve(equipamentos, ultimaPrev) {
     .sort((a, b) => a.dias - b.dias)
 }
 
+// Serviços reprovados registrados por um usuário (o técnico), do mais recente
+// para o mais antigo. Fecha o ciclo "gestor reprova -> técnico corrige": o
+// técnico vê no dashboard o que precisa refazer e o motivo.
+export function reprovadosDoUsuario(manutencoes, usuarioId) {
+  if (!usuarioId) return []
+  return manutencoes
+    .filter(
+      (m) =>
+        m.aprovacao_status === 'reprovado' && m.registrado_por === usuarioId,
+    )
+    .sort((a, b) => (b.aprovado_em ?? '').localeCompare(a.aprovado_em ?? ''))
+}
+
 // As N manutenções mais recentes (já ordenadas por data desc).
 export function ultimasManutencoes(manutencoes, n = 5) {
   return manutencoes.slice(0, n)
