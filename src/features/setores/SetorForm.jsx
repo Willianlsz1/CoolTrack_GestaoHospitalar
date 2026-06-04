@@ -84,7 +84,7 @@ export default function SetorForm({ setor, onSucesso, onCancelar }) {
           <option value="">— Sem responsável —</option>
           {perfis?.map((p) => (
             <option key={p.id} value={p.id}>
-              {p.nome || p.email || 'Sem nome'}
+              {p.nome || 'Sem nome'}
             </option>
           ))}
         </Select>

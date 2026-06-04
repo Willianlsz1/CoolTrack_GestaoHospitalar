@@ -24,7 +24,7 @@ const acaoCls =
 // Card de um setor: identidade + cadência + responsável + nº de
 // equipamentos + termômetro de situação. `resumo` vem de resumoPorSetor.
 export function SetorCard({ setor, resumo, onEditar, onExcluir }) {
-  const responsavel = setor.responsavel?.nome || setor.responsavel?.email
+  const responsavel = setor.responsavel?.nome
   const semEquipamentos = resumo.total === 0
   const [confirmando, setConfirmando] = useState(false)
 

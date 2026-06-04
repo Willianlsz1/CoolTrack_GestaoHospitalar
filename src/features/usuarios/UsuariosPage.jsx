@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { UserPlus } from 'lucide-react'
 import { SomenteAdmin } from '../../components/SomenteAdmin'
-import { usePerfis } from '../perfil/usePerfis'
+import { useUsuarios } from './useUsuarios'
 import { useSetores } from '../setores/useSetores'
 import { useTodasManutencoes } from '../dashboard/useTodasManutencoes'
 import { useToast } from '../feedback/useToast'
@@ -46,7 +46,7 @@ function GestaoUsuarios() {
     isPending: perfisPend,
     isError,
     error,
-  } = usePerfis()
+  } = useUsuarios()
   const { data: setores = [], isPending: setoresPend } = useSetores()
   const { data: manutencoes = [], isPending: manPend } = useTodasManutencoes()
 

@@ -1,29 +1,29 @@
 import { supabase } from '../../core/supabase'
 
-// Lista todos os usuários (perfis) — usado para escolher o responsável de
-// um setor. Todo autenticado pode ler perfis (RLS da 0014).
+// Lista os usuários para o dropdown de responsável de setor. Só id e nome —
+// é tudo que o autenticado pode ler da tabela (grant por coluna da 0025);
+// email/role ficam fora de propósito (não vazam para não-admin).
 export async function buscarPerfis() {
   const { data, error } = await supabase
     .from('perfis')
-    .select('id, nome, email, role')
+    .select('id, nome')
     .order('nome')
   if (error) throw error
   return data
 }
 
-// Perfil do usuário logado (lê pelo id do usuário atual).
+// Lista completa (id, nome, email, role) para o painel de admin. Vai pela
+// função listar_usuarios(), que recusa quem não for admin (checagem no banco).
+export async function listarUsuarios() {
+  const { data, error } = await supabase.rpc('listar_usuarios')
+  if (error) throw error
+  return data
+}
+
+// Perfil do usuário logado, completo (com role/email). Vai pela função
+// meu_perfil(), que sempre devolve só a linha de auth.uid().
 export async function buscarMeuPerfil() {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) return null
-
-  const { data, error } = await supabase
-    .from('perfis')
-    .select('*')
-    .eq('id', user.id)
-    .maybeSingle()
-
+  const { data, error } = await supabase.rpc('meu_perfil')
   if (error) throw error
   return data
 }

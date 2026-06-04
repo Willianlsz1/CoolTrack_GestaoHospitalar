@@ -41,7 +41,7 @@ function GestaoSetores() {
   const termo = busca.trim().toLowerCase()
   const setoresFiltrados = (setores ?? []).filter((s) => {
     if (!termo) return true
-    const resp = s.responsavel?.nome ?? s.responsavel?.email ?? ''
+    const resp = s.responsavel?.nome ?? ''
     return `${s.nome} ${resp}`.toLowerCase().includes(termo)
   })
 
