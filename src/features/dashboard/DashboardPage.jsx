@@ -128,6 +128,7 @@ export default function DashboardPage() {
             hint="Passou do intervalo desde a última preventiva — ação imediata"
             total={atrasados.length}
             itens={atrasados}
+            acao={{ to: '/ronda', label: 'Iniciar ronda' }}
           />
           <div className="flex flex-col gap-6">
             <AlertCard

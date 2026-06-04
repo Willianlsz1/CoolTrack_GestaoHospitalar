@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, ArrowRight } from 'lucide-react'
 import { IconeTipo } from '../equipamentos/iconesTipo'
 import { nomeSetorDoEquipamento } from '../../core/dominio'
 import { pluralDias } from '../../core/data'
@@ -26,6 +26,7 @@ export function AlertCard({
   hint,
   total,
   itens,
+  acao,
 }) {
   const cor = COR[variant]
   const [mostrarTodos, setMostrarTodos] = useState(false)
@@ -105,16 +106,30 @@ export function AlertCard({
         </ul>
       )}
 
-      {/* Expande/recolhe a lista ali mesmo, sem navegar nem carregar query. */}
-      {itens.length > LIMITE && (
-        <div className="mt-auto pt-[10px]">
-          <button
-            type="button"
-            onClick={() => setMostrarTodos((v) => !v)}
-            className="text-[14px] text-[var(--link)]"
-          >
-            {mostrarTodos ? 'Ver menos' : `Ver todos os ${total}`}
-          </button>
+      {/* Rodapé: expandir a lista (sem navegar) e/ou a ação (ex.: ir à ronda).
+          Só aparece quando há o que mostrar. */}
+      {(itens.length > LIMITE || (acao && itens.length > 0)) && (
+        <div className="mt-auto flex items-center justify-between gap-3 pt-[10px]">
+          {itens.length > LIMITE ? (
+            <button
+              type="button"
+              onClick={() => setMostrarTodos((v) => !v)}
+              className="text-[14px] text-[var(--link)]"
+            >
+              {mostrarTodos ? 'Ver menos' : `Ver todos os ${total}`}
+            </button>
+          ) : (
+            <span />
+          )}
+          {acao && itens.length > 0 && (
+            <Link
+              to={acao.to}
+              className="inline-flex items-center gap-1 text-[14px] text-[var(--link)]"
+            >
+              {acao.label}
+              <ArrowRight size={14} />
+            </Link>
+          )}
         </div>
       )}
     </article>
