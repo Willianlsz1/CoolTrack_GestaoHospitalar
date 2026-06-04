@@ -7,6 +7,7 @@ import { useConfigPmoc } from '../config/useConfigPmoc'
 import { useEhAdmin } from '../perfil/useEhAdmin'
 import { montarRelatorioPmoc } from './relatorioPmoc'
 import { nomeSetorDoEquipamento } from '../../core/dominio'
+import { hojeLocal, formatarData } from '../../core/data'
 import { Select } from '../../components/Select'
 import { Button } from '../../components/Button'
 import { Carregando, Erro } from '../../components/Estado'
@@ -34,6 +35,9 @@ export default function RelatorioPmocPage() {
   const { data: config } = useConfigPmoc()
   const { ehAdmin } = useEhAdmin()
   const [filtroSetor, setFiltroSetor] = useState('')
+  // Data de emissão do documento (compliance): fixada na montagem da tela,
+  // não recalculada a cada render. hojeLocal() lê o relógio uma única vez.
+  const [emitidoEm] = useState(hojeLocal)
 
   if (eqQuery.isPending || manQuery.isPending) {
     return <Carregando />
@@ -102,6 +106,7 @@ export default function RelatorioPmocPage() {
             {filtroSetor ? `Setor: ${filtroSetor}` : 'Todos os setores'} ·
             inventário e cadência de manutenção preventiva
           </p>
+          <p className="t-caption mt-1">Emitido em {formatarData(emitidoEm)}</p>
         </header>
 
         <p className="t-caption mb-3">
