@@ -1,0 +1,47 @@
+/* CoolTrack UI Kit — Navegação do cabeçalho (ct-nav + item de dropdown).
+   Tokens vêm de ../colors_and_type.css. */
+.ct-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 6px 10px;
+  border-radius: var(--r);
+  font-size: 14px;
+  color: var(--fg-2);
+  cursor: pointer;
+}
+.ct-nav:hover {
+  color: var(--fg);
+  background: var(--surface-2);
+}
+.ct-nav.is-active {
+  color: var(--link);
+  background: var(--surface-2);
+}
+
+/* Item dentro de um dropdown do menu (Administração / Perfil). Serve para
+   <a> e <button> — preenche a largura do painel para o hover cobrir tudo. */
+.ct-menu-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: none;
+  background: none;
+  border-radius: var(--r);
+  font-size: 14px;
+  text-align: left;
+  color: var(--fg-2);
+  text-decoration: none;
+  cursor: pointer;
+}
+.ct-menu-item:hover {
+  background: var(--surface-2);
+  color: var(--fg);
+}
+.ct-menu-item.is-active {
+  color: var(--link);
+}

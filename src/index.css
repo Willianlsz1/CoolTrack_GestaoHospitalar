@@ -2,7 +2,19 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap');
 @import 'tailwindcss';
 @import './styles/colors_and_type.css';
-@import './styles/kit.css';
+/* UI Kit dividido por família (mesmo conjunto de classes que o antigo kit.css,
+   só que em arquivos menores). A ordem não altera especificidade — são
+   seletores independentes, todos fora de layer (vencem as utilities). */
+@import './styles/kit/botoes.css';
+@import './styles/kit/badges.css';
+@import './styles/kit/cards.css';
+@import './styles/kit/inputs.css';
+@import './styles/kit/links.css';
+@import './styles/kit/modal.css';
+@import './styles/kit/chips.css';
+@import './styles/kit/diversos.css';
+@import './styles/kit/tabela.css';
+@import './styles/kit/nav.css';
 
 /* Etiqueta do QR: fundo branco, então o texto precisa ser ESCURO. Sem layer
    (vence a regra global `p { color: var(--fg) }`, que é clara e está fora de

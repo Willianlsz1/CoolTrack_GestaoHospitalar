@@ -1,0 +1,11 @@
+/* CoolTrack UI Kit — Cards.
+   Tokens vêm de ../colors_and_type.css. */
+.ct-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+  padding: 16px;
+}
+.ct-card--pad24 {
+  padding: 24px;
+}

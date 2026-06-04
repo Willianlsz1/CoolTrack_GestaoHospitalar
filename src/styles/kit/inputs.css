@@ -1,0 +1,57 @@
+/* CoolTrack UI Kit — Campos de formulário (label, input, hint, erros).
+   Tokens vêm de ../colors_and_type.css. */
+.ct-label {
+  display: block;
+  font-size: 13px;
+  color: var(--fg-2);
+  margin-bottom: 6px;
+}
+.ct-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--surface-2);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 9px 12px;
+  font-size: 14px;
+  transition:
+    border-color 0.13s ease,
+    box-shadow 0.13s ease;
+}
+.ct-input:hover {
+  border-color: var(--border-strong);
+}
+.ct-input:focus {
+  outline: none;
+  border-color: var(--focus-ring);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+.ct-input--error {
+  border-color: var(--danger-border);
+}
+select.ct-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 34px;
+}
+.ct-hint {
+  font-size: 12px;
+  color: var(--fg-3);
+  margin-top: 6px;
+}
+.ct-error {
+  font-size: 12px;
+  color: var(--warn);
+  margin-top: 6px;
+}
+.ct-validation {
+  font-size: 13px;
+  color: var(--warn);
+}
+.ct-formerror {
+  font-size: 13px;
+  color: var(--danger);
+}

@@ -1,0 +1,42 @@
+/* CoolTrack UI Kit — Badges de status e tipo.
+   Tokens vêm de ../colors_and_type.css. */
+.ct-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  line-height: 1;
+  padding: 4px 10px;
+  border-radius: var(--r);
+  border: 0.5px solid;
+}
+.ct-badge--ativo {
+  background: var(--ok-fill);
+  color: var(--ok);
+  border-color: var(--ok-border);
+}
+.ct-badge--manutencao {
+  background: var(--warn-fill);
+  color: var(--warn);
+  border-color: var(--warn-border);
+}
+.ct-badge--inativo {
+  background: var(--idle-fill);
+  color: var(--idle);
+  border-color: var(--idle-border);
+}
+.ct-badge--preventiva {
+  background: rgba(22, 163, 74, 0.12);
+  color: var(--type-prev);
+  border-color: rgba(22, 163, 74, 0.4);
+}
+.ct-badge--corretiva {
+  background: rgba(220, 38, 38, 0.12);
+  color: var(--type-corr);
+  border-color: rgba(220, 38, 38, 0.4);
+}
+.ct-badge--preditiva {
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--type-pred);
+  border-color: rgba(59, 130, 246, 0.4);
+}
