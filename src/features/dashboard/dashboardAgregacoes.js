@@ -22,6 +22,48 @@ function statusChecklist(eq, ultimaPrev, hoje) {
   )
 }
 
+// Resumo de conformidade PMOC sobre os equipamentos ATIVOS (os sujeitos à
+// cadência). "Em dia" = em dia + a vencer (decisão de produto). O percentual é
+// sobre a BASE = ativos com cadência (exclui os sem intervalo definido, que não
+// têm o que cumprir — contados à parte para não esconder gaps de configuração).
+export function resumoConformidade(equipamentos, ultimaPrev) {
+  const hoje = hojeLocal()
+  let emDia = 0
+  let aVencer = 0
+  let atrasados = 0
+  let criticos = 0
+  let nunca = 0
+  let semCadencia = 0
+
+  for (const eq of equipamentos) {
+    if (eq.status !== 'ativo') continue
+    const c = statusChecklist(eq, ultimaPrev, hoje)
+    switch (c.chave) {
+      case 'emdia':
+        emDia += 1
+        break
+      case 'vence':
+        emDia += 1
+        aVencer += 1
+        break
+      case 'atrasado':
+        atrasados += 1
+        if (c.dias >= DIAS_CRITICO) criticos += 1
+        break
+      case 'nunca':
+        nunca += 1
+        break
+      case 'sem_cadencia':
+        semCadencia += 1
+        break
+    }
+  }
+
+  const base = emDia + atrasados + nunca
+  const pct = base ? Math.round((emDia / base) * 100) : 0
+  return { base, emDia, pct, aVencer, atrasados, criticos, nunca, semCadencia }
+}
+
 // Conta equipamentos por status (ordem fixa).
 export function contarPorStatus(equipamentos) {
   const contagem = { ativo: 0, manutencao: 0, inativo: 0 }

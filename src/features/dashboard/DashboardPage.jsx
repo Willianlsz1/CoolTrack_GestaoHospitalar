@@ -21,8 +21,10 @@ import {
   ultimasManutencoes,
   porSetorOrdenado,
   reprovadosDoUsuario,
+  resumoConformidade,
 } from './dashboardAgregacoes'
 import { ultimaPreventivaPorEquipamento } from '../../core/dominio'
+import { CabecalhoConformidade } from './CabecalhoConformidade'
 import { AlertCard } from './AlertCard'
 import { ReprovadosCard } from './ReprovadosCard'
 import { PanoramaStatus } from './PanoramaStatus'
@@ -60,6 +62,7 @@ export default function DashboardPage() {
   const ultimaPrev = ultimaPreventivaPorEquipamento(mans)
   const atrasados = atrasadosComDias(eqs, ultimaPrev)
   const aVencer = venceEmBreve(eqs, ultimaPrev)
+  const conformidade = resumoConformidade(eqs, ultimaPrev)
   // Serviços aguardando aprovação (só relevante p/ o gestor/admin).
   const pendentesAprov = ehAdmin ? contagemPorAprovacao(mans).pendente : 0
   // Serviços do técnico que o gestor reprovou (espelho do card do gestor).
@@ -78,6 +81,9 @@ export default function DashboardPage() {
       onAtualizar={atualizar}
     >
       <div className="flex flex-col gap-3">
+        {/* Métrica-título: conformidade PMOC do parque ativo. */}
+        <CabecalhoConformidade resumo={conformidade} />
+
         {/* Ação do gestor: serviços aguardando aprovação (só admin, só se houver) */}
         {pendentesAprov > 0 && (
           <Link
