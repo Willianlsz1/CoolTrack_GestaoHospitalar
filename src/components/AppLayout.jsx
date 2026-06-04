@@ -1,96 +1,13 @@
 import { useState, Suspense } from 'react'
 import { Link, Outlet } from '@tanstack/react-router'
-import {
-  Snowflake,
-  Boxes,
-  ScanLine,
-  LayoutDashboard,
-  Route,
-  FileText,
-  ListChecks,
-  ClipboardCheck,
-  MapPin,
-  UserPlus,
-  Settings,
-  User,
-  LogOut,
-  Menu,
-  X,
-} from 'lucide-react'
+import { Snowflake, Menu, X } from 'lucide-react'
 import { useSessao } from '../features/auth/useSessao'
 import { useEhAdmin } from '../features/perfil/useEhAdmin'
 import { usePendentesAprovacao } from '../features/aprovacoes/usePendentesAprovacao'
-import { sair } from '../features/auth/authApi'
 import LoginPage from '../features/auth/LoginPage'
 import PerfilModal from '../features/perfil/PerfilModal'
 import { Carregando } from './Estado'
-
-// Itens de navegação (ordem do menu). adminOnly esconde de quem não é admin;
-// exact marca o link da raiz (só ativo em "/"). A trava real é sempre o RLS.
-const ITENS_NAV = [
-  { to: '/', label: 'Equipamentos', icon: Boxes, exact: true },
-  { to: '/escanear', label: 'Escanear', icon: ScanLine },
-  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/ronda', label: 'Ronda', icon: Route },
-  { to: '/relatorio', label: 'Relatório', icon: FileText },
-  {
-    to: '/aprovacoes',
-    label: 'Aprovações',
-    icon: ClipboardCheck,
-    adminOnly: true,
-  },
-  { to: '/checklists', label: 'Checklists', icon: ListChecks, adminOnly: true },
-  { to: '/setores', label: 'Setores', icon: MapPin, adminOnly: true },
-  { to: '/usuarios', label: 'Usuários', icon: UserPlus, adminOnly: true },
-  { to: '/config-pmoc', label: 'Config', icon: Settings, adminOnly: true },
-]
-
-// Itens da navegação, reusados no desktop e no menu mobile. aoNavegar
-// fecha o menu mobile ao clicar num item.
-function ItensNav({ aoAbrirPerfil, aoNavegar, ehAdmin, pendentes }) {
-  return (
-    <>
-      {ITENS_NAV.filter((i) => !i.adminOnly || ehAdmin).map((item) => {
-        const Icone = item.icon
-        const badge = item.to === '/aprovacoes' && pendentes > 0
-        return (
-          <Link
-            key={item.to}
-            to={item.to}
-            activeOptions={item.exact ? { exact: true } : undefined}
-            className="ct-nav"
-            activeProps={{ className: 'is-active' }}
-            onClick={aoNavegar}
-          >
-            <Icone size={16} /> {item.label}
-            {badge && (
-              <span
-                className="ml-1 inline-flex min-w-[18px] items-center justify-center rounded-full px-1.5 text-[11px] font-medium text-[var(--bg)]"
-                style={{ background: 'var(--warn)' }}
-                aria-label={`${pendentes} aguardando aprovação`}
-              >
-                {pendentes}
-              </span>
-            )}
-          </Link>
-        )
-      })}
-      <button
-        type="button"
-        onClick={() => {
-          aoAbrirPerfil()
-          aoNavegar?.()
-        }}
-        className="ct-nav"
-      >
-        <User size={16} /> Perfil
-      </button>
-      <button type="button" onClick={() => sair()} className="ct-nav">
-        <LogOut size={16} /> Sair
-      </button>
-    </>
-  )
-}
+import { NavDesktop, NavMobile } from './NavMenu'
 
 // Casco do app + PORTEIRO: carregando -> "Carregando"; sem sessão ->
 // login; logado -> app. Cabeçalho responsivo: nav inline no desktop,
@@ -131,11 +48,11 @@ export default function AppLayout() {
           </Link>
 
           {/* Desktop: navegação inline (>= sm) */}
-          <nav className="hidden items-center gap-6 sm:flex">
-            <ItensNav
-              aoAbrirPerfil={() => setPerfilAberto(true)}
+          <nav className="hidden items-center gap-1 sm:flex">
+            <NavDesktop
               ehAdmin={ehAdmin}
               pendentes={pendentes}
+              aoAbrirPerfil={() => setPerfilAberto(true)}
             />
           </nav>
 
@@ -153,12 +70,12 @@ export default function AppLayout() {
 
         {/* Mobile: menu aberto */}
         {menuAberto && (
-          <nav className="flex flex-col items-start gap-3 border-t border-[var(--border)] px-6 py-3 sm:hidden">
-            <ItensNav
-              aoAbrirPerfil={() => setPerfilAberto(true)}
-              aoNavegar={() => setMenuAberto(false)}
+          <nav className="flex flex-col items-stretch gap-1 border-t border-[var(--border)] px-4 py-3 sm:hidden">
+            <NavMobile
               ehAdmin={ehAdmin}
               pendentes={pendentes}
+              aoAbrirPerfil={() => setPerfilAberto(true)}
+              aoNavegar={() => setMenuAberto(false)}
             />
           </nav>
         )}
