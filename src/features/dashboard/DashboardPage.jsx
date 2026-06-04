@@ -11,6 +11,7 @@ import {
 import { useEquipamentos } from '../equipamentos/useEquipamentos'
 import { useTodasManutencoes } from './useTodasManutencoes'
 import { useEhAdmin } from '../perfil/useEhAdmin'
+import { useMeuPerfil } from '../perfil/useMeuPerfil'
 import { contagemPorAprovacao } from '../aprovacoes/aprovacoesSelectors'
 import { Carregando, Erro } from '../../components/Estado'
 import {
@@ -19,9 +20,11 @@ import {
   venceEmBreve,
   ultimasManutencoes,
   porSetorOrdenado,
+  reprovadosDoUsuario,
 } from './dashboardAgregacoes'
 import { ultimaPreventivaPorEquipamento } from '../../core/dominio'
 import { AlertCard } from './AlertCard'
+import { ReprovadosCard } from './ReprovadosCard'
 import { PanoramaStatus } from './PanoramaStatus'
 import { UltimasManutencoes } from './UltimasManutencoes'
 import { PorSetor } from './PorSetor'
@@ -30,6 +33,7 @@ export default function DashboardPage() {
   const eqQuery = useEquipamentos()
   const manQuery = useTodasManutencoes()
   const { ehAdmin } = useEhAdmin()
+  const { data: meuPerfil } = useMeuPerfil()
 
   const carregando = eqQuery.isPending || manQuery.isPending
   const erro = eqQuery.isError || manQuery.isError
@@ -58,6 +62,8 @@ export default function DashboardPage() {
   const aVencer = venceEmBreve(eqs, ultimaPrev)
   // Serviços aguardando aprovação (só relevante p/ o gestor/admin).
   const pendentesAprov = ehAdmin ? contagemPorAprovacao(mans).pendente : 0
+  // Serviços do técnico que o gestor reprovou (espelho do card do gestor).
+  const reprovados = ehAdmin ? [] : reprovadosDoUsuario(mans, meuPerfil?.id)
   // Quando os dados foram buscados (o mais recente das duas queries).
   const atualizadoEm = Math.max(eqQuery.dataUpdatedAt, manQuery.dataUpdatedAt)
   const atualizar = () => {
@@ -100,6 +106,9 @@ export default function DashboardPage() {
             </span>
           </Link>
         )}
+
+        {/* Ação do técnico: serviços seus que foram reprovados (só se houver) */}
+        {reprovados.length > 0 && <ReprovadosCard itens={reprovados} />}
 
         {/* Nível 1 — alertas de ação */}
         <section className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
