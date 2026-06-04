@@ -34,17 +34,25 @@ export function resumoConformidade(equipamentos, ultimaPrev) {
   let criticos = 0
   let nunca = 0
   let semCadencia = 0
+  // Equipamentos que aparecem como "em dia/a vencer" aqui mas cuja última
+  // preventiva ainda não foi aprovada — o relatório oficial (só aprovadas)
+  // não os conta como em dia. Sinaliza a diferença painel × PDF.
+  let aguardandoAprovacao = 0
 
   for (const eq of equipamentos) {
     if (eq.status !== 'ativo') continue
     const c = statusChecklist(eq, ultimaPrev, hoje)
+    const ultimaPendente =
+      ultimaPrev.get(eq.id)?.aprovacao_status === 'pendente'
     switch (c.chave) {
       case 'emdia':
         emDia += 1
+        if (ultimaPendente) aguardandoAprovacao += 1
         break
       case 'vence':
         emDia += 1
         aVencer += 1
+        if (ultimaPendente) aguardandoAprovacao += 1
         break
       case 'atrasado':
         atrasados += 1
@@ -61,7 +69,17 @@ export function resumoConformidade(equipamentos, ultimaPrev) {
 
   const base = emDia + atrasados + nunca
   const pct = base ? Math.round((emDia / base) * 100) : 0
-  return { base, emDia, pct, aVencer, atrasados, criticos, nunca, semCadencia }
+  return {
+    base,
+    emDia,
+    pct,
+    aVencer,
+    atrasados,
+    criticos,
+    nunca,
+    semCadencia,
+    aguardandoAprovacao,
+  }
 }
 
 // Conta equipamentos por status (ordem fixa).

@@ -10,8 +10,17 @@ function corPct(pct) {
 }
 
 export function CabecalhoConformidade({ resumo }) {
-  const { base, emDia, pct, aVencer, atrasados, criticos, nunca, semCadencia } =
-    resumo
+  const {
+    base,
+    emDia,
+    pct,
+    aVencer,
+    atrasados,
+    criticos,
+    nunca,
+    semCadencia,
+    aguardandoAprovacao,
+  } = resumo
   const cor = corPct(pct)
 
   return (
@@ -39,6 +48,14 @@ export function CabecalhoConformidade({ resumo }) {
           {criticos > 0 ? ` (${criticos} críticos)` : ''}
         </span>
         <span style={{ color: 'var(--warn)' }}>{aVencer} a vencer</span>
+        {aguardandoAprovacao > 0 && (
+          <span
+            style={{ color: 'var(--warn)' }}
+            title="Contam como em dia aqui, mas o relatório oficial só certifica preventivas aprovadas."
+          >
+            {aguardandoAprovacao} aguardando aprovação
+          </span>
+        )}
         {nunca > 0 && (
           <span className="text-[var(--fg-3)]">
             {nunca} nunca inspecionados
