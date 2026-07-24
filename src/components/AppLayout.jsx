@@ -3,18 +3,21 @@ import { Link, Outlet } from '@tanstack/react-router'
 import { Snowflake, Menu, X, Loader2 } from 'lucide-react'
 import { useSessao } from '../features/auth/useSessao'
 import { useEhAdmin } from '../features/perfil/useEhAdmin'
+import { useMeuPerfil } from '../features/perfil/useMeuPerfil'
 import { usePendentesAprovacao } from '../features/aprovacoes/usePendentesAprovacao'
 import LoginPage from '../features/auth/LoginPage'
+import TrocaSenhaObrigatoria from '../features/auth/TrocaSenhaObrigatoria'
 import PerfilModal from '../features/perfil/PerfilModal'
 import { Carregando } from './Estado'
 import { NavDesktop, NavMobile } from './NavMenu'
 
 // Casco do app + PORTEIRO: carregando -> "Carregando"; sem sessão ->
-// login; logado -> app. Cabeçalho responsivo: nav inline no desktop,
-// menu hambúrguer no celular.
+// login; senha ainda temporária -> troca obrigatória; logado -> app.
+// Cabeçalho responsivo: nav inline no desktop, menu hambúrguer no celular.
 export default function AppLayout() {
   const { sessao, carregando } = useSessao()
   const { ehAdmin } = useEhAdmin()
+  const { data: perfil } = useMeuPerfil()
   const { data: pendentes = 0 } = usePendentesAprovacao(ehAdmin)
   const [perfilAberto, setPerfilAberto] = useState(false)
   const [menuAberto, setMenuAberto] = useState(false)
@@ -34,6 +37,14 @@ export default function AppLayout() {
 
   if (!sessao) {
     return <LoginPage />
+  }
+
+  // Senha ainda é a temporária que o admin criou (0029). Só barra quando o
+  // perfil JÁ carregou: se a query falhar ou estiver em voo, o app segue —
+  // travar todo mundo por causa de uma consulta lenta seria pior que o risco
+  // que esta tela evita.
+  if (perfil && !perfil.senha_trocada_em) {
+    return <TrocaSenhaObrigatoria />
   }
 
   return (

@@ -28,6 +28,23 @@ export async function buscarMeuPerfil() {
   return data
 }
 
+// Marca que o usuário definiu uma senha PRÓPRIA (0029). Enquanto a coluna é
+// null, o app entende que a senha em uso ainda é a temporária que o admin
+// digitou ao criar a conta, e exige a troca.
+export async function marcarSenhaTrocada() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) throw new Error('Sem sessão.')
+
+  const { error } = await supabase
+    .from('perfis')
+    .update({ senha_trocada_em: new Date().toISOString() })
+    .eq('id', user.id)
+
+  if (error) throw error
+}
+
 // Atualiza o nome do próprio perfil. O RLS já garante que só dá para
 // editar o seu (id = auth.uid()).
 export async function atualizarMeuNome(nome) {
