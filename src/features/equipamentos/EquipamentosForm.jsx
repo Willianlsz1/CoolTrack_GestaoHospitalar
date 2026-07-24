@@ -76,7 +76,7 @@ export default function EquipamentosForm({
   const [cargaBtu, setCargaBtu] = useState(String(equipamento?.carga_btu ?? ''))
   const [areaM2, setAreaM2] = useState(String(equipamento?.area_m2 ?? ''))
   const [foto, setFoto] = useState(null)
-  const [removerFoto, setRemoverFoto] = useState(false)
+  const [removerFotoAtual, setRemoverFotoAtual] = useState(false)
   const [erroValidacao, setErroValidacao] = useState('')
 
   const { ehAdmin } = useEhAdmin()
@@ -134,13 +134,13 @@ export default function EquipamentosForm({
     }
 
     if (editando) {
-      // foto nova = troca; senão removerFoto = limpa; senão mantém.
+      // foto nova = troca; senão removerFotoAtual = limpa; senão mantém.
       // fotoAntiga permite ao hook apagar o arquivo trocado/removido.
       atualizar.mutate(
         {
           id: equipamento.id,
           foto,
-          removerFoto,
+          removerFotoAtual,
           fotoAntiga: equipamento.foto_url,
           ...dados,
         },
@@ -264,9 +264,9 @@ export default function EquipamentosForm({
         </div>
         <CampoFoto
           setFoto={setFoto}
-          removerFoto={removerFoto}
-          setRemoverFoto={setRemoverFoto}
-          fotoUrlAtual={equipamento?.foto_url}
+          removerFotoAtual={removerFotoAtual}
+          setRemoverFotoAtual={setRemoverFotoAtual}
+          fotoAtual={equipamento?.foto_url}
           editando={editando}
         />
       </Secao>

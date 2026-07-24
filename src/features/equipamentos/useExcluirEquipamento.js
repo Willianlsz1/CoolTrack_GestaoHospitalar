@@ -3,8 +3,8 @@ import {
   excluirEquipamento,
   excluirEquipamentoEmCascata,
 } from './equipamentosQueries'
-import { removerFotoPorUrl } from '../../core/storage'
-import { buscarUrlsFotosManutencoes } from '../manutencoes/manutencoesQueries'
+import { removerFoto } from '../../core/storage'
+import { buscarCaminhosFotosManutencoes } from '../manutencoes/manutencoesQueries'
 
 // Hook de mutation: recebe { id, foto_url, comManutencoes }. Se
 // comManutencoes, usa a função atômica do banco (apaga manutenções +
@@ -15,11 +15,11 @@ export function useExcluirEquipamento() {
 
   return useMutation({
     mutationFn: async ({ id, foto_url, comManutencoes }) => {
-      // Na cascata, guarda as URLs das fotos de manutenção ANTES de
+      // Na cascata, guarda os caminhos das fotos de manutenção ANTES de
       // apagar as linhas — depois removemos os arquivos do Storage.
       let fotosManutencoes = []
       if (comManutencoes) {
-        fotosManutencoes = await buscarUrlsFotosManutencoes(id)
+        fotosManutencoes = await buscarCaminhosFotosManutencoes(id)
         await excluirEquipamentoEmCascata(id)
       } else {
         await excluirEquipamento(id)
@@ -27,9 +27,9 @@ export function useExcluirEquipamento() {
 
       // Limpeza best-effort dos arquivos (foto do equipamento + das
       // manutenções). Erro de Storage não falha a exclusão.
-      await removerFotoPorUrl(foto_url).catch(() => {})
-      for (const url of fotosManutencoes) {
-        await removerFotoPorUrl(url).catch(() => {})
+      await removerFoto(foto_url).catch(() => {})
+      for (const caminho of fotosManutencoes) {
+        await removerFoto(caminho).catch(() => {})
       }
     },
     onSuccess: () => {

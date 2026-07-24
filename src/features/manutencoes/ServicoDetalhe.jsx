@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { TipoManutencaoBadge } from '../../components/TipoManutencaoBadge'
 import { AprovacaoBadge } from '../../components/AprovacaoBadge'
+import { Foto } from '../../components/Foto'
 import { formatarData, formatarDataLocal } from '../../core/data'
 import { HistoricoDecisoes } from './HistoricoDecisoes'
 
@@ -84,7 +85,7 @@ export function ServicoDetalhe({ servico: m, children, destacado }) {
         <div className="mt-3 flex gap-3">
           {m.foto_antes_url && (
             <figure className="m-0">
-              <img
+              <Foto
                 src={m.foto_antes_url}
                 alt="Antes"
                 className="h-20 w-20 rounded-[var(--r)] object-cover"
@@ -94,7 +95,7 @@ export function ServicoDetalhe({ servico: m, children, destacado }) {
           )}
           {m.foto_depois_url && (
             <figure className="m-0">
-              <img
+              <Foto
                 src={m.foto_depois_url}
                 alt="Depois"
                 className="h-20 w-20 rounded-[var(--r)] object-cover"

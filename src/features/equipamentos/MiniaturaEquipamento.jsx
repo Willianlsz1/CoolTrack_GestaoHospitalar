@@ -1,3 +1,4 @@
+import { Foto } from '../../components/Foto'
 import { IconeTipo } from './iconesTipo'
 
 // Miniatura 40x40 da linha: a foto do equipamento, ou — quando não há —
@@ -12,7 +13,7 @@ const caixa = {
 export function MiniaturaEquipamento({ eq }) {
   if (eq.foto_url) {
     return (
-      <img
+      <Foto
         src={eq.foto_url}
         alt={eq.nome}
         loading="lazy"
