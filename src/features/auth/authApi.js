@@ -16,3 +16,12 @@ export async function sair() {
   const { error } = await supabase.auth.signOut()
   if (error) throw error
 }
+
+// Define uma senha nova para o usuário LOGADO. Vale tanto para a troca
+// obrigatória do primeiro acesso quanto para a troca voluntária no perfil.
+// Não pede a senha atual: quem chega aqui já tem sessão válida, e exigi-la
+// não bloquearia nada que a sessão aberta não permita fazer de qualquer jeito.
+export async function trocarSenha(novaSenha) {
+  const { error } = await supabase.auth.updateUser({ password: novaSenha })
+  if (error) throw new Error(mensagemErroAuth(error))
+}

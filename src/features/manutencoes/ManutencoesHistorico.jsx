@@ -7,6 +7,7 @@ import Modal from '../../components/Modal'
 import { Button } from '../../components/Button'
 import { TipoManutencaoBadge } from '../../components/TipoManutencaoBadge'
 import { AprovacaoBadge } from '../../components/AprovacaoBadge'
+import { Foto } from '../../components/Foto'
 import { useToast } from '../feedback/useToast'
 import { Carregando, Erro } from '../../components/Estado'
 import { formatarData, formatarDataLocal } from '../../core/data'
@@ -103,7 +104,7 @@ export default function ManutencoesHistorico({
                 <div className="mt-3 flex gap-3">
                   {m.foto_antes_url && (
                     <figure>
-                      <img
+                      <Foto
                         src={m.foto_antes_url}
                         alt="Antes"
                         className="h-24 w-24 rounded-[var(--r)] object-cover"
@@ -113,7 +114,7 @@ export default function ManutencoesHistorico({
                   )}
                   {m.foto_depois_url && (
                     <figure>
-                      <img
+                      <Foto
                         src={m.foto_depois_url}
                         alt="Depois"
                         className="h-24 w-24 rounded-[var(--r)] object-cover"

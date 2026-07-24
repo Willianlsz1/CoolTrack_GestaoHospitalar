@@ -46,9 +46,11 @@ export async function criarManutencao(manutencao) {
   return data
 }
 
-// URLs de fotos (antes/depois) das manutenções de um equipamento —
-// usadas para apagar os arquivos do Storage na exclusão em cascata.
-export async function buscarUrlsFotosManutencoes(equipamentoId) {
+// Caminhos das fotos (antes/depois) das manutenções de um equipamento —
+// usados para apagar os arquivos do Storage na exclusão em cascata. As
+// colunas ainda se chamam *_url por herança: desde a 0028 guardam o caminho
+// no bucket, não uma URL (renomear coluna é migração de dados sem ganho).
+export async function buscarCaminhosFotosManutencoes(equipamentoId) {
   const { data, error } = await supabase
     .from('manutencoes')
     .select('foto_antes_url, foto_depois_url')

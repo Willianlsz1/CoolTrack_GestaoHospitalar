@@ -7,6 +7,7 @@ import { TIPO_LABELS } from './rotulos'
 import { formatarData } from '../../core/data'
 import { nomeSetorDoEquipamento } from '../../core/dominio'
 import { IconeTipo } from './iconesTipo'
+import { Foto } from '../../components/Foto'
 import { StatusBadge } from '../../components/StatusBadge'
 import { Button } from '../../components/Button'
 import Modal from '../../components/Modal'
@@ -89,7 +90,7 @@ export default function EquipamentoFicha() {
           <div className="rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)] p-5">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
               {eq.foto_url ? (
-                <img
+                <Foto
                   src={eq.foto_url}
                   alt={eq.nome}
                   className="h-16 w-16 flex-none rounded-[var(--r)] object-cover"

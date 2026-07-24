@@ -53,7 +53,7 @@ export default function UsuarioForm({ onSucesso, onCancelar }) {
       <Field
         label="Senha provisória"
         required
-        hint="Mínimo 6 caracteres. O técnico pode trocar depois."
+        hint="Mínimo 6 caracteres. O técnico terá de definir a sua própria no primeiro acesso."
       >
         <Input
           type="text"

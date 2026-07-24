@@ -3,6 +3,7 @@ import { UserPlus } from 'lucide-react'
 import { SomenteAdmin } from '../../components/SomenteAdmin'
 import { useUsuarios } from './useUsuarios'
 import { useSetores } from '../setores/useSetores'
+import { useMeuPerfil } from '../perfil/useMeuPerfil'
 import { useTodasManutencoes } from '../dashboard/useTodasManutencoes'
 import { useToast } from '../feedback/useToast'
 import { resumoUsuarios, servicosDoUsuario } from './usuariosAgregacoes'
@@ -11,6 +12,7 @@ import { Button } from '../../components/Button'
 import { Carregando, Erro } from '../../components/Estado'
 import Modal from '../../components/Modal'
 import UsuarioForm from './UsuarioForm'
+import RedefinirSenhaForm from './RedefinirSenhaForm'
 import ServicosUsuarioModal from './ServicosUsuarioModal'
 
 // Página de gestão de usuários (só admin). A trava REAL é na Edge Function
@@ -49,10 +51,13 @@ function GestaoUsuarios() {
   } = useUsuarios()
   const { data: setores = [], isPending: setoresPend } = useSetores()
   const { data: manutencoes = [], isPending: manPend } = useTodasManutencoes()
+  const { data: meuPerfil } = useMeuPerfil()
 
   const [formAberto, setFormAberto] = useState(false)
   // Usuário cujo modal de serviços está aberto (ou null).
   const [servicosDe, setServicosDe] = useState(null)
+  // Usuário cuja senha está sendo redefinida (ou null).
+  const [senhaDe, setSenhaDe] = useState(null)
   const toast = useToast()
 
   const buscando = perfisPend || setoresPend || manPend
@@ -88,6 +93,7 @@ function GestaoUsuarios() {
                 <th>Papel</th>
                 <th>Setores</th>
                 <th>Serviços</th>
+                <th>Acesso</th>
               </tr>
             </thead>
             <tbody>
@@ -128,6 +134,21 @@ function GestaoUsuarios() {
                         </div>
                       )}
                     </td>
+                    <td>
+                      {/* A própria senha se troca em "Meu perfil" — aqui só
+                          o reset de quem perdeu a sua. */}
+                      {p.id === meuPerfil?.id ? (
+                        <span className="text-[var(--fg-3)]">—</span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setSenhaDe(p)}
+                          className="ct-link text-[14px]"
+                        >
+                          Redefinir senha
+                        </button>
+                      )}
+                    </td>
                   </tr>
                 )
               })}
@@ -144,6 +165,19 @@ function GestaoUsuarios() {
               toast.sucesso('Usuário criado')
             }}
             onCancelar={() => setFormAberto(false)}
+          />
+        </Modal>
+      )}
+
+      {senhaDe && (
+        <Modal titulo="Redefinir senha" onClose={() => setSenhaDe(null)}>
+          <RedefinirSenhaForm
+            usuario={senhaDe}
+            onSucesso={() => {
+              setSenhaDe(null)
+              toast.sucesso('Senha redefinida')
+            }}
+            onCancelar={() => setSenhaDe(null)}
           />
         </Modal>
       )}
