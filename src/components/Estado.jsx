@@ -13,7 +13,7 @@ export function Carregando({ texto = 'Carregando…', className = '' }) {
       aria-live="polite"
       className={`flex items-center justify-center gap-2 py-8 text-[var(--fg-3)] ${className}`.trim()}
     >
-      <Loader2 size={18} className="animate-spin" aria-hidden="true" />
+      <Loader2 size={20} className="animate-spin" aria-hidden="true" />
       <span className="t-secondary">{texto}</span>
     </div>
   )

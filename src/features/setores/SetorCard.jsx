@@ -82,11 +82,11 @@ export function SetorCard({ setor, resumo, onEditar, onExcluir }) {
       {/* Metadados */}
       <dl className="flex flex-col gap-1.5 text-[14px]">
         <div className="flex items-center gap-2 text-[var(--fg-2)]">
-          <Clock size={15} className="flex-none text-[var(--fg-3)]" />
+          <Clock size={16} className="flex-none text-[var(--fg-3)]" />
           Higienização a cada {setor.intervalo_dias} dias
         </div>
         <div className="flex items-center gap-2 text-[var(--fg-2)]">
-          <User size={15} className="flex-none text-[var(--fg-3)]" />
+          <User size={16} className="flex-none text-[var(--fg-3)]" />
           {responsavel ? (
             <span>
               Responsável:{' '}
@@ -105,17 +105,17 @@ export function SetorCard({ setor, resumo, onEditar, onExcluir }) {
             className="group inline-flex w-fit items-center gap-2 text-[14px]"
             style={{ textDecoration: 'none' }}
           >
-            <Boxes size={15} className="flex-none text-[var(--fg-3)]" />
+            <Boxes size={16} className="flex-none text-[var(--fg-3)]" />
             <span className="text-[var(--fg)]">{resumo.total}</span>
             <span className="text-[var(--fg-2)]">equipamentos</span>
             <ArrowRight
-              size={14}
+              size={16}
               className="flex-none text-[var(--link)] transition-transform group-hover:translate-x-0.5"
             />
           </Link>
         ) : (
           <div className="flex items-center gap-2 text-[var(--fg-3)]">
-            <Boxes size={15} className="flex-none" />
+            <Boxes size={16} className="flex-none" />
             <span>0 equipamentos</span>
           </div>
         )}

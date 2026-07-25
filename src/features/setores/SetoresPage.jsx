@@ -79,7 +79,7 @@ function GestaoSetores() {
 
       {!buscando && !isError && setores.length === 0 && (
         <div className="rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)] p-6 text-center">
-          <MapPin size={22} className="mx-auto mb-2 text-[var(--fg-3)]" />
+          <MapPin size={24} className="mx-auto mb-2 text-[var(--fg-3)]" />
           <p className="t-secondary">
             Nenhum setor cadastrado. Comece criando o primeiro.
           </p>

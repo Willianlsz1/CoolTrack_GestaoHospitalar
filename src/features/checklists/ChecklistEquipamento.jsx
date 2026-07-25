@@ -135,7 +135,7 @@ export default function ChecklistEquipamento({ equipamento }) {
   if (!modelo) {
     return (
       <div className="rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)] p-5 text-center">
-        <ClipboardX size={22} className="mx-auto mb-2 text-[var(--fg-3)]" />
+        <ClipboardX size={24} className="mx-auto mb-2 text-[var(--fg-3)]" />
         <p className="t-secondary">
           Nenhum modelo de checklist mensal para{' '}
           {TIPO_LABELS[equipamento.tipo] ?? equipamento.tipo}. Peça ao admin

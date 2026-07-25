@@ -14,7 +14,7 @@ function Secao({ icon: Icone, titulo, children }) {
   return (
     <section className="space-y-3">
       <p className="flex items-center gap-2 text-[14px] text-[var(--fg-3)]">
-        <Icone size={15} /> {titulo}
+        <Icone size={16} /> {titulo}
       </p>
       {children}
     </section>
@@ -77,7 +77,7 @@ function FormularioConfig({ config }) {
         to="/relatorio"
         className="ct-link inline-flex items-center gap-1 text-[14px]"
       >
-        <ArrowLeft size={14} /> Voltar ao relatório
+        <ArrowLeft size={16} /> Voltar ao relatório
       </Link>
       <h1 className="mt-2">Configuração do PMOC</h1>
       <p className="t-secondary mt-1">

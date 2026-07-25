@@ -32,7 +32,7 @@ function ChipsTipo({ valor, aoSelecionar, erro, tipos = MANUTENCAO_TIPOS }) {
             aria-pressed={sel}
           >
             {sel ? (
-              <Check size={14} />
+              <Check size={16} />
             ) : (
               <span className="ct-chip-dot" aria-hidden="true" />
             )}
@@ -49,7 +49,7 @@ function CelulaFoto({ id, rotulo, aoEscolher }) {
   return (
     <div>
       <span className="ct-label flex items-center gap-1.5">
-        <Camera size={14} className="text-[var(--fg-3)]" /> {rotulo}
+        <Camera size={16} className="text-[var(--fg-3)]" /> {rotulo}
       </span>
       <input
         id={id}
@@ -180,7 +180,7 @@ export default function ManutencaoForm({
           className="flex items-center gap-1.5 text-[14px]"
           style={{ color: 'var(--warn)' }}
         >
-          <CircleAlert size={14} /> {erroValidacao}
+          <CircleAlert size={16} /> {erroValidacao}
         </p>
       )}
       {criar.isError && (
@@ -188,7 +188,7 @@ export default function ManutencaoForm({
           className="flex items-center gap-1.5 text-[14px]"
           style={{ color: 'var(--danger)' }}
         >
-          <CircleAlert size={14} /> Erro ao salvar: {criar.error.message}
+          <CircleAlert size={16} /> Erro ao salvar: {criar.error.message}
         </p>
       )}
 

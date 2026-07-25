@@ -23,7 +23,7 @@ export function HistoricoDecisoes({ manutencaoId }) {
         onClick={() => setAberto((v) => !v)}
         className="inline-flex items-center gap-1.5 text-[14px] text-[var(--link)]"
       >
-        <History size={14} />
+        <History size={16} />
         {aberto ? 'Ocultar histórico de decisões' : 'Histórico de decisões'}
       </button>
 

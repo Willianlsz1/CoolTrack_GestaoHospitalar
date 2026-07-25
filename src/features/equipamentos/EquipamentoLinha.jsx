@@ -74,7 +74,7 @@ export function EquipamentoLinha({ eq, onEditar, podeExcluir }) {
               onClick={() => onEditar(eq)}
               aria-label="Editar"
             >
-              <Pencil size={15} />
+              <Pencil size={16} />
             </button>
             {podeExcluir && (
               <button className="ct-quiet" onClick={pedirExcluir}>

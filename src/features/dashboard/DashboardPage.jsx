@@ -92,7 +92,7 @@ export default function DashboardPage() {
             style={{ textDecoration: 'none' }}
           >
             <ClipboardCheck
-              size={18}
+              size={20}
               className="flex-none"
               style={{ color: 'var(--warn)' }}
             />
@@ -106,7 +106,7 @@ export default function DashboardPage() {
             <span className="ml-auto inline-flex items-center gap-1 text-[var(--link)]">
               Revisar
               <ArrowRight
-                size={15}
+                size={16}
                 className="transition-transform group-hover:translate-x-0.5"
               />
             </span>
@@ -176,7 +176,7 @@ function ChipAtualizado({ atualizadoEm, onAtualizar }) {
       title="Clique para atualizar"
       className={`${chip} hover:text-[var(--fg)]`}
     >
-      <RefreshCw size={14} className="text-[var(--fg-3)]" /> Atualizado {quando}
+      <RefreshCw size={16} className="text-[var(--fg-3)]" /> Atualizado {quando}
     </button>
   )
 }
@@ -193,7 +193,7 @@ function Pagina({ total, atualizadoEm, onAtualizar, children }) {
         {total !== undefined && (
           <div className="flex flex-wrap items-center gap-[10px]">
             <span className={chip}>
-              <Boxes size={14} className="text-[var(--fg-3)]" />
+              <Boxes size={16} className="text-[var(--fg-3)]" />
               <b className="font-medium text-[var(--fg)]">{total}</b>{' '}
               equipamentos
             </span>

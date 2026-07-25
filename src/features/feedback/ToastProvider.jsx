@@ -34,7 +34,7 @@ function Toaster({ toasts, aoFechar }) {
               aria-label="Fechar"
               className="ml-1 flex-none text-[var(--fg-3)] hover:text-[var(--fg)]"
             >
-              <X size={14} />
+              <X size={16} />
             </button>
           </div>
         )

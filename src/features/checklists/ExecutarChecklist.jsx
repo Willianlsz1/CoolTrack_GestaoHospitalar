@@ -94,7 +94,7 @@ export default function ExecutarChecklist({
                       : 'text-[var(--fg-3)] hover:text-[var(--fg)]'
                   }`}
                 >
-                  <Check size={14} /> OK
+                  <Check size={16} /> OK
                 </button>
                 <button
                   type="button"
@@ -106,7 +106,7 @@ export default function ExecutarChecklist({
                       : 'text-[var(--fg-3)] hover:text-[var(--fg)]'
                   }`}
                 >
-                  <CircleAlert size={14} /> Exceção
+                  <CircleAlert size={16} /> Exceção
                 </button>
               </div>
             </div>

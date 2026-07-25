@@ -8,7 +8,7 @@ export function PanoramaStatus({ contagem, total }) {
   return (
     <section className="ct-card">
       <p className="flex items-center gap-2 text-[14px] text-[var(--fg-3)]">
-        <ChartPie size={14} /> Equipamentos por status
+        <ChartPie size={16} /> Equipamentos por status
       </p>
       <ProporcaoBar contagem={contagem} total={total} />
     </section>

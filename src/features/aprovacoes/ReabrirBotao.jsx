@@ -53,7 +53,7 @@ export function ReabrirBotao({ servicoId }) {
       onClick={() => setConfirmando(true)}
       className="inline-flex items-center gap-1.5 text-[14px] text-[var(--fg-2)] hover:text-[var(--fg)]"
     >
-      <RotateCcw size={15} /> Reabrir
+      <RotateCcw size={16} /> Reabrir
     </button>
   )
 }

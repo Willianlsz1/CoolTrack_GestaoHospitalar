@@ -24,7 +24,7 @@ export function ReprovadosCard({ itens }) {
     <article className="flex flex-col rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)] px-[22px] py-4">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-[10px]">
-          <XCircle size={18} style={{ color: 'var(--danger)' }} />
+          <XCircle size={20} style={{ color: 'var(--danger)' }} />
           <div>
             <h2 className="text-[17px] font-medium">Serviços reprovados</h2>
             <div className="t-caption mt-0.5">

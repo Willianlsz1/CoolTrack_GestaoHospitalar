@@ -76,7 +76,7 @@ export default function AppLayout() {
             aria-label="Abrir menu"
             aria-expanded={menuAberto}
           >
-            {menuAberto ? <X size={22} /> : <Menu size={22} />}
+            {menuAberto ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 

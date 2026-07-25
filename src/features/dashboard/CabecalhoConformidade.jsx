@@ -26,7 +26,7 @@ export function CabecalhoConformidade({ resumo }) {
   return (
     <section className="ct-card flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
       <div className="flex items-center gap-3">
-        <ShieldCheck size={26} style={{ color: cor }} />
+        <ShieldCheck size={24} style={{ color: cor }} />
         <div>
           <p className="t-caption">Conformidade PMOC</p>
           <p

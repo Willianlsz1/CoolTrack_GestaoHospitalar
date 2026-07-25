@@ -92,7 +92,7 @@ export default function EquipamentoScanner() {
         to="/"
         className="ct-link inline-flex items-center gap-1 text-[14px]"
       >
-        <ArrowLeft size={14} /> Voltar
+        <ArrowLeft size={16} /> Voltar
       </Link>
 
       {semCamera ? (
