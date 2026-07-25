@@ -18,6 +18,10 @@
     border-color 0.13s ease;
   white-space: nowrap;
   cursor: pointer;
+  /* Botão nunca é sublinhado. Vale porque .ct-btn também veste <Link>, e a
+     regra global `a:hover` sublinharia — inclusive por baixo de um botão só
+     de ícone, onde o traço aparece sem significar nada. */
+  text-decoration: none;
 }
 .ct-btn:disabled {
   opacity: 0.5;
@@ -65,9 +69,16 @@
   padding: 6px 8px;
   color: var(--fg-3);
 }
+/* Hover neutro, mesma regra do .ct-quiet: clarear já diz "responde ao mouse".
+   Era var(--link), e isso quebrava a coluna de Ações por baixo — ver e editar
+   acenderiam em azul e excluir em vermelho, trazendo de volta pelo hover a
+   mistura de idiomas que a linha acabou de resolver. Azul volta a ser só do
+   botão primário e dos links de verdade. */
 .ct-btn--ghost:not(:disabled):hover {
-  color: var(--link);
+  color: var(--fg);
 }
+/* A exceção que se justifica: o destrutivo é o único que muda de MATIZ no
+   hover, porque é o único cujo risco muda a decisão. */
 .ct-btn--ghost.is-danger:not(:disabled):hover {
   color: var(--danger);
 }

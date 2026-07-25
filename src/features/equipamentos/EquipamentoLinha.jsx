@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { Pencil } from 'lucide-react'
+import { Eye, Pencil, Trash2 } from 'lucide-react'
 import { useExcluirEquipamento } from './useExcluirEquipamento'
 import { useToast } from '../feedback/useToast'
 import { contarManutencoes } from '../manutencoes/manutencoesQueries'
@@ -61,24 +61,34 @@ export function EquipamentoLinha({ eq, onEditar, podeExcluir }) {
       </td>
       <td>
         {fase === 'idle' ? (
-          <div style={acoes}>
+          // Três ações, um idioma só: antes era texto azul ("Ver"), ícone
+          // (lápis) e texto cinza ("Excluir") na mesma linha. O gap cai para 4
+          // porque o botão ghost já carrega o próprio padding.
+          <div style={{ ...acoes, gap: 4 }}>
             <Link
               to="/equipamentos/$id"
               params={{ id: eq.id }}
-              className="ct-link"
+              className="ct-btn ct-btn--ghost"
+              aria-label={`Ver ficha de ${eq.nome}`}
             >
-              Ver
+              <Eye size={16} />
             </Link>
             <button
               className="ct-btn ct-btn--ghost"
               onClick={() => onEditar(eq)}
-              aria-label="Editar"
+              aria-label={`Editar ${eq.nome}`}
             >
               <Pencil size={16} />
             </button>
             {podeExcluir && (
-              <button className="ct-quiet" onClick={pedirExcluir}>
-                Excluir
+              // is-danger: cinza em repouso, vermelho só no hover — a cor do
+              // perigo aparece quando você mira, não o tempo todo.
+              <button
+                className="ct-btn ct-btn--ghost is-danger"
+                onClick={pedirExcluir}
+                aria-label={`Excluir ${eq.nome}`}
+              >
+                <Trash2 size={16} />
               </button>
             )}
           </div>

@@ -12,12 +12,18 @@
   color: var(--fg-2);
   cursor: pointer;
 }
+/* "Onde posso ir" e "onde estou" precisam ser sinais DIFERENTES. Antes os
+   dois estados dividiam o mesmo `background: var(--surface-2)` e só o texto
+   mudava — e mudava para var(--link), a cor que em todo o resto do app
+   significa "isto é um link". Ou seja: o item onde você JÁ ESTÁ era pintado
+   de "clique aqui para ir".
+   Agora hover clareia o texto (sem fundo) e ativo é o texto mais claro DENTRO
+   de um chip preenchido. Dois sinais estruturais distintos, e o azul sai. */
 .ct-nav:hover {
   color: var(--fg);
-  background: var(--surface-2);
 }
 .ct-nav.is-active {
-  color: var(--link);
+  color: var(--fg);
   background: var(--surface-2);
 }
 
@@ -42,6 +48,8 @@
   background: var(--surface-2);
   color: var(--fg);
 }
+/* Mesma lógica dentro do dropdown: o item ativo é o de texto mais claro; o
+   hover é o que ganha fundo. */
 .ct-menu-item.is-active {
-  color: var(--link);
+  color: var(--fg);
 }
