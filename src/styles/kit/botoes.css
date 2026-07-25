@@ -76,3 +76,43 @@
   font-size: 13px;
   padding: 6px 12px;
 }
+
+/* ============================================================
+   ALVO DE TOQUE — 44px quando o ponteiro é o dedo
+   ------------------------------------------------------------
+   POR QUE `pointer: coarse` E NÃO UM BREAKPOINT DE LARGURA:
+   `sm:` pergunta "a tela é estreita?"; `pointer: coarse` pergunta "o
+   ponteiro é impreciso (dedo) ou preciso (mouse)?". São perguntas
+   diferentes, e aqui a segunda é a certa — um tablet de 10" precisa do alvo
+   grande e passaria batido por um breakpoint de largura, enquanto a janela
+   espremida do navegador do gestor ganharia botões gigantes sem precisar.
+
+   POR QUE 44px: o mínimo do WCAG 2.2 (2.5.8) é 24px, que os botões já
+   cumpriam — 34px de altura (9 + 14 + 9 + 2 de borda). Mas 44px é o valor da
+   Apple (HIG) e 48px o do Material; abaixo de ~40px a taxa de erro sobe de
+   forma medida. O técnico usa o app em pé, na frente do equipamento.
+
+   MIN-HEIGHT, NÃO HEIGHT: o botão continua crescendo se o texto quebrar.
+   Como .ct-btn é inline-flex com align-items:center, o conteúdo se centraliza
+   sozinho na altura nova — não precisa mexer no padding.
+   ============================================================ */
+@media (pointer: coarse) {
+  .ct-btn {
+    min-height: 44px;
+  }
+
+  /* Ghost é usado como botão só-de-ícone (lixeira, fechar): sem min-width ele
+     ficaria alto e estreito, e a largura é metade do alvo. */
+  .ct-btn--ghost {
+    min-width: 44px;
+    justify-content: center;
+  }
+
+  /* Utilitário para alvos que NÃO são .ct-btn (abas, toggles montados com
+     Tailwind no JSX). Mantém a regra dos 44px num lugar só, em vez de
+     espalhar `[@media(pointer:coarse)]:` pelos componentes. */
+  .ct-toque {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

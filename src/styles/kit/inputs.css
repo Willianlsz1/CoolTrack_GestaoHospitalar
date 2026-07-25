@@ -37,6 +37,27 @@ select.ct-input {
   background-position: right 10px center;
   padding-right: 34px;
 }
+/* ============================================================
+   CAMPOS NO TOQUE — 16px de fonte e 44px de altura
+   ------------------------------------------------------------
+   OS 16px NÃO SÃO ESTÉTICA, SÃO UM BUG DO iOS: o Safari aplica zoom
+   automático ao focar qualquer campo com fonte abaixo de 16px (heurística da
+   Apple: "menor que isso é ilegível"). Com os 14px anteriores, a tela pulava
+   a cada campo tocado no meio do serviço. A saída comum — `maximum-scale=1`
+   no viewport — resolve o zoom automático matando TAMBÉM o zoom manual, o
+   que quebra a acessibilidade. Subir a fonte é a correção sem efeito
+   colateral.
+
+   Mesmo `pointer: coarse` dos botões: no desktop o campo segue com 14px, que
+   é a densidade certa para um console visto de perto.
+   ============================================================ */
+@media (pointer: coarse) {
+  .ct-input {
+    font-size: 16px;
+    min-height: 44px;
+  }
+}
+
 .ct-hint {
   font-size: 12px;
   color: var(--fg-3);

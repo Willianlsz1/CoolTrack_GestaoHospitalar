@@ -27,7 +27,13 @@
   /* ---- Text ------------------------------------------------ */
   --fg: #f1f5f9; /* primary text */
   --fg-2: #94a3b8; /* secondary text, sub-labels */
-  --fg-3: #64748b; /* tertiary — captions, meta, hints */
+  /* Terciário — captions, meta, hints. Era #64748b, que dava 3.47:1 sobre
+     --surface-2 e reprovava no AA (4.5:1) justamente nos tamanhos menores do
+     app (.ct-hint 12px, .t-caption 13px). #7c8b9f é o menor clareamento que
+     passa nas TRÊS superfícies (pior caso 4.75:1) mantendo o matiz slate e
+     sem encostar no --fg-2 (6.43:1) — se encostasse, dois níveis da
+     hierarquia virariam um só. */
+  --fg-3: #7c8b9f; /* tertiary — captions, meta, hints */
   --fg-on-brand: #ffffff; /* text on solid blue */
 
   /* ---- Status (sober: translucent fill + color text + 0.5px border) */
