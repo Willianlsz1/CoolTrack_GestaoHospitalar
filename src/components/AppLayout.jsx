@@ -8,6 +8,7 @@ import { usePendentesAprovacao } from '../features/aprovacoes/usePendentesAprova
 import LoginPage from '../features/auth/LoginPage'
 import TrocaSenhaObrigatoria from '../features/auth/TrocaSenhaObrigatoria'
 import PerfilModal from '../features/perfil/PerfilModal'
+import { BannerModoDemo } from './BannerModoDemo'
 import { Carregando } from './Estado'
 import { NavDesktop, NavMobile } from './NavMenu'
 
@@ -49,6 +50,7 @@ export default function AppLayout() {
 
   return (
     <div className="min-h-screen bg-[var(--bg)]">
+      <BannerModoDemo />
       <header className="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--surface)]">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-3">
           <Link

@@ -15,6 +15,11 @@ export async function entrar(email, senha) {
 export async function sair() {
   const { error } = await supabase.auth.signOut()
   if (error) throw error
+  // Sair de dentro do modo visitante encerra o modo junto: sem isto, o
+  // reload seguinte cairia de novo no auto-login do visitante e a pessoa
+  // nunca voltaria à tela de login normal.
+  const { modoDemoAtivo, sairModoDemo } = await import('../../core/demoConfig')
+  if (modoDemoAtivo()) sairModoDemo()
 }
 
 // Define uma senha nova para o usuário LOGADO. Vale tanto para a troca
