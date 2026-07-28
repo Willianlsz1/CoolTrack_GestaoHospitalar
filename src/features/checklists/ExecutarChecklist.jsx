@@ -88,25 +88,25 @@ export default function ExecutarChecklist({
                   type="button"
                   onClick={() => setOkItem(i, true)}
                   aria-pressed={it.ok}
-                  className={`flex items-center gap-1 rounded-[6px] px-3 py-1 ${
+                  className={`ct-toque flex items-center justify-center gap-1 rounded-[6px] px-3 py-1 ${
                     it.ok
                       ? 'bg-[var(--ok-fill)] text-[var(--ok)]'
                       : 'text-[var(--fg-3)] hover:text-[var(--fg)]'
                   }`}
                 >
-                  <Check size={14} /> OK
+                  <Check size={16} /> OK
                 </button>
                 <button
                   type="button"
                   onClick={() => setOkItem(i, false)}
                   aria-pressed={!it.ok}
-                  className={`flex items-center gap-1 rounded-[6px] px-3 py-1 ${
+                  className={`ct-toque flex items-center justify-center gap-1 rounded-[6px] px-3 py-1 ${
                     !it.ok
                       ? 'bg-[var(--warn-fill)] text-[var(--warn)]'
                       : 'text-[var(--fg-3)] hover:text-[var(--fg)]'
                   }`}
                 >
-                  <CircleAlert size={14} /> Exceção
+                  <CircleAlert size={16} /> Exceção
                 </button>
               </div>
             </div>

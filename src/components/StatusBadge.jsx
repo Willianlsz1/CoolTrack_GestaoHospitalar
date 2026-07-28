@@ -13,7 +13,7 @@ export function StatusBadge({ status }) {
   const Icone = ICONES[status]
   return (
     <span className={`ct-badge ct-badge--${status}`}>
-      {Icone && <Icone size={13} />}
+      {Icone && <Icone size={16} />}
       {STATUS_LABELS[status] ?? status}
     </span>
   )

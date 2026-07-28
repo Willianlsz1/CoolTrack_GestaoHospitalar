@@ -35,7 +35,7 @@ export function AlertCard({
     <article className="flex flex-col rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)] px-[22px] py-4">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-[10px]">
-          <Icone size={18} style={{ color: cor }} />
+          <Icone size={20} style={{ color: cor }} />
           <div>
             <h2 className="text-[17px] font-medium">{titulo}</h2>
             <div className="t-caption mt-0.5">{hint}</div>
@@ -66,7 +66,7 @@ export function AlertCard({
               >
                 <IconeTipo
                   tipo={eq.tipo}
-                  size={17}
+                  size={20}
                   className="flex-none text-[var(--fg-3)]"
                 />
                 <div className="min-w-0">
@@ -127,7 +127,7 @@ export function AlertCard({
               className="inline-flex items-center gap-1 text-[14px] text-[var(--link)]"
             >
               {acao.label}
-              <ArrowRight size={14} />
+              <ArrowRight size={16} />
             </Link>
           )}
         </div>

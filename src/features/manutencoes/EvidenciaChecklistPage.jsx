@@ -81,7 +81,7 @@ export default function EvidenciaChecklistPage() {
           search={{ aba: 'checklist' }}
           className="ct-link inline-flex items-center gap-1 text-[14px]"
         >
-          <ArrowLeft size={14} /> Voltar
+          <ArrowLeft size={16} /> Voltar
         </Link>
         <Button variant="secondary" icon={Printer} onClick={imprimir}>
           Imprimir / PDF

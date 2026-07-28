@@ -35,7 +35,7 @@ export function MiniaturaEquipamento({ eq }) {
         color: 'var(--fg-3)',
       }}
     >
-      <IconeTipo tipo={eq.tipo} size={20} strokeWidth={1.5} />
+      <IconeTipo tipo={eq.tipo} size={20} />
     </div>
   )
 }

@@ -31,7 +31,7 @@ function Secao({ icon: Icone, titulo, children }) {
   return (
     <section className="space-y-3">
       <p className="flex items-center gap-2 text-[14px] text-[var(--fg-3)]">
-        <Icone size={15} /> {titulo}
+        <Icone size={16} /> {titulo}
       </p>
       {children}
     </section>
@@ -276,7 +276,7 @@ export default function EquipamentosForm({
           className="flex items-center gap-1.5 text-[14px]"
           style={{ color: 'var(--warn)' }}
         >
-          <CircleAlert size={14} /> {erroValidacao}
+          <CircleAlert size={16} /> {erroValidacao}
         </p>
       )}
       {mutation.isError && (

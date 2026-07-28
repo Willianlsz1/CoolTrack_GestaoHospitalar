@@ -32,11 +32,35 @@
 }
 select.ct-input {
   appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");
+  /* Chevron desenhado à mão porque é background-image, não JSX — mas segue a
+     mesma regra dos ícones do app: 16px, traço 2px. A cor acompanha --fg-3
+     (#7c8b9f); como data-URI não lê var(), o hex vai literal aqui. */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237c8b9f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");
   background-repeat: no-repeat;
   background-position: right 10px center;
   padding-right: 34px;
 }
+/* ============================================================
+   CAMPOS NO TOQUE — 16px de fonte e 44px de altura
+   ------------------------------------------------------------
+   OS 16px NÃO SÃO ESTÉTICA, SÃO UM BUG DO iOS: o Safari aplica zoom
+   automático ao focar qualquer campo com fonte abaixo de 16px (heurística da
+   Apple: "menor que isso é ilegível"). Com os 14px anteriores, a tela pulava
+   a cada campo tocado no meio do serviço. A saída comum — `maximum-scale=1`
+   no viewport — resolve o zoom automático matando TAMBÉM o zoom manual, o
+   que quebra a acessibilidade. Subir a fonte é a correção sem efeito
+   colateral.
+
+   Mesmo `pointer: coarse` dos botões: no desktop o campo segue com 14px, que
+   é a densidade certa para um console visto de perto.
+   ============================================================ */
+@media (pointer: coarse) {
+  .ct-input {
+    font-size: 16px;
+    min-height: 44px;
+  }
+}
+
 .ct-hint {
   font-size: 12px;
   color: var(--fg-3);

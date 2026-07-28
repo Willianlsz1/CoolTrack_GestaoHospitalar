@@ -12,7 +12,7 @@ export function PorSetor({ setores }) {
   return (
     <article className="flex min-h-0 flex-col rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)] px-[22px] py-[18px]">
       <p className="flex items-center gap-2 text-[14px] text-[var(--fg-3)]">
-        <Building2 size={14} /> Equipamentos por setor
+        <Building2 size={16} /> Equipamentos por setor
       </p>
       <p className="t-caption mb-[10px] mt-0.5">
         Quantos equipamentos cada setor tem — e quantos estão atrasados.

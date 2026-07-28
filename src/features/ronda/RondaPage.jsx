@@ -81,7 +81,7 @@ export default function RondaPage() {
                   >
                     <IconeTipo
                       tipo={eq.tipo}
-                      size={18}
+                      size={20}
                       className="flex-none text-[var(--fg-3)]"
                     />
                     <div className="min-w-0 flex-1">

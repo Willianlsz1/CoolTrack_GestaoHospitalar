@@ -107,7 +107,7 @@ function NavDropdown({ label, icon: Icone, children }) {
       >
         {Icone && <Icone size={16} />} {label}
         <ChevronDown
-          size={14}
+          size={16}
           className={`transition-transform ${aberto ? 'rotate-180' : ''}`}
         />
       </button>

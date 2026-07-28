@@ -29,7 +29,7 @@ export function EquipamentoCard({ eq }) {
           </div>
         </div>
         <StatusBadge status={eq.status} />
-        <ChevronRight size={18} className="flex-none text-[var(--fg-3)]" />
+        <ChevronRight size={20} className="flex-none text-[var(--fg-3)]" />
       </Link>
     </li>
   )

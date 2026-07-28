@@ -72,7 +72,7 @@ function GestaoModelos() {
 
       {!isPending && !isError && modelos.length === 0 && (
         <div className="rounded-[var(--r-card)] border border-[var(--border)] bg-[var(--surface)] p-6 text-center">
-          <ListChecks size={22} className="mx-auto mb-2 text-[var(--fg-3)]" />
+          <ListChecks size={24} className="mx-auto mb-2 text-[var(--fg-3)]" />
           <p className="t-secondary">
             Nenhum modelo. Crie o primeiro (ex.: ar-condicionado · mensal).
           </p>

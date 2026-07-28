@@ -20,7 +20,7 @@ export function RondaBarra({ equipamentoId }) {
   return (
     <div className="mt-3 flex items-center justify-between gap-3 rounded-[var(--r)] border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-[14px]">
       <span className="inline-flex items-center gap-2 text-[var(--fg-2)]">
-        <Route size={15} className="flex-none text-[var(--fg-3)]" />
+        <Route size={16} className="flex-none text-[var(--fg-3)]" />
         Ronda · {restantes.length} pendente
         {restantes.length === 1 ? '' : 's'} restante
         {restantes.length === 1 ? '' : 's'}
@@ -32,7 +32,7 @@ export function RondaBarra({ equipamentoId }) {
           search={{ aba: 'checklist', origem: 'ronda' }}
           className="ct-link inline-flex items-center gap-1 whitespace-nowrap"
         >
-          Próximo pendente <ArrowRight size={14} />
+          Próximo pendente <ArrowRight size={16} />
         </Link>
       ) : (
         <span className="whitespace-nowrap" style={{ color: 'var(--ok)' }}>

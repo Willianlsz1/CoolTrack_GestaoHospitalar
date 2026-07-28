@@ -13,6 +13,12 @@
   cursor: pointer;
   transition: color 0.13s ease;
 }
+/* Hover NEUTRO, não azul. A regra antiga (`color: var(--link)`) pintava de
+   azul de link no hover — e como .ct-quiet veste ações de escape e de
+   exclusão, a cor de "siga em frente" acendia justamente na ação destrutiva,
+   no instante em que o usuário mira nela. Clarear o cinza já é sinal
+   suficiente de "isto responde ao mouse"; azul é promessa, e esta classe não
+   promete nada. */
 .ct-quiet:hover {
-  color: var(--link);
+  color: var(--fg);
 }

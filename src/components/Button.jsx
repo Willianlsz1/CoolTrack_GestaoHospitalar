@@ -18,7 +18,10 @@ export function Button({
 
   return (
     <button className={cls} {...rest}>
-      {Icone && <Icone size={size === 'sm' ? 15 : 16} />}
+      {/* Ícone sempre 16: a escala é 16/20/24/32 e o botão pequeno reduz o
+          texto e o padding, não o ícone — traço e tamanho constantes são o
+          que faz a família parecer uma família. */}
+      {Icone && <Icone size={16} />}
       {children}
     </button>
   )

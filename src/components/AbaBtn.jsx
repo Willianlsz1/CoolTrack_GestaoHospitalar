@@ -5,7 +5,7 @@ export function AbaBtn({ ativo, onClick, children }) {
     <button
       type="button"
       onClick={onClick}
-      className={`-mb-px border-b-2 px-3 py-2 text-[15px] ${
+      className={`ct-toque -mb-px inline-flex items-center justify-center border-b-2 px-3 py-2 text-[15px] ${
         ativo
           ? 'border-[var(--link)] text-[var(--fg)]'
           : 'border-transparent text-[var(--fg-3)] hover:text-[var(--fg)]'

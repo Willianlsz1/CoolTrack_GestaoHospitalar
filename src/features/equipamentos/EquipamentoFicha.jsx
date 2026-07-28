@@ -67,7 +67,7 @@ export default function EquipamentoFicha() {
         to={emRonda ? '/ronda' : '/'}
         className="ct-link inline-flex items-center gap-1 text-[14px]"
       >
-        <ArrowLeft size={14} /> {emRonda ? 'Voltar à ronda' : 'Voltar'}
+        <ArrowLeft size={16} /> {emRonda ? 'Voltar à ronda' : 'Voltar'}
       </Link>
 
       {emRonda && <RondaBarra equipamentoId={id} />}
@@ -97,7 +97,7 @@ export default function EquipamentoFicha() {
                 />
               ) : (
                 <div className="flex h-16 w-16 flex-none items-center justify-center rounded-[var(--r)] bg-[var(--surface-2)] text-[var(--fg-3)]">
-                  <IconeTipo tipo={eq.tipo} size={28} strokeWidth={1} />
+                  <IconeTipo tipo={eq.tipo} size={32} />
                 </div>
               )}
               <div className="min-w-0 flex-1">
